@@ -1,0 +1,11 @@
+<AppUpdater>
+  <update>
+    <latestVersion>1.0.0</latestVersion>
+    <url>https://github.com/steve1316/android-cv-bot-template/releases</url>
+    <releaseNotes>
+v1.0.0 - Changelog
+
+
+    </releaseNotes>
+  </update>
+</AppUpdater>
