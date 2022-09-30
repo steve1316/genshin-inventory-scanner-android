@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from "react"
 import SnackBar from "rn-snackbar-component"
 import { BotStateContext } from "../../context/BotStateContext"
 import { ScrollView, StyleSheet, View } from "react-native"
-import CustomCheckbox from "../../components/CustomCheckbox"
-import { TextInput } from "react-native-paper"
 import TitleDivider from "../../components/TitleDivider"
+import CustomCheckbox from "../../components/CustomCheckbox"
+import { Divider, Text } from "react-native-elements"
 
 const styles = StyleSheet.create({
     root: {
@@ -31,73 +31,27 @@ const Settings = () => {
     //////////////////////////////////////////////////
     // Rendering
 
-    const renderSampleSettings = () => {
+    const renderScanSettings = () => {
         return (
             <View>
-                <TitleDivider title="Sample Settings" subtitle="Sample description 1" hasIcon={true} iconName="clipboard-account-outline" iconColor="#000" />
+                <TitleDivider title="Categories to Scan" subtitle="Customize which categories in the inventory to scan." hasIcon={true} iconName="bag-personal" iconColor="#000" />
+
+                <Divider style={{ marginBottom: 10 }} />
+                <Text style={{ marginBottom: 10, color: "black" }}>{`Tested at 1080p screen resolution.`}</Text>
+                <Divider style={{ marginBottom: 10 }} />
 
                 <CustomCheckbox
-                    isChecked={bsc.settings.property1}
-                    onPress={() => bsc.setSettings({ ...bsc.settings, property1: !bsc.settings.property1 })}
-                    text="I am a Checkbox"
-                    subtitle="Check this to enable the Start button on the Home Page"
+                    text="Scan Weapons"
+                    isChecked={bsc.settings.weapons.enableScanWeapons}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, enableScanWeapons: !bsc.settings.weapons.enableScanWeapons } })}
                 />
-            </View>
-        )
-    }
-
-    const renderDiscordSettings = () => {
-        return (
-            <View>
-                <TitleDivider
-                    title="Discord Settings"
-                    subtitle="Please visit the wiki on the GitHub page for instructions on how to get the token and user ID."
-                    hasIcon={true}
-                    iconName="discord"
-                    iconColor="#7289d9"
-                />
-
-                <CustomCheckbox
-                    isChecked={bsc.settings.discord.enableDiscordNotifications}
-                    onPress={() => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, enableDiscordNotifications: !bsc.settings.discord.enableDiscordNotifications } })}
-                    text="Enable Discord Notifications"
-                    subtitle="Check this to enable having the bot send you status notifications via Discord DM."
-                />
-
-                {bsc.settings.discord.enableDiscordNotifications ? (
-                    <View>
-                        <TextInput
-                            label="Discord Token"
-                            mode="outlined"
-                            multiline
-                            right={<TextInput.Icon name="close" onPress={() => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordToken: "" } })} />}
-                            value={bsc.settings.discord.discordToken}
-                            onChangeText={(value: string) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordToken: value } })}
-                            autoComplete={false}
-                        />
-
-                        <TextInput
-                            label="Discord User ID"
-                            mode="outlined"
-                            multiline
-                            right={<TextInput.Icon name="close" onPress={() => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordUserID: "" } })} />}
-                            value={bsc.settings.discord.discordUserID}
-                            onChangeText={(value: string) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordUserID: value } })}
-                            autoComplete={false}
-                        />
-                    </View>
-                ) : null}
             </View>
         )
     }
 
     return (
         <View style={styles.root}>
-            <ScrollView>
-                {renderSampleSettings()}
-
-                {renderDiscordSettings()}
-            </ScrollView>
+            <ScrollView>{renderScanSettings()}</ScrollView>
 
             <SnackBar
                 visible={snackbarOpen}

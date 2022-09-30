@@ -138,7 +138,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.example.cv_bot_template"
+        applicationId "com.steve1316.genshin_inventory_scanner_android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -177,7 +177,7 @@ android {
             variant.outputs.all { output ->
                 def versionName = defaultConfig.versionName
                 def architecture = output.filters[0].identifier
-                outputFileName = "v${versionName}-CVBotTemplate-${architecture}.apk"
+                outputFileName = "v${versionName}-GenshinInventoryScannerAndroid-${architecture}.apk"
             }
         }
     }
@@ -188,7 +188,7 @@ android {
             enable true
             universalApk false  // If true, also generate a universal APK
             // "arm64-v8a", "armeabi-v7a", "armeabi", "mips", "x86", "x86_64"
-            include "arm64-v8a", "armeabi-v7a", "armeabi", "mips", "x86", "x86_64"
+            include "arm64-v8a", "armeabi-v7a"
         }
     }
 
@@ -244,20 +244,8 @@ dependencies {
     // OpenCV Android 4.5.1 for image processing.
     implementation project(path: ':opencv')
 
-    // Google's Firebase Machine Learning OCR for Text Detection.
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
-
-    // Tesseract4Android for OCR text recognition.
-    implementation 'cz.adaptech.android:tesseract4android:2.1.1'
-
-    // Twitter4j is used to connect to the Twitter API.
-    implementation 'org.twitter4j:twitter4j-stream:4.0.7'
-
     // AppUpdater for notifying users when there is a new update available.
     implementation 'com.github.javiersantos:AppUpdater:2.7'
-
-    // Javacord for Discord integration.
-    implementation 'org.javacord:javacord:3.3.2'
 
     // Klaxon to parse JSON data files.
     implementation 'com.beust:klaxon:5.5'
@@ -267,6 +255,12 @@ dependencies {
 
     // react-native-bootsplash for the bootsplash during app startup.
     implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
+
+    // Google's Firebase Machine Learning OCR for Text Detection.
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+
+    // Tesseract4Android for OCR text recognition.
+    implementation 'cz.adaptech:tesseract4android:4.1.1'
 }
 
 // Run this once to be able to run the application with BUCK

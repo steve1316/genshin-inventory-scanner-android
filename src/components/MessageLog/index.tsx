@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
     logText: {
         color: "white",
         margin: 20,
-        fontSize: 12,
+        fontSize: 10,
     },
 })
 
 const MessageLog = () => {
     const mlc = useContext(MessageLogContext)
 
-    const introMessage = `****************************************\nWelcome to CV Bot Template v${DeviceInfo.getVersion()}\n****************************************\n`
+    const introMessage = `****************************************\nWelcome to ${DeviceInfo.getApplicationName()} v${DeviceInfo.getVersion()}\n****************************************\n`
 
     return (
         <View style={styles.logInnerContainer}>

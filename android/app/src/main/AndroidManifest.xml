@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.cv_bot_template">
+    package="com.steve1316.genshin_inventory_scanner_android">
 
     <!--Grants permission for MediaProjection to display a Notification that tells users that it is currently running.-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.example.cv_bot_template.MainApplication"
+        android:name="com.steve1316.genshin_inventory_scanner_android.MainApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -34,7 +34,7 @@
             android:value="ocr" />
 
         <activity
-            android:name="com.example.cv_bot_template.MainActivity"
+            android:name="com.steve1316.genshin_inventory_scanner_android.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
             android:exported="true"
             android:launchMode="singleTask"
@@ -48,7 +48,7 @@
 
         <!--The Accessibility Service that controls gestures on the screen.-->
         <service
-            android:name=".utils.MyAccessibilityService"
+            android:name="com.steve1316.genshin_inventory_scanner_android.utils.MyAccessibilityService"
             android:foregroundServiceType="mediaProjection"
             android:label="@string/accessibility_service_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
@@ -63,15 +63,15 @@
 
         <!--The MediaProjection service that controls taking screenshots of the screen.-->
         <service
-            android:name=".utils.MediaProjectionService"
+            android:name="com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService"
             android:foregroundServiceType="mediaProjection" />
 
         <!--Bot Service that will automate the specified workflow.-->
-        <service android:name=".utils.BotService" />
+        <service android:name="com.steve1316.genshin_inventory_scanner_android.utils.BotService" />
 
         <!--Receiver that will send the "STOP" Intent to MediaProjection Service when the action button on the Notification is tapped.-->
         <receiver
-            android:name=".utils.StopServiceReceiver"
+            android:name="com.steve1316.genshin_inventory_scanner_android.utils.StopServiceReceiver"
             android:enabled="true"
             android:process=":remote" />
     </application>

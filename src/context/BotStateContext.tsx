@@ -1,39 +1,15 @@
 import React, { createContext, useState } from "react"
 
 export interface Settings {
-    property1: boolean
-
-    discord: {
-        enableDiscordNotifications: boolean
-        discordToken: string
-        discordUserID: string
-    }
-
-    android: {
-        enableDelayTap: boolean
-        delayTapMilliseconds: number
-        confidence: number
-        confidenceAll: number
-        customScale: number
-        enableTestForHomeScreen: boolean
+    weapons: {
+        enableScanWeapons: boolean
     }
 }
 
 // Set the default settings.
 export const defaultSettings: Settings = {
-    property1: false,
-    discord: {
-        enableDiscordNotifications: false,
-        discordToken: "",
-        discordUserID: "",
-    },
-    android: {
-        enableDelayTap: false,
-        delayTapMilliseconds: 1000,
-        confidence: 80,
-        confidenceAll: 80,
-        customScale: 1.0,
-        enableTestForHomeScreen: false,
+    weapons: {
+        enableScanWeapons: false,
     },
 }
 
