@@ -38,6 +38,15 @@ class JSONParser {
 		} catch (e: Exception) {
 		}
 
+		try {
+			val miscObj = jObj.getJSONObject("misc")
+			sharedPreferences.edit {
+				putBoolean("debugMode", miscObj.getBoolean("debugMode"))
+				commit()
+			}
+		} catch (e: Exception) {
+		}
+
 		// Now load in the data from all of the JSON files.
 		loadData(myContext)
 	}

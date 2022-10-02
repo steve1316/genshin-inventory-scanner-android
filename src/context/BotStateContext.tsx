@@ -4,12 +4,18 @@ export interface Settings {
     weapons: {
         enableScanWeapons: boolean
     }
+    misc: {
+        debugMode: boolean
+    }
 }
 
 // Set the default settings.
 export const defaultSettings: Settings = {
     weapons: {
         enableScanWeapons: false,
+    },
+    misc: {
+        debugMode: false,
     },
 }
 

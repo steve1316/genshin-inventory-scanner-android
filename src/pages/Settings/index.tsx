@@ -49,9 +49,27 @@ const Settings = () => {
         )
     }
 
+    const renderMiscSettings = () => {
+        return (
+            <View>
+                <TitleDivider title="Misc Settings" subtitle="Below are miscelleneous settings mainly for debugging purposes." hasIcon={true} iconName="content-save-cog" iconColor="#000" />
+
+                <CustomCheckbox
+                    isChecked={bsc.settings.misc.debugMode}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, debugMode: !bsc.settings.misc.debugMode } })}
+                    text="Enable Debug Mode"
+                    subtitle="Check this to enable more detailed log messages and debugging screenshots to be saved to the /temp/ folder."
+                />
+            </View>
+        )
+    }
+
     return (
         <View style={styles.root}>
-            <ScrollView>{renderScanSettings()}</ScrollView>
+            <ScrollView>
+                {renderScanSettings()}
+                {renderMiscSettings()}
+            </ScrollView>
 
             <SnackBar
                 visible={snackbarOpen}
