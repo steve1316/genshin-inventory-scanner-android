@@ -1,0 +1,503 @@
+[
+    {
+        "name": "AgentsSacrificialKnife"
+    },
+    {
+        "name": "AgnidusAgateChunk"
+    },
+    {
+        "name": "AgnidusAgateFragment"
+    },
+    {
+        "name": "AgnidusAgateGemstone"
+    },
+    {
+        "name": "AnemoculusResonanceStone"
+    },
+    {
+        "name": "BitOfAerosiderite"
+    },
+    {
+        "name": "BlackBronzeHorn"
+    },
+    {
+        "name": "BlackCrystalHorn"
+    },
+    {
+        "name": "BlueDye"
+    },
+    {
+        "name": "BorealWolfsBrokenFang"
+    },
+    {
+        "name": "BorealWolfsCrackedTooth"
+    },
+    {
+        "name": "BorealWolfsNostalgia"
+    },
+    {
+        "name": "ChainsOfTheDandelionGladiator"
+    },
+    {
+        "name": "ChaosAxis"
+    },
+    {
+        "name": "ChaosBolt"
+    },
+    {
+        "name": "ChaosCircuit"
+    },
+    {
+        "name": "ChaosCore"
+    },
+    {
+        "name": "ChaosModule"
+    },
+    {
+        "name": "ChaosOculus"
+    },
+    {
+        "name": "ChunkOfAerosiderite"
+    },
+    {
+        "name": "ConcealedTalon"
+    },
+    {
+        "name": "ConcealedUnguis"
+    },
+    {
+        "name": "CondensedResin"
+    },
+    {
+        "name": "CrystallineCystDust"
+    },
+    {
+        "name": "CrystalPrism"
+    },
+    {
+        "name": "DarkStatuette"
+    },
+    {
+        "name": "DeadLeyLineLeaves"
+    },
+    {
+        "name": "DeathlyStatuette"
+    },
+    {
+        "name": "DebrisOfDecarabiansCity"
+    },
+    {
+        "name": "DendrocidePotion"
+    },
+    {
+        "name": "DendroculusResonanceStone"
+    },
+    {
+        "name": "DesiccantPotion"
+    },
+    {
+        "name": "DivineBodyFromGuyun"
+    },
+    {
+        "name": "DormantFungalNucleus"
+    },
+    {
+        "name": "DreamOfScorchingMight"
+    },
+    {
+        "name": "DreamOfTheDandelionGladiator"
+    },
+    {
+        "name": "DustproofPotion"
+    },
+    {
+        "name": "ElectroculusResonanceStone"
+    },
+    {
+        "name": "EnergyNectar"
+    },
+    {
+        "name": "Fabric"
+    },
+    {
+        "name": "FakeFlyBait"
+    },
+    {
+        "name": "FalseWormBait"
+    },
+    {
+        "name": "FamedHandguard"
+    },
+    {
+        "name": "FatesYearningEssentialOil"
+    },
+    {
+        "name": "FlamingEssentialOil"
+    },
+    {
+        "name": "FloatySplody"
+    },
+    {
+        "name": "ForbiddenCurseScroll"
+    },
+    {
+        "name": "ForestEssentialOil"
+    },
+    {
+        "name": "FossilizedBoneShard"
+    },
+    {
+        "name": "FragmentOfDecarabiansEpic"
+    },
+    {
+        "name": "FrostingEssentialOil"
+    },
+    {
+        "name": "FrostshieldPotion"
+    },
+    {
+        "name": "FruitPasteBait"
+    },
+    {
+        "name": "GeoculusResonanceStone"
+    },
+    {
+        "name": "GoldenBranchOfADistantSea"
+    },
+    {
+        "name": "GoldenHouseMaidenEssentialOil"
+    },
+    {
+        "name": "GoldenRavenInsignia"
+    },
+    {
+        "name": "GoldenTalismanOfTheForestDew"
+    },
+    {
+        "name": "GuideToAdmonition"
+    },
+    {
+        "name": "GuideToBallad"
+    },
+    {
+        "name": "GuideToDiligence"
+    },
+    {
+        "name": "GuideToElegance"
+    },
+    {
+        "name": "GuideToFreedom"
+    },
+    {
+        "name": "GuideToGold"
+    },
+    {
+        "name": "GuideToIngenuity"
+    },
+    {
+        "name": "GuideToLight"
+    },
+    {
+        "name": "GuideToPraxis"
+    },
+    {
+        "name": "GuideToProsperity"
+    },
+    {
+        "name": "GuideToResistance"
+    },
+    {
+        "name": "GuideToTransience"
+    },
+    {
+        "name": "GushingEssentialOil"
+    },
+    {
+        "name": "HeatshieldPotion"
+    },
+    {
+        "name": "HotPod"
+    },
+    {
+        "name": "InspectorsSacrificialKnife"
+    },
+    {
+        "name": "InsulationPotion"
+    },
+    {
+        "name": "IronTalismanOfTheForestDew"
+    },
+    {
+        "name": "JadeBranchOfADistantSea"
+    },
+    {
+        "name": "JeweledBranchOfADistantSea"
+    },
+    {
+        "name": "KageuchiHandguard"
+    },
+    {
+        "name": "LeyLineSprout"
+    },
+    {
+        "name": "LieutenantsInsignia"
+    },
+    {
+        "name": "LuminescentPollen"
+    },
+    {
+        "name": "LustrousStoneFromGuyun"
+    },
+    {
+        "name": "MaskOfTheKijin"
+    },
+    {
+        "name": "MaskOfTheOneHorned"
+    },
+    {
+        "name": "MaskOfTheTigersBite"
+    },
+    {
+        "name": "MintEssentialOil"
+    },
+    {
+        "name": "MistGrass"
+    },
+    {
+        "name": "MistGrassWick"
+    },
+    {
+        "name": "MistVeiledGoldElixir"
+    },
+    {
+        "name": "MistVeiledMercuryElixir"
+    },
+    {
+        "name": "MistVeiledPrimoElixir"
+    },
+    {
+        "name": "NagadusEmeraldChunk"
+    },
+    {
+        "name": "NagadusEmeraldFragment"
+    },
+    {
+        "name": "NagadusEmeraldGemstone"
+    },
+    {
+        "name": "NarukamisAffection"
+    },
+    {
+        "name": "NarukamisJoy"
+    },
+    {
+        "name": "NarukamisValor"
+    },
+    {
+        "name": "OasisGardensKindness"
+    },
+    {
+        "name": "OasisGardensMourning"
+    },
+    {
+        "name": "OasisGardensTruth"
+    },
+    {
+        "name": "OldenDaysOfScorchingMight"
+    },
+    {
+        "name": "OminousMask"
+    },
+    {
+        "name": "PhilosophiesOfAdmonition"
+    },
+    {
+        "name": "PhilosophiesOfBallad"
+    },
+    {
+        "name": "PhilosophiesOfDiligence"
+    },
+    {
+        "name": "PhilosophiesOfElegance"
+    },
+    {
+        "name": "PhilosophiesOfFreedom"
+    },
+    {
+        "name": "PhilosophiesOfGold"
+    },
+    {
+        "name": "PhilosophiesOfIngenuity"
+    },
+    {
+        "name": "PhilosophiesOfLight"
+    },
+    {
+        "name": "PhilosophiesOfPraxis"
+    },
+    {
+        "name": "PhilosophiesOfProsperity"
+    },
+    {
+        "name": "PhilosophiesOfResistance"
+    },
+    {
+        "name": "PhilosophiesOfTransience"
+    },
+    {
+        "name": "PieceOfAerosiderite"
+    },
+    {
+        "name": "PolarizingPrism"
+    },
+    {
+        "name": "PortableWaypoint"
+    },
+    {
+        "name": "PrithivaTopazChunk"
+    },
+    {
+        "name": "PrithivaTopazFragment"
+    },
+    {
+        "name": "PrithivaTopazGemstone"
+    },
+    {
+        "name": "RadiantPrism"
+    },
+    {
+        "name": "RedDye"
+    },
+    {
+        "name": "RedrotBait"
+    },
+    {
+        "name": "RelicFromGuyun"
+    },
+    {
+        "name": "RemnantGlowOfScorchingMight"
+    },
+    {
+        "name": "RichRedBrocade"
+    },
+    {
+        "name": "RobustFungalNucleus"
+    },
+    {
+        "name": "ScatteredPieceOfDecarabiansDream"
+    },
+    {
+        "name": "SealedScroll"
+    },
+    {
+        "name": "SergeantsInsignia"
+    },
+    {
+        "name": "ShacklesOfTheDandelionGladiator"
+    },
+    {
+        "name": "SharpArrowhead"
+    },
+    {
+        "name": "ShimmeringNectar"
+    },
+    {
+        "name": "ShivadaJadeChunk"
+    },
+    {
+        "name": "ShivadaJadeFragment"
+    },
+    {
+        "name": "ShivadaJadeGemstone"
+    },
+    {
+        "name": "ShockingEssentialOil"
+    },
+    {
+        "name": "SilverRavenInsignia"
+    },
+    {
+        "name": "SilverTalismanOfTheForestDew"
+    },
+    {
+        "name": "SlimeConcentrate"
+    },
+    {
+        "name": "SlimeSecretions"
+    },
+    {
+        "name": "SpecialUnmovingEssentialOil"
+    },
+    {
+        "name": "SpectralHeart"
+    },
+    {
+        "name": "SpectralNucleus"
+    },
+    {
+        "name": "StainedMask"
+    },
+    {
+        "name": "StraightShooter"
+    },
+    {
+        "name": "StreamingEssentialOil"
+    },
+    {
+        "name": "SturdyBoneShard"
+    },
+    {
+        "name": "SugardewBait"
+    },
+    {
+        "name": "TrimmedRedSilk"
+    },
+    {
+        "name": "TurbidPrism"
+    },
+    {
+        "name": "UnmovingEssentialOil"
+    },
+    {
+        "name": "VajradaAmethystChunk"
+    },
+    {
+        "name": "VajradaAmethystFragment"
+    },
+    {
+        "name": "VajradaAmethystGemstone"
+    },
+    {
+        "name": "ValleyWeaverEssentialOil"
+    },
+    {
+        "name": "VarunadaLazuriteChunk"
+    },
+    {
+        "name": "VarunadaLazuriteFragment"
+    },
+    {
+        "name": "VarunadaLazuriteGemstone"
+    },
+    {
+        "name": "VayudaTurquoiseChunk"
+    },
+    {
+        "name": "VayudaTurquoiseFragment"
+    },
+    {
+        "name": "VayudaTurquoiseGemstone"
+    },
+    {
+        "name": "WeatheredArrowhead"
+    },
+    {
+        "name": "WindbarrierPotion"
+    },
+    {
+        "name": "XiaoLantern"
+    },
+    {
+        "name": "YellowDye"
+    }
+]

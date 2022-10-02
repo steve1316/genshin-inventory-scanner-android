@@ -1,0 +1,590 @@
+[
+    {
+        "name": "Akuoumaru",
+        "rarity": "4"
+    },
+    {
+        "name": "AlleyHunter",
+        "rarity": "4"
+    },
+    {
+        "name": "AmenomaKageuchi",
+        "rarity": "4"
+    },
+    {
+        "name": "AmosBow",
+        "rarity": "5"
+    },
+    {
+        "name": "ApprenticesNotes",
+        "rarity": "1"
+    },
+    {
+        "name": "AquaSimulacra",
+        "rarity": "5"
+    },
+    {
+        "name": "AquilaFavonia",
+        "rarity": "5"
+    },
+    {
+        "name": "BeginnersProtector",
+        "rarity": "1"
+    },
+    {
+        "name": "BlackcliffAgate",
+        "rarity": "4"
+    },
+    {
+        "name": "BlackcliffLongsword",
+        "rarity": "4"
+    },
+    {
+        "name": "BlackcliffPole",
+        "rarity": "4"
+    },
+    {
+        "name": "BlackcliffSlasher",
+        "rarity": "4"
+    },
+    {
+        "name": "BlackcliffWarbow",
+        "rarity": "4"
+    },
+    {
+        "name": "BlackTassel",
+        "rarity": "3"
+    },
+    {
+        "name": "BloodtaintedGreatsword",
+        "rarity": "3"
+    },
+    {
+        "name": "CalamityQueller",
+        "rarity": "5"
+    },
+    {
+        "name": "CinnabarSpindle",
+        "rarity": "4"
+    },
+    {
+        "name": "CompoundBow",
+        "rarity": "4"
+    },
+    {
+        "name": "CoolSteel",
+        "rarity": "3"
+    },
+    {
+        "name": "CrescentPike",
+        "rarity": "4"
+    },
+    {
+        "name": "DarkIronSword",
+        "rarity": "3"
+    },
+    {
+        "name": "Deathmatch",
+        "rarity": "4"
+    },
+    {
+        "name": "DebateClub",
+        "rarity": "3"
+    },
+    {
+        "name": "DodocoTales",
+        "rarity": "4"
+    },
+    {
+        "name": "DragonsBane",
+        "rarity": "4"
+    },
+    {
+        "name": "DragonspineSpear",
+        "rarity": "4"
+    },
+    {
+        "name": "DullBlade",
+        "rarity": "1"
+    },
+    {
+        "name": "ElegyForTheEnd",
+        "rarity": "5"
+    },
+    {
+        "name": "EmeraldOrb",
+        "rarity": "3"
+    },
+    {
+        "name": "EndOfTheLine",
+        "rarity": "4"
+    },
+    {
+        "name": "EngulfingLightning",
+        "rarity": "5"
+    },
+    {
+        "name": "EverlastingMoonglow",
+        "rarity": "5"
+    },
+    {
+        "name": "EyeOfPerception",
+        "rarity": "4"
+    },
+    {
+        "name": "FadingTwilight",
+        "rarity": "4"
+    },
+    {
+        "name": "FavoniusCodex",
+        "rarity": "4"
+    },
+    {
+        "name": "FavoniusGreatsword",
+        "rarity": "4"
+    },
+    {
+        "name": "FavoniusLance",
+        "rarity": "4"
+    },
+    {
+        "name": "FavoniusSword",
+        "rarity": "4"
+    },
+    {
+        "name": "FavoniusWarbow",
+        "rarity": "4"
+    },
+    {
+        "name": "FerrousShadow",
+        "rarity": "3"
+    },
+    {
+        "name": "FesteringDesire",
+        "rarity": "4"
+    },
+    {
+        "name": "FilletBlade",
+        "rarity": "3"
+    },
+    {
+        "name": "ForestRegalia",
+        "rarity": "4"
+    },
+    {
+        "name": "FreedomSworn",
+        "rarity": "5"
+    },
+    {
+        "name": "Frostbearer",
+        "rarity": "4"
+    },
+    {
+        "name": "FruitOfFulfillment",
+        "rarity": "4"
+    },
+    {
+        "name": "HakushinRing",
+        "rarity": "4"
+    },
+    {
+        "name": "Halberd",
+        "rarity": "3"
+    },
+    {
+        "name": "Hamayumi",
+        "rarity": "4"
+    },
+    {
+        "name": "HaranGeppakuFutsu",
+        "rarity": "5"
+    },
+    {
+        "name": "HarbingerOfDawn",
+        "rarity": "3"
+    },
+    {
+        "name": "HuntersBow",
+        "rarity": "1"
+    },
+    {
+        "name": "HuntersPath",
+        "rarity": "5"
+    },
+    {
+        "name": "IronPoint",
+        "rarity": "2"
+    },
+    {
+        "name": "IronSting",
+        "rarity": "4"
+    },
+    {
+        "name": "KagotsurubeIsshin",
+        "rarity": "4"
+    },
+    {
+        "name": "KagurasVerity",
+        "rarity": "5"
+    },
+    {
+        "name": "KatsuragikiriNagamasa",
+        "rarity": "4"
+    },
+    {
+        "name": "KeyOfKhajNisut",
+        "rarity": "5"
+    },
+    {
+        "name": "KingsSquire",
+        "rarity": "4"
+    },
+    {
+        "name": "KitainCrossSpear",
+        "rarity": "4"
+    },
+    {
+        "name": "LionsRoar",
+        "rarity": "4"
+    },
+    {
+        "name": "LithicBlade",
+        "rarity": "4"
+    },
+    {
+        "name": "LithicSpear",
+        "rarity": "4"
+    },
+    {
+        "name": "LostPrayerToTheSacredWinds",
+        "rarity": "5"
+    },
+    {
+        "name": "LuxuriousSeaLord",
+        "rarity": "4"
+    },
+    {
+        "name": "MagicGuide",
+        "rarity": "3"
+    },
+    {
+        "name": "MakhairaAquamarine",
+        "rarity": "4"
+    },
+    {
+        "name": "MappaMare",
+        "rarity": "4"
+    },
+    {
+        "name": "MemoryOfDust",
+        "rarity": "5"
+    },
+    {
+        "name": "Messenger",
+        "rarity": "3"
+    },
+    {
+        "name": "MissiveWindspear",
+        "rarity": "4"
+    },
+    {
+        "name": "MistsplitterReforged",
+        "rarity": "5"
+    },
+    {
+        "name": "MitternachtsWaltz",
+        "rarity": "4"
+    },
+    {
+        "name": "Moonpiercer",
+        "rarity": "4"
+    },
+    {
+        "name": "MouunsMoon",
+        "rarity": "4"
+    },
+    {
+        "name": "OathswornEye",
+        "rarity": "4"
+    },
+    {
+        "name": "OldMercsPal",
+        "rarity": "2"
+    },
+    {
+        "name": "OtherworldlyStory",
+        "rarity": "3"
+    },
+    {
+        "name": "PocketGrimoire",
+        "rarity": "2"
+    },
+    {
+        "name": "PolarStar",
+        "rarity": "5"
+    },
+    {
+        "name": "Predator",
+        "rarity": "4"
+    },
+    {
+        "name": "PrimordialJadeCutter",
+        "rarity": "5"
+    },
+    {
+        "name": "PrimordialJadeWingedSpear",
+        "rarity": "5"
+    },
+    {
+        "name": "PrototypeAmber",
+        "rarity": "4"
+    },
+    {
+        "name": "PrototypeArchaic",
+        "rarity": "4"
+    },
+    {
+        "name": "PrototypeCrescent",
+        "rarity": "4"
+    },
+    {
+        "name": "PrototypeRancour",
+        "rarity": "4"
+    },
+    {
+        "name": "PrototypeStarglitter",
+        "rarity": "4"
+    },
+    {
+        "name": "Rainslasher",
+        "rarity": "4"
+    },
+    {
+        "name": "RavenBow",
+        "rarity": "3"
+    },
+    {
+        "name": "RecurveBow",
+        "rarity": "3"
+    },
+    {
+        "name": "RedhornStonethresher",
+        "rarity": "5"
+    },
+    {
+        "name": "RoyalBow",
+        "rarity": "4"
+    },
+    {
+        "name": "RoyalGreatsword",
+        "rarity": "4"
+    },
+    {
+        "name": "RoyalGrimoire",
+        "rarity": "4"
+    },
+    {
+        "name": "RoyalLongsword",
+        "rarity": "4"
+    },
+    {
+        "name": "RoyalSpear",
+        "rarity": "4"
+    },
+    {
+        "name": "Rust",
+        "rarity": "4"
+    },
+    {
+        "name": "SacrificialBow",
+        "rarity": "4"
+    },
+    {
+        "name": "SacrificialFragments",
+        "rarity": "4"
+    },
+    {
+        "name": "SacrificialGreatsword",
+        "rarity": "4"
+    },
+    {
+        "name": "SacrificialSword",
+        "rarity": "4"
+    },
+    {
+        "name": "SapwoodBlade",
+        "rarity": "4"
+    },
+    {
+        "name": "SeasonedHuntersBow",
+        "rarity": "2"
+    },
+    {
+        "name": "SerpentSpine",
+        "rarity": "4"
+    },
+    {
+        "name": "SharpshootersOath",
+        "rarity": "3"
+    },
+    {
+        "name": "SilverSword",
+        "rarity": "2"
+    },
+    {
+        "name": "SkyriderGreatsword",
+        "rarity": "3"
+    },
+    {
+        "name": "SkyriderSword",
+        "rarity": "3"
+    },
+    {
+        "name": "SkywardAtlas",
+        "rarity": "5"
+    },
+    {
+        "name": "SkywardBlade",
+        "rarity": "5"
+    },
+    {
+        "name": "SkywardHarp",
+        "rarity": "5"
+    },
+    {
+        "name": "SkywardPride",
+        "rarity": "5"
+    },
+    {
+        "name": "SkywardSpine",
+        "rarity": "5"
+    },
+    {
+        "name": "Slingshot",
+        "rarity": "3"
+    },
+    {
+        "name": "SnowTombedStarsilver",
+        "rarity": "4"
+    },
+    {
+        "name": "SolarPearl",
+        "rarity": "4"
+    },
+    {
+        "name": "SongOfBrokenPines",
+        "rarity": "5"
+    },
+    {
+        "name": "StaffOfHoma",
+        "rarity": "5"
+    },
+    {
+        "name": "StaffOfTheScarletSands",
+        "rarity": "5"
+    },
+    {
+        "name": "SummitShaper",
+        "rarity": "5"
+    },
+    {
+        "name": "SwordOfDescension",
+        "rarity": "4"
+    },
+    {
+        "name": "TheAlleyFlash",
+        "rarity": "4"
+    },
+    {
+        "name": "TheBell",
+        "rarity": "4"
+    },
+    {
+        "name": "TheBlackSword",
+        "rarity": "4"
+    },
+    {
+        "name": "\"TheCatch\"",
+        "rarity": "4"
+    },
+    {
+        "name": "TheFlute",
+        "rarity": "4"
+    },
+    {
+        "name": "TheStringless",
+        "rarity": "4"
+    },
+    {
+        "name": "TheUnforged",
+        "rarity": "5"
+    },
+    {
+        "name": "TheViridescentHunt",
+        "rarity": "4"
+    },
+    {
+        "name": "TheWidsith",
+        "rarity": "4"
+    },
+    {
+        "name": "ThrillingTalesOfDragonSlayers",
+        "rarity": "3"
+    },
+    {
+        "name": "ThunderingPulse",
+        "rarity": "5"
+    },
+    {
+        "name": "TravelersHandySword",
+        "rarity": "3"
+    },
+    {
+        "name": "TwinNephrite",
+        "rarity": "3"
+    },
+    {
+        "name": "VortexVanquisher",
+        "rarity": "5"
+    },
+    {
+        "name": "WanderingEvenstar",
+        "rarity": "4"
+    },
+    {
+        "name": "WasterGreatsword",
+        "rarity": "1"
+    },
+    {
+        "name": "WavebreakersFin",
+        "rarity": "4"
+    },
+    {
+        "name": "Whiteblind",
+        "rarity": "4"
+    },
+    {
+        "name": "WhiteIronGreatsword",
+        "rarity": "3"
+    },
+    {
+        "name": "WhiteTassel",
+        "rarity": "3"
+    },
+    {
+        "name": "WindblumeOde",
+        "rarity": "4"
+    },
+    {
+        "name": "WineAndSong",
+        "rarity": "4"
+    },
+    {
+        "name": "WolfsGravestone",
+        "rarity": "5"
+    },
+    {
+        "name": "XiphosMoonlight",
+        "rarity": "4"
+    }
+]
