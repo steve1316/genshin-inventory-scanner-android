@@ -44,7 +44,8 @@ class ImageUtils(context: Context, private val game: Game) {
 	// Device configuration
 	private val is1080p: Boolean = (MediaProjectionService.displayWidth == 1080) || (MediaProjectionService.displayHeight == 1080) // 1080p Portrait or Landscape Mode.
 	val is720p: Boolean = (MediaProjectionService.displayWidth == 720) || (MediaProjectionService.displayHeight == 720) // 720p
-	val isTabletPortrait: Boolean = (MediaProjectionService.displayWidth == 1600 && MediaProjectionService.displayHeight == 2560) || (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Portrait Mode
+	val isTabletPortrait: Boolean =
+		(MediaProjectionService.displayWidth == 1600 && MediaProjectionService.displayHeight == 2560) || (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Portrait Mode
 	val isTabletLandscape: Boolean = (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Landscape Mode
 
 	// Scales
@@ -437,10 +438,9 @@ class ImageUtils(context: Context, private val game: Game) {
 	 * Open the source and template image files and return Bitmaps for them.
 	 *
 	 * @param templateName File name of the template image.
-	 * @param templateFolderName Name of the subfolder in /assets/ that the template image is in.
 	 * @return A Pair of source and template Bitmaps.
 	 */
-	private fun getBitmaps(templateName: String, templateFolderName: String): Pair<Bitmap?, Bitmap?> {
+	private fun getBitmaps(templateName: String): Pair<Bitmap?, Bitmap?> {
 		var sourceBitmap: Bitmap? = null
 
 		// Keep swiping a little bit up and down to trigger a new image for ImageReader to grab.
@@ -448,8 +448,7 @@ class ImageUtils(context: Context, private val game: Game) {
 			sourceBitmap = MediaProjectionService.takeScreenshotNow()
 
 			if (sourceBitmap == null) {
-				game.gestureUtils.swipe(500f, 500f, 500f, 400f, 100L)
-				game.gestureUtils.swipe(500f, 400f, 500f, 500f, 100L)
+				game.gestureUtils.swipe(1900f, 300f, 1900f, 400f, 100L)
 				game.wait(0.5)
 			}
 		}
@@ -457,7 +456,7 @@ class ImageUtils(context: Context, private val game: Game) {
 		var templateBitmap: Bitmap?
 
 		// Get the Bitmap from the template image file inside the specified folder.
-		myContext.assets?.open("$templateFolderName/$templateName.webp").use { inputStream ->
+		myContext.assets?.open("images/$templateName.webp").use { inputStream ->
 			// Get the Bitmap from the template image file and then start matching.
 			templateBitmap = BitmapFactory.decodeStream(inputStream)
 		}
@@ -484,7 +483,6 @@ class ImageUtils(context: Context, private val game: Game) {
 	 * @return Point object containing the location of the match or null if not found.
 	 */
 	fun findImage(templateName: String, tries: Int = 5, region: IntArray = intArrayOf(0, 0, 0, 0), suppressError: Boolean = false, testMode: Boolean = false): Point? {
-		val folderName = "images"
 		var numberOfTries = tries
 
 		if (debugMode) {
@@ -498,7 +496,7 @@ class ImageUtils(context: Context, private val game: Game) {
 		}
 
 		while (numberOfTries > 0) {
-			val (sourceBitmap, templateBitmap) = getBitmaps(templateName, folderName)
+			val (sourceBitmap, templateBitmap) = getBitmaps(templateName)
 
 			if (sourceBitmap != null && templateBitmap != null) {
 				val resultFlag: Boolean = match(sourceBitmap, templateBitmap, region, useSingleScale = true)
@@ -549,51 +547,6 @@ class ImageUtils(context: Context, private val game: Game) {
 	}
 
 	/**
-	 * Confirms whether or not the bot is at the specified location from the /headers/ folder inside assets.
-	 *
-	 * @param templateName File name of the template image.
-	 * @param tries Number of tries before failing. Defaults to 5.
-	 * @param region Specify the region consisting of (x, y, width, height) of the source screenshot to template match. Defaults to (0, 0, 0, 0) which is equivalent to searching the full image.
-	 * @param suppressError Whether or not to suppress saving error messages to the log.
-	 * @return True if the current location is at the specified location. False otherwise.
-	 */
-	fun confirmLocation(templateName: String, tries: Int = 5, region: IntArray = intArrayOf(0, 0, 0, 0), suppressError: Boolean = false): Boolean {
-		val folderName = "locations"
-		var numberOfTries = tries
-
-		if (debugMode) {
-			game.printToLog("\n[DEBUG] Starting process to find the ${templateName.uppercase()} location image...", tag = tag)
-		}
-
-		while (numberOfTries > 0) {
-			val (sourceBitmap, templateBitmap) = getBitmaps(templateName, folderName)
-
-			if (sourceBitmap != null && templateBitmap != null) {
-				val resultFlag: Boolean = match(sourceBitmap, templateBitmap, region)
-				if (!resultFlag) {
-					numberOfTries -= 1
-					if (numberOfTries <= 0) {
-						break
-					}
-
-					game.wait(0.5)
-				} else {
-					game.printToLog("[SUCCESS] Current location confirmed to be at ${templateName.uppercase()}.", tag = tag)
-					return true
-				}
-			} else {
-				break
-			}
-		}
-
-		if (!suppressError) {
-			game.printToLog("[WARNING] Failed to confirm the bot location at ${templateName.uppercase()}.", tag = tag)
-		}
-
-		return false
-	}
-
-	/**
 	 * Finds all occurrences of the specified image. Has an optional parameter to specify looking in the items folder instead.
 	 *
 	 * @param templateName File name of the template image.
@@ -601,12 +554,12 @@ class ImageUtils(context: Context, private val game: Game) {
 	 * @param customConfidence Accuracy threshold for matching. Defaults to 0.8.
 	 * @return An ArrayList of Point objects containing all the occurrences of the specified image or null if not found.
 	 */
-	fun findAll(templateName: String, folderName: String, region: IntArray = intArrayOf(0, 0, 0, 0), customConfidence: Double = 0.8): ArrayList<Point> {
+	fun findAll(templateName: String, region: IntArray = intArrayOf(0, 0, 0, 0), customConfidence: Double = 0.8): ArrayList<Point> {
 		if (debugMode) {
 			game.printToLog("\n[DEBUG] Starting process to find all ${templateName.uppercase()} images...", tag = tag)
 		}
 
-		val (sourceBitmap, templateBitmap) = getBitmaps(templateName, folderName)
+		val (sourceBitmap, templateBitmap) = getBitmaps(templateName)
 
 		// Clear the ArrayList first before attempting to find all matches.
 		matchLocations.clear()
