@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.StartModule
+import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanWeapons
 import com.steve1316.genshin_inventory_scanner_android.data.ConfigData
 import com.steve1316.genshin_inventory_scanner_android.utils.ImageUtils
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService
@@ -11,6 +12,7 @@ import com.steve1316.genshin_inventory_scanner_android.utils.MessageLog
 import com.steve1316.genshin_inventory_scanner_android.utils.MyAccessibilityService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.opencv.core.Point
 import java.util.concurrent.TimeUnit
 
 /**
@@ -24,6 +26,9 @@ class Game(private val myContext: Context) {
 	val configData: ConfigData = ConfigData(myContext)
 	val imageUtils: ImageUtils = ImageUtils(myContext, this)
 	val gestureUtils: MyAccessibilityService = MyAccessibilityService.getInstance()
+	val scanUtils: Scan = Scan(this)
+
+	lateinit var backpackLocation: Point
 
 	/**
 	 * Returns a formatted string of the elapsed time since the bot started as HH:MM:SS format.
@@ -145,9 +150,16 @@ class Game(private val myContext: Context) {
 
 		landscapeCheck()
 
+		wait(2.0)
+
 		if (initializationCheck()) {
-			val loc = imageUtils.findImage("backpack")!!
-			printToLog(imageUtils.findTextTesseract((loc.x + 1480).toInt(), (loc.y + 97).toInt(), 550, 55, customThreshold = 170.0))
+			backpackLocation = imageUtils.findImage("backpack")!!
+			printToLog("Backpack: $backpackLocation")
+
+			if (configData.enableScanWeapons) {
+				val scanWeapons = ScanWeapons(this)
+				scanWeapons.start()
+			}
 		} else {
 			throw Exception("Unable to detect if the bot is at the Inventory screen.")
 		}
