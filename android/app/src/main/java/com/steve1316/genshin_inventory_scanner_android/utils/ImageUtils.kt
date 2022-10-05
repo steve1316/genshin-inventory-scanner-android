@@ -61,6 +61,8 @@ class ImageUtils(context: Context, private val game: Game) {
 
 	private var mostRecent = 1
 
+	private lateinit var tesseractSourceBitmap: Bitmap
+
 	companion object {
 		private var matchFilePath: String = ""
 		private lateinit var matchLocation: Point
@@ -659,10 +661,25 @@ class ImageUtils(context: Context, private val game: Game) {
 	/**
 	 * Perform OCR text detection using Tesseract along with some image manipulation via thresholding to make the cropped screenshot black and white using OpenCV.
 	 *
+	 * @param x Initial x-coordinate for crop region.
+	 * @param y Initial y-coordinate for crop region.
+	 * @param width Width of the crop region.
+	 * @param height Height of the crop region.
+	 * @param thresh Performs thresholding on the cropped region. Defaults to true.
+	 * @param customThreshold Minimum threshold value. Defaults to 130.
+	 * @param customThreshMaxVal Maximum threshold value. Defaults to 255.
+	 * @param reuseSourceBitmap Reuses the source bitmap from the previous call. Defaults to false which will retake the source bitmap.
+	 *
 	 * @return The detected String in the cropped region.
 	 */
-	fun findTextTesseract(x: Int, y: Int, width: Int, height: Int, thresh: Boolean = true, customThreshold: Double = 130.0, customThreshMaxVal: Double = 255.0): String {
-		val sourceBitmap = MediaProjectionService.takeScreenshotNow(saveImage = true) ?: return ""
+	fun findTextTesseract(x: Int, y: Int, width: Int, height: Int, thresh: Boolean = true, customThreshold: Double = 130.0, customThreshMaxVal: Double = 255.0, reuseSourceBitmap: Boolean = false):
+			String {
+		val sourceBitmap: Bitmap = if (!reuseSourceBitmap) {
+			tesseractSourceBitmap = MediaProjectionService.takeScreenshotNow(saveImage = game.configData.debugMode)!!
+			tesseractSourceBitmap
+		} else {
+			tesseractSourceBitmap
+		}
 
 		tessBaseAPI.init(myContext.getExternalFilesDir(null)?.absolutePath + "/tesseract/", "eng")
 		game.printToLog("\n[TESSERACT] Starting text detection now...", tag = tag)
