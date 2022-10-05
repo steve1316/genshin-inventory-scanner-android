@@ -5,7 +5,7 @@ class Data {
 		val artifactSets: ArrayList<String> = arrayListOf()
 		val characterDevelopmentItems: ArrayList<String> = arrayListOf()
 		val materials: ArrayList<String> = arrayListOf()
-		val weapons: ArrayList<String> = arrayListOf()
+		val weapons: MutableMap<String, String> = mutableMapOf()
 		val characters: ArrayList<String> = arrayListOf()
 	}
 }

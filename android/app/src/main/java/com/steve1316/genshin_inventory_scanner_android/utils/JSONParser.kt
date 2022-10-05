@@ -115,7 +115,7 @@ class JSONParser {
 		Data.weapons.clear()
 		for (i in 0 until weaponJSONArray.length()) {
 			val weapon = weaponJSONArray.getJSONObject(i)
-			Data.weapons.add(weapon["name"] as String)
+			Data.weapons[weapon["name"] as String] = weapon["rarity"] as String
 		}
 
 		Log.d(loggerTag, "Loaded in data for ${Data.weapons.size} weapons.")
