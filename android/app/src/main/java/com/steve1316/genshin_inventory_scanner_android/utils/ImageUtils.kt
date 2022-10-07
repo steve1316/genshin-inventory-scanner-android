@@ -674,15 +674,17 @@ class ImageUtils(context: Context, private val game: Game) {
 	 */
 	fun findTextTesseract(x: Int, y: Int, width: Int, height: Int, thresh: Boolean = true, customThreshold: Double = 130.0, customThreshMaxVal: Double = 255.0, reuseSourceBitmap: Boolean = false):
 			String {
+		val startTime: Long = System.currentTimeMillis()
+
 		val sourceBitmap: Bitmap = if (!reuseSourceBitmap) {
-			tesseractSourceBitmap = MediaProjectionService.takeScreenshotNow(saveImage = game.configData.debugMode)!!
+			tesseractSourceBitmap = MediaProjectionService.takeScreenshotNow(saveImage = debugMode)!!
 			tesseractSourceBitmap
 		} else {
 			tesseractSourceBitmap
 		}
 
 		tessBaseAPI.init(myContext.getExternalFilesDir(null)?.absolutePath + "/tesseract/", "eng")
-		game.printToLog("\n[TESSERACT] Starting text detection now...", tag = tag)
+		if (debugMode) game.printToLog("\n[TESSERACT] Starting text detection now...", tag)
 
 		// Read in the new screenshot and crop it.
 		val croppedBitmap = Bitmap.createBitmap(sourceBitmap, x, y, width, height)
@@ -690,16 +692,21 @@ class ImageUtils(context: Context, private val game: Game) {
 		Utils.bitmapToMat(croppedBitmap, cvImage)
 
 		// Save the cropped image before converting it to black and white in order to troubleshoot issues related to differing device sizes and cropping.
-		Imgcodecs.imwrite("$matchFilePath/tesseract_result_${mostRecent}_a.png", cvImage)
+		if (debugMode) {
+			Imgcodecs.imwrite("$matchFilePath/tesseract_result_${mostRecent}_a.png", cvImage)
+		}
 
 		// Thresh the grayscale cropped image to make black and white.
-		val resultBitmap = if (thresh) {
+		val resultBitmap: Bitmap = croppedBitmap
+		if (thresh) {
 			val bwImage = Mat()
 			Imgproc.threshold(cvImage, bwImage, customThreshold, customThreshMaxVal, Imgproc.THRESH_BINARY)
-			Imgcodecs.imwrite("$matchFilePath/tesseract_result_${mostRecent}_b.png", bwImage)
-			BitmapFactory.decodeFile("$matchFilePath/tesseract_result_${mostRecent}_b.png")
-		} else {
-			BitmapFactory.decodeFile("$matchFilePath/tesseract_result_${mostRecent}_a.png")
+			Utils.matToBitmap(bwImage, resultBitmap)
+
+			// Save the cropped image before converting it to black and white in order to troubleshoot issues related to differing device sizes and cropping.
+			if (debugMode) {
+				Imgcodecs.imwrite("$matchFilePath/tesseract_result_${mostRecent}_b.png", bwImage)
+			}
 		}
 
 		tessBaseAPI.setImage(resultBitmap)
@@ -712,7 +719,7 @@ class ImageUtils(context: Context, private val game: Game) {
 			// Finally, detect text on the cropped region.
 			result = tessBaseAPI.utF8Text
 		} catch (e: Exception) {
-			game.printToLog("[ERROR] Cannot perform OCR: ${e.stackTraceToString()}", tag = tag, isError = true)
+			game.printToLog("[ERROR] Cannot perform OCR: ${e.stackTraceToString()}", tag, isError = true)
 		}
 
 		tessBaseAPI.stop()
@@ -722,7 +729,7 @@ class ImageUtils(context: Context, private val game: Game) {
 			mostRecent = 1
 		}
 
-		game.printToLog("[TESSERACT] Text detection finished.", tag = tag)
+		if (debugMode) game.printToLog("[TESSERACT] Text detection finished in ${System.currentTimeMillis() - startTime}ms.", tag)
 
 		return result
 	}
