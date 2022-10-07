@@ -110,7 +110,7 @@ class Game(private val myContext: Context) {
 	 * @param suppressError Whether or not to suppress saving error messages to the log in failing to find the button.
 	 * @return True if the button was found and clicked. False otherwise.
 	 */
-	fun findAndPress(imageName: String, tries: Int = 0, suppressError: Boolean = false): Boolean {
+	fun findAndPress(imageName: String, tries: Int = 5, suppressError: Boolean = false): Boolean {
 		if (configData.debugMode) {
 			printToLog("[DEBUG] Now attempting to find and click the \"$imageName\" image asset.")
 		}
