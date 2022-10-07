@@ -237,10 +237,10 @@ class GenshinDataScraper:
 if __name__ == '__main__':
     start = time.time()
 
-    # GenshinDataScraper.scrape_weapons()
-    # GenshinDataScraper.scrape_materials()
-    # GenshinDataScraper.scrape_character_development_items()
-    # GenshinDataScraper.scrape_artifacts()
+    GenshinDataScraper.scrape_weapons()
+    GenshinDataScraper.scrape_materials()
+    GenshinDataScraper.scrape_character_development_items()
+    GenshinDataScraper.scrape_artifacts()
     GenshinDataScraper.scrape_characters()
 
     print(f"Total running time: {round(time.time() - start, 2)} seconds")
