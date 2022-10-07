@@ -176,14 +176,14 @@ class MyAccessibilityService : AccessibilityService() {
 		while (tries > 0) {
 			dispatchGesture(gesture, null, null)
 			if (!ignoreWait) {
-				0.5.wait()
+				0.25.wait()
 			}
 
 			tries -= 1
 		}
 
 		if (!ignoreWait) {
-			0.5.wait()
+			0.25.wait()
 		}
 
 		return dispatchResult
