@@ -348,6 +348,10 @@ class ImageUtils(context: Context, private val game: Game) {
 
 		// Loop until all other matches are found and break out when there are no more to be found.
 		while (matchCheck) {
+			if (!BotService.isRunning) {
+				break
+			}
+
 			// Now perform the matching and localize the result.
 			Imgproc.matchTemplate(sourceMat, templateMat, resultMat, matchMethod)
 			val mmr: Core.MinMaxLocResult = Core.minMaxLoc(resultMat)
