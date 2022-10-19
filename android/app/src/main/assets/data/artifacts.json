@@ -1,298 +1,298 @@
 [
     {
         "name": "Adventurer",
-        "flower": "Adventurer's Flower",
-        "plume": "Adventurer's Tail Feather",
-        "sands": "Adventurer's Pocket Watch",
-        "goblet": "Adventurer's Golden Goblet",
-        "circlet": "Adventurer's Bandana"
+        "flower": "AdventurersFlower",
+        "plume": "AdventurersTailFeather",
+        "sands": "AdventurersPocketWatch",
+        "goblet": "AdventurersGoldenGoblet",
+        "circlet": "AdventurersBandana"
     },
     {
         "name": "ArchaicPetra",
-        "flower": "Flower of Creviced Cliff",
-        "plume": "Feather of Jagged Peaks",
-        "sands": "Sundial of Enduring Jade",
-        "goblet": "Goblet of Chiseled Crag",
-        "circlet": "Mask of Solitude Basalt"
+        "flower": "FlowerOfCrevicedCliff",
+        "plume": "FeatherOfJaggedPeaks",
+        "sands": "SundialOfEnduringJade",
+        "goblet": "GobletOfChiseledCrag",
+        "circlet": "MaskOfSolitudeBasalt"
     },
     {
         "name": "Berserker",
-        "flower": "Berserker's Rose",
-        "plume": "Berserker's Indigo Feather",
-        "sands": "Berserker's Timepiece",
-        "goblet": "Berserker's Bone Goblet",
-        "circlet": "Berserker's Battle Mask"
+        "flower": "BerserkersRose",
+        "plume": "BerserkersIndigoFeather",
+        "sands": "BerserkersTimepiece",
+        "goblet": "BerserkersBoneGoblet",
+        "circlet": "BerserkersBattleMask"
     },
     {
         "name": "BlizzardStrayer",
-        "flower": "Snowswept Memory",
-        "plume": "Icebreaker's Resolve",
-        "sands": "Frozen Homeland's Demise",
-        "goblet": "Frost-Weaved Dignity",
-        "circlet": "Broken Rime's Echo"
+        "flower": "SnowsweptMemory",
+        "plume": "IcebreakersResolve",
+        "sands": "FrozenHomelandsDemise",
+        "goblet": "FrostWeavedDignity",
+        "circlet": "BrokenRimesEcho"
     },
     {
         "name": "BloodstainedChivalry",
-        "flower": "Bloodstained Flower of Iron",
-        "plume": "Bloodstained Black Plume",
-        "sands": "Bloodstained Final Hour",
-        "goblet": "Bloodstained Chevalier's Goblet",
-        "circlet": "Bloodstained Iron Mask"
+        "flower": "BloodstainedFlowerOfIron",
+        "plume": "BloodstainedBlackPlume",
+        "sands": "BloodstainedFinalHour",
+        "goblet": "BloodstainedChevaliersGoblet",
+        "circlet": "BloodstainedIronMask"
     },
     {
         "name": "BraveHeart",
-        "flower": "Medal of the Brave",
-        "plume": "Prospect of the Brave",
-        "sands": "Fortitude of the Brave",
-        "goblet": "Outset of the Brave",
-        "circlet": "Crown of the Brave"
+        "flower": "MedalOfTheBrave",
+        "plume": "ProspectOfTheBrave",
+        "sands": "FortitudeOfTheBrave",
+        "goblet": "OutsetOfTheBrave",
+        "circlet": "CrownOfTheBrave"
     },
     {
         "name": "CrimsonWitchOfFlames",
-        "flower": "Witch's Flower of Blaze",
-        "plume": "Witch's Ever-Burning Plume",
-        "sands": "Witch's End Time",
-        "goblet": "Witch's Heart Flames",
-        "circlet": "Witch's Scorching Hat"
+        "flower": "WitchsFlowerOfBlaze",
+        "plume": "WitchsEverBurningPlume",
+        "sands": "WitchsEndTime",
+        "goblet": "WitchsHeartFlames",
+        "circlet": "WitchsScorchingHat"
     },
     {
         "name": "DeepwoodMemories",
-        "flower": "Labyrinth Wayfarer",
-        "plume": "Scholar of Vines",
-        "sands": "A Time of Insight",
-        "goblet": "Lamp of the Lost",
-        "circlet": "Laurel Coronet"
+        "flower": "LabyrinthWayfarer",
+        "plume": "ScholarOfVines",
+        "sands": "ATimeOfInsight",
+        "goblet": "LampOfTheLost",
+        "circlet": "LaurelCoronet"
     },
     {
         "name": "DefendersWill",
-        "flower": "Guardian's Flower",
-        "plume": "Guardian's Sigil",
-        "sands": "Guardian's Clock",
-        "goblet": "Guardian's Vessel",
-        "circlet": "Guardian's Band"
+        "flower": "GuardiansFlower",
+        "plume": "GuardiansSigil",
+        "sands": "GuardiansClock",
+        "goblet": "GuardiansVessel",
+        "circlet": "GuardiansBand"
     },
     {
         "name": "EchoesOfAnOffering",
-        "flower": "Soulscent Bloom",
-        "plume": "Jade Leaf",
-        "sands": "Symbol of Felicitation",
-        "goblet": "Chalice of the Font",
-        "circlet": "Flowing Rings"
+        "flower": "SoulscentBloom",
+        "plume": "JadeLeaf",
+        "sands": "SymbolOfFelicitation",
+        "goblet": "ChaliceOfTheFont",
+        "circlet": "FlowingRings"
     },
     {
         "name": "EmblemOfSeveredFate",
-        "flower": "Magnificent Tsuba",
-        "plume": "Sundered Feather",
-        "sands": "Storm Cage",
-        "goblet": "Scarlet Vessel",
-        "circlet": "Ornate Kabuto"
+        "flower": "MagnificentTsuba",
+        "plume": "SunderedFeather",
+        "sands": "StormCage",
+        "goblet": "ScarletVessel",
+        "circlet": "OrnateKabuto"
     },
     {
         "name": "Gambler",
-        "flower": "Gambler's Brooch",
-        "plume": "Gambler's Feather Accessory",
-        "sands": "Gambler's Pocket Watch",
-        "goblet": "Gambler's Dice Cup",
-        "circlet": "Gambler's Earrings"
+        "flower": "GamblersBrooch",
+        "plume": "GamblersFeatherAccessory",
+        "sands": "GamblersPocketWatch",
+        "goblet": "GamblersDiceCup",
+        "circlet": "GamblersEarrings"
     },
     {
         "name": "GildedDreams",
-        "flower": "Dreaming Steelbloom",
-        "plume": "Feather of Judgment",
-        "sands": "The Sunken Years",
-        "goblet": "Honeyed Final Feast",
-        "circlet": "Shadow of the Sand King"
+        "flower": "DreamingSteelbloom",
+        "plume": "FeatherOfJudgment",
+        "sands": "TheSunkenYears",
+        "goblet": "HoneyedFinalFeast",
+        "circlet": "ShadowOfTheSandKing"
     },
     {
         "name": "GladiatorsFinale",
-        "flower": "Gladiator's Nostalgia",
-        "plume": "Gladiator's Destiny",
-        "sands": "Gladiator's Longing",
-        "goblet": "Gladiator's Intoxication",
-        "circlet": "Gladiator's Triumphus"
+        "flower": "GladiatorsNostalgia",
+        "plume": "GladiatorsDestiny",
+        "sands": "GladiatorsLonging",
+        "goblet": "GladiatorsIntoxication",
+        "circlet": "GladiatorsTriumphus"
     },
     {
         "name": "HeartOfDepth",
-        "flower": "Gilded Corsage",
-        "plume": "Gust of Nostalgia",
-        "sands": "Copper Compass",
-        "goblet": "Goblet of Thundering Deep",
-        "circlet": "Wine-Stained Tricorne"
+        "flower": "GildedCorsage",
+        "plume": "GustOfNostalgia",
+        "sands": "CopperCompass",
+        "goblet": "GobletOfThunderingDeep",
+        "circlet": "WineStainedTricorne"
     },
     {
         "name": "HuskOfOpulentDreams",
-        "flower": "Bloom Times",
-        "plume": "Plume of Luxury",
-        "sands": "Song of Life",
-        "goblet": "Calabash of Awakening",
-        "circlet": "Skeletal Hat"
+        "flower": "BloomTimes",
+        "plume": "PlumeOfLuxury",
+        "sands": "SongOfLife",
+        "goblet": "CalabashOfAwakening",
+        "circlet": "SkeletalHat"
     },
     {
         "name": "Instructor",
-        "flower": "Instructor's Brooch",
-        "plume": "Instructor's Feather Accessory",
-        "sands": "Instructor's Pocket Watch",
-        "goblet": "Instructor's Tea Cup",
-        "circlet": "Instructor's Cap"
+        "flower": "InstructorsBrooch",
+        "plume": "InstructorsFeatherAccessory",
+        "sands": "InstructorsPocketWatch",
+        "goblet": "InstructorsTeaCup",
+        "circlet": "InstructorsCap"
     },
     {
         "name": "Lavawalker",
-        "flower": "Lavawalker's Resolution",
-        "plume": "Lavawalker's Salvation",
-        "sands": "Lavawalker's Torment",
-        "goblet": "Lavawalker's Epiphany",
-        "circlet": "Lavawalker's Wisdom"
+        "flower": "LavawalkersResolution",
+        "plume": "LavawalkersSalvation",
+        "sands": "LavawalkersTorment",
+        "goblet": "LavawalkersEpiphany",
+        "circlet": "LavawalkersWisdom"
     },
     {
         "name": "LuckyDog",
-        "flower": "Lucky Dog's Clover",
-        "plume": "Lucky Dog's Eagle Feather",
-        "sands": "Lucky Dog's Hourglass",
-        "goblet": "Lucky Dog's Goblet",
-        "circlet": "Lucky Dog's Silver Circlet"
+        "flower": "LuckyDogsClover",
+        "plume": "LuckyDogsEagleFeather",
+        "sands": "LuckyDogsHourglass",
+        "goblet": "LuckyDogsGoblet",
+        "circlet": "LuckyDogsSilverCirclet"
     },
     {
         "name": "MaidenBeloved",
-        "flower": "Maiden's Distant Love",
-        "plume": "Maiden's Heart-stricken Infatuation",
-        "sands": "Maiden's Passing Youth",
-        "goblet": "Maiden's Fleeting Leisure",
-        "circlet": "Maiden's Fading Beauty"
+        "flower": "MaidensDistantLove",
+        "plume": "MaidensHeartStrickenInfatuation",
+        "sands": "MaidensPassingYouth",
+        "goblet": "MaidensFleetingLeisure",
+        "circlet": "MaidensFadingBeauty"
     },
     {
         "name": "MartialArtist",
-        "flower": "Martial Artist's Red Flower",
-        "plume": "Martial Artist's Feather Accessory",
-        "sands": "Martial Artist's Water Hourglass",
-        "goblet": "Martial Artist's Wine Cup",
-        "circlet": "Martial Artist's Bandana"
+        "flower": "MartialArtistsRedFlower",
+        "plume": "MartialArtistsFeatherAccessory",
+        "sands": "MartialArtistsWaterHourglass",
+        "goblet": "MartialArtistsWineCup",
+        "circlet": "MartialArtistsBandana"
     },
     {
         "name": "NoblesseOblige",
-        "flower": "Royal Flora",
-        "plume": "Royal Plume",
-        "sands": "Royal Pocket Watch",
-        "goblet": "Royal Silver Urn",
-        "circlet": "Royal Masque"
+        "flower": "RoyalFlora",
+        "plume": "RoyalPlume",
+        "sands": "RoyalPocketWatch",
+        "goblet": "RoyalSilverUrn",
+        "circlet": "RoyalMasque"
     },
     {
         "name": "OceanHuedClam",
-        "flower": "Sea-Dyed Blossom",
-        "plume": "Deep Palace's Plume",
-        "sands": "Cowry of Parting",
-        "goblet": "Pearl Cage",
-        "circlet": "Crown of Watatsumi"
+        "flower": "SeaDyedBlossom",
+        "plume": "DeepPalacesPlume",
+        "sands": "CowryOfParting",
+        "goblet": "PearlCage",
+        "circlet": "CrownOfWatatsumi"
     },
     {
         "name": "PaleFlame",
-        "flower": "Stainless Bloom",
-        "plume": "Wise Doctor's Pinion",
-        "sands": "Moment of Cessation",
-        "goblet": "Surpassing Cup",
-        "circlet": "Mocking Mask"
+        "flower": "StainlessBloom",
+        "plume": "WiseDoctorsPinion",
+        "sands": "MomentOfCessation",
+        "goblet": "SurpassingCup",
+        "circlet": "MockingMask"
     },
     {
         "name": "ResolutionOfSojourner",
-        "flower": "Heart of Comradeship",
-        "plume": "Feather of Homecoming",
-        "sands": "Sundial of the Sojourner",
-        "goblet": "Goblet of the Sojourner",
-        "circlet": "Crown of Parting"
+        "flower": "HeartOfComradeship",
+        "plume": "FeatherOfHomecoming",
+        "sands": "SundialOfTheSojourner",
+        "goblet": "GobletOfTheSojourner",
+        "circlet": "CrownOfParting"
     },
     {
         "name": "RetracingBolide",
-        "flower": "Summer Night's Bloom",
-        "plume": "Summer Night's Finale",
-        "sands": "Summer Night's Moment",
-        "goblet": "Summer Night's Waterballoon",
-        "circlet": "Summer Night's Mask"
+        "flower": "SummerNightsBloom",
+        "plume": "SummerNightsFinale",
+        "sands": "SummerNightsMoment",
+        "goblet": "SummerNightsWaterballoon",
+        "circlet": "SummerNightsMask"
     },
     {
         "name": "Scholar",
-        "flower": "Scholar's Bookmark",
-        "plume": "Scholar's Quill Pen",
-        "sands": "Scholar's Clock",
-        "goblet": "Scholar's Ink Cup",
-        "circlet": "Scholar's Lens"
+        "flower": "ScholarsBookmark",
+        "plume": "ScholarsQuillPen",
+        "sands": "ScholarsClock",
+        "goblet": "ScholarsInkCup",
+        "circlet": "ScholarsLens"
     },
     {
         "name": "ShimenawasReminiscence",
-        "flower": "Entangling Bloom",
-        "plume": "Shaft of Remembrance",
-        "sands": "Morning Dew's Moment",
-        "goblet": "Hopeful Heart",
-        "circlet": "Capricious Visage"
+        "flower": "EntanglingBloom",
+        "plume": "ShaftOfRemembrance",
+        "sands": "MorningDewsMoment",
+        "goblet": "HopefulHeart",
+        "circlet": "CapriciousVisage"
     },
     {
         "name": "TenacityOfTheMillelith",
-        "flower": "Flower of Accolades",
-        "plume": "Ceremonial War-Plume",
-        "sands": "Orichalceous Time-Dial",
-        "goblet": "Noble's Pledging Vessel",
-        "circlet": "General's Ancient Helm"
+        "flower": "FlowerOfAccolades",
+        "plume": "CeremonialWarPlume",
+        "sands": "OrichalceousTimeDial",
+        "goblet": "NoblesPledgingVessel",
+        "circlet": "GeneralsAncientHelm"
     },
     {
         "name": "TheExile",
-        "flower": "Exile's Flower",
-        "plume": "Exile's Feather",
-        "sands": "Exile's Pocket Watch",
-        "goblet": "Exile's Goblet",
-        "circlet": "Exile's Circlet"
+        "flower": "ExilesFlower",
+        "plume": "ExilesFeather",
+        "sands": "ExilesPocketWatch",
+        "goblet": "ExilesGoblet",
+        "circlet": "ExilesCirclet"
     },
     {
         "name": "ThunderingFury",
-        "flower": "Thunderbird's Mercy",
-        "plume": "Survivor of Catastrophe",
-        "sands": "Hourglass of Thunder",
-        "goblet": "Omen of Thunderstorm",
-        "circlet": "Thunder Summoner's Crown"
+        "flower": "ThunderbirdsMercy",
+        "plume": "SurvivorOfCatastrophe",
+        "sands": "HourglassOfThunder",
+        "goblet": "OmenOfThunderstorm",
+        "circlet": "ThunderSummonersCrown"
     },
     {
         "name": "Thundersoother",
-        "flower": "Thundersoother's Heart",
-        "plume": "Thundersoother's Plume",
-        "sands": "Hour of Soothing Thunder",
-        "goblet": "Thundersoother's Goblet",
-        "circlet": "Thundersoother's Diadem"
+        "flower": "ThundersoothersHeart",
+        "plume": "ThundersoothersPlume",
+        "sands": "HourOfSoothingThunder",
+        "goblet": "ThundersoothersGoblet",
+        "circlet": "ThundersoothersDiadem"
     },
     {
         "name": "TinyMiracle",
-        "flower": "Tiny Miracle's Flower",
-        "plume": "Tiny Miracle's Feather",
-        "sands": "Tiny Miracle's Hourglass",
-        "goblet": "Tiny Miracle's Goblet",
-        "circlet": "Tiny Miracle's Earrings"
+        "flower": "TinyMiraclesFlower",
+        "plume": "TinyMiraclesFeather",
+        "sands": "TinyMiraclesHourglass",
+        "goblet": "TinyMiraclesGoblet",
+        "circlet": "TinyMiraclesEarrings"
     },
     {
         "name": "TravelingDoctor",
-        "flower": "Traveling Doctor's Silver Lotus",
-        "plume": "Traveling Doctor's Owl Feather",
-        "sands": "Traveling Doctor's Pocket Watch",
-        "goblet": "Traveling Doctor's Medicine Pot",
-        "circlet": "Traveling Doctor's Handkerchief"
+        "flower": "TravelingDoctorsSilverLotus",
+        "plume": "TravelingDoctorsOwlFeather",
+        "sands": "TravelingDoctorsPocketWatch",
+        "goblet": "TravelingDoctorsMedicinePot",
+        "circlet": "TravelingDoctorsHandkerchief"
     },
     {
         "name": "VermillionHereafter",
-        "flower": "Flowering Life",
-        "plume": "Feather of Nascent Light",
-        "sands": "Solar Relic",
-        "goblet": "Moment of the Pact",
-        "circlet": "Thundering Poise"
+        "flower": "FloweringLife",
+        "plume": "FeatherOfNascentLight",
+        "sands": "SolarRelic",
+        "goblet": "MomentOfThePact",
+        "circlet": "ThunderingPoise"
     },
     {
         "name": "ViridescentVenerer",
-        "flower": "In Remembrance of Viridescent Fields",
-        "plume": "Viridescent Arrow Feather",
-        "sands": "Viridescent Venerer's Determination",
-        "goblet": "Viridescent Venerer's Vessel",
-        "circlet": "Viridescent Venerer's Diadem"
+        "flower": "InRemembranceOfViridescentFields",
+        "plume": "ViridescentArrowFeather",
+        "sands": "ViridescentVenerersDetermination",
+        "goblet": "ViridescentVenerersVessel",
+        "circlet": "ViridescentVenerersDiadem"
     },
     {
         "name": "WanderersTroupe",
-        "flower": "Troupe's Dawnlight",
-        "plume": "Bard's Arrow Feather",
-        "sands": "Concert's Final Hour",
-        "goblet": "Wanderer's String-Kettle",
-        "circlet": "Conductor's Top Hat"
+        "flower": "TroupesDawnlight",
+        "plume": "BardsArrowFeather",
+        "sands": "ConcertsFinalHour",
+        "goblet": "WanderersStringKettle",
+        "circlet": "ConductorsTopHat"
     }
 ]
