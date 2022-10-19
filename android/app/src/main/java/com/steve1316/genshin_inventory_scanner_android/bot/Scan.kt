@@ -9,7 +9,7 @@ class Scan(private val game: Game) {
 	private val tag: String = "${loggerTag}Game"
 	private val debugMode = game.configData.debugMode
 
-	private var failAttempts = 10
+	private var failAttempts = 5
 	private var maxAscensionLevel = 6
 	private var scrollDiff = 0L
 
@@ -18,20 +18,17 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun resetScrollScreen() {
-		game.printToLog("[SCAN] Now resetting the scroll level for this category...", tag)
-
-		// TODO: Make this adjustable in the Settings for each category. Default is 5 swipes.
-		game.gestureUtils.swipe(900f, 200f, 900f, 1000f, duration = 200L)
-		game.wait(0.5)
-		game.gestureUtils.swipe(900f, 200f, 900f, 1000f, duration = 200L)
-		game.wait(0.5)
-		game.gestureUtils.swipe(900f, 200f, 900f, 1000f, duration = 200L)
-		game.wait(0.5)
-		game.gestureUtils.swipe(900f, 200f, 900f, 1000f, duration = 200L)
-		game.wait(0.5)
-		game.gestureUtils.swipe(900f, 200f, 900f, 1000f, duration = 200L)
-
+		game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
+		game.findAndPress("reorder")
+		game.findAndPress("reorder")
+		game.wait(1.0)
 		game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+	}
+
+	fun reset() {
+		failAttempts = 5
+		maxAscensionLevel = 6
+		scrollDiff = 0L
 	}
 
 	/**
@@ -39,6 +36,8 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun scrollFirstRow() {
+		game.printToLog("\n[SCAN] Scrolling the first row down...", tag)
+		reset()
 		game.gestureUtils.swipe(900f, 800f, 900f, 750f, duration = 200L)
 		game.wait(1.0)
 	}
@@ -48,6 +47,7 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun scrollSubsequentRow() {
+		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
 		game.gestureUtils.swipe(900f, 800f, 900f, 695f - scrollDiff, duration = 200L)
 		game.wait(1.0)
 
@@ -65,7 +65,8 @@ class Scan(private val game: Game) {
 	 * @return String in Pascal Case.
 	 */
 	private fun toPascalCase(str: String): String {
-		val cleanedString = str.replace("'", "").replace("-", " ").replace("(", "").replace(")", "").replace(":", "")
+		val cleanedString = str.replace("'", "").replace("’", "").replace("-", " ").replace("(", "")
+			.replace(")", "").replace(":", "")
 		val split = cleanedString.split(" ")
 		val result = arrayListOf<String>()
 		split.forEach { word ->
@@ -81,16 +82,31 @@ class Scan(private val game: Game) {
 	 * @return Weapon Name and rarity.
 	 */
 	fun getWeaponNameAndRarity(): Pair<String, String> {
-		val weaponName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 170.0)
-		val formattedWeaponName = toPascalCase(weaponName)
+		var tries = 3
+		var thresholdDiff = 0.0
+		var resultWeaponName = ""
+		while (tries > 0) {
+			val weaponName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			val formattedWeaponName = toPascalCase(weaponName)
+
+			Data.weapons.forEach { weapon ->
+				if (weapon.key == formattedWeaponName) {
+					resultWeaponName = formattedWeaponName
+				}
+			}
+
+			thresholdDiff += 5.0
+
+			tries -= 1
+		}
 
 		var weaponRarity = ""
 
 		// Determine rarity.
-		if (!Data.weapons[formattedWeaponName].isNullOrBlank()) weaponRarity = Data.weapons[formattedWeaponName] as String
+		if (!Data.weapons[resultWeaponName].isNullOrBlank()) weaponRarity = Data.weapons[resultWeaponName] as String
 
-		if (debugMode) game.printToLog("[DEBUG] Weapon is: $formattedWeaponName, Rarity is: $weaponRarity", tag)
-		return Pair(formattedWeaponName, weaponRarity)
+		if (debugMode) game.printToLog("[DEBUG] Weapon is: $resultWeaponName, Rarity is: $weaponRarity", tag)
+		return Pair(resultWeaponName, weaponRarity)
 	}
 
 	/**
@@ -98,7 +114,7 @@ class Scan(private val game: Game) {
 	 *
 	 * @return Weapon Level and Ascension.
 	 */
-	fun getWeaponLevel(): Pair<String, String> {
+	fun getWeaponLevelAndAscension(): Pair<String, String> {
 		// First determine ascension level. Weapons are usually sorted from highest level to lowest.
 		val weaponLevel: String
 		val weaponAscensionLevel: String
@@ -137,10 +153,10 @@ class Scan(private val game: Game) {
 					failAttempts -= 1
 					if (failAttempts < 0) {
 						maxAscensionLevel = i
-						failAttempts = 10
+						failAttempts = 5
 					}
 				} else {
-					failAttempts = 10
+					failAttempts = 5
 				}
 
 				return Pair(weaponLevel, weaponAscensionLevel)
@@ -152,7 +168,7 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN] Could not determine weapon level. Returning default value...", tag, isWarning = true)
-		failAttempts = 10
+		failAttempts = 5
 		return Pair("1", "0")
 	}
 
@@ -163,5 +179,31 @@ class Scan(private val game: Game) {
 	 */
 	fun getRefinementLevel(): String {
 		return game.imageUtils.findTextTesseract((game.backpackLocation.x + 1490).toInt(), (game.backpackLocation.y + 530).toInt(), 35, 35, customThreshold = 170.0, reuseSourceBitmap = true)
+	}
+
+	/**
+	 * Detects whether or not the item is equipped and by who.
+	 *
+	 * @return The Character's name that the item is equipped to or an empty string if none.
+	 */
+	fun getEquippedBy(): String {
+		return if (game.imageUtils.findImage("equipped", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+			val result = game.imageUtils.findTextTesseract(
+				(game.backpackLocation.x + 1705).toInt(), (game.backpackLocation.y + 815).toInt(), 360, 40, customThreshold = 170.0,
+				reuseSourceBitmap = true
+			)
+			result.replace("|", "").trim()
+		} else {
+			""
+		}
+	}
+
+	/**
+	 * Detects whether or not the item is locked.
+	 *
+	 * @return True if the item is locked.
+	 */
+	fun getLocked(): Boolean {
+		return game.imageUtils.findImage("lock", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null
 	}
 }
