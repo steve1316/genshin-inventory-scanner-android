@@ -522,8 +522,6 @@ class ImageUtils(context: Context, private val game: Game) {
 						break
 					}
 
-					Log.d(tag, "Failed to find the ${templateName.uppercase()} image. Trying again...")
-
 					if (!testMode) {
 						game.wait(0.5)
 					}
@@ -540,7 +538,7 @@ class ImageUtils(context: Context, private val game: Game) {
 							"[SUCCESS] Found the ${templateName.uppercase()} at $matchLocation with scale $scale0.\n\nRecommended to use scale $scale1, $scale2, $scale3 or $scale4.",
 							tag = tag
 						)
-					} else {
+					} else if (debugMode) {
 						game.printToLog("[SUCCESS] Found the ${templateName.uppercase()} at $matchLocation.", tag = tag)
 					}
 
