@@ -3,6 +3,15 @@ import React, { createContext, useState } from "react"
 export interface Settings {
     weapons: {
         enableScanWeapons: boolean
+        scan5StarWeapons: boolean
+        scan4StarWeapons: boolean
+        scan3StarWeapons: boolean
+    }
+    artifacts: {
+        enableScanArtifacts: boolean
+        scan5StarArtifacts: boolean
+        scan4StarArtifacts: boolean
+        scan3StarArtifacts: boolean
     }
     misc: {
         debugMode: boolean
@@ -13,6 +22,15 @@ export interface Settings {
 export const defaultSettings: Settings = {
     weapons: {
         enableScanWeapons: false,
+        scan5StarWeapons: true,
+        scan4StarWeapons: false,
+        scan3StarWeapons: false,
+    },
+    artifacts: {
+        enableScanArtifacts: false,
+        scan5StarArtifacts: true,
+        scan4StarArtifacts: false,
+        scan3StarArtifacts: false,
     },
     misc: {
         debugMode: false,

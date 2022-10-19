@@ -33,6 +33,21 @@ class JSONParser {
 			val weaponsObj = jObj.getJSONObject("weapons")
 			sharedPreferences.edit {
 				putBoolean("enableScanWeapons", weaponsObj.getBoolean("enableScanWeapons"))
+				putBoolean("scan5StarWeapons", weaponsObj.getBoolean("scan5StarWeapons"))
+				putBoolean("scan4StarWeapons", weaponsObj.getBoolean("scan4StarWeapons"))
+				putBoolean("scan3StarWeapons", weaponsObj.getBoolean("scan3StarWeapons"))
+				commit()
+			}
+		} catch (e: Exception) {
+		}
+
+		try {
+			val artifactsObj = jObj.getJSONObject("artifacts")
+			sharedPreferences.edit {
+				putBoolean("enableScanArtifacts", artifactsObj.getBoolean("enableScanArtifacts"))
+				putBoolean("scan5StarArtifacts", artifactsObj.getBoolean("scan5StarArtifacts"))
+				putBoolean("scan4StarArtifacts", artifactsObj.getBoolean("scan4StarArtifacts"))
+				putBoolean("scan3StarArtifacts", artifactsObj.getBoolean("scan3StarArtifacts"))
 				commit()
 			}
 		} catch (e: Exception) {

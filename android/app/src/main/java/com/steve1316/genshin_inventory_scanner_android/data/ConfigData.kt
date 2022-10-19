@@ -18,12 +18,36 @@ class ConfigData(myContext: Context) {
 	val confidenceAll: Double
 	val customScale: Double
 
+	// Weapon Scan
+	val enableScanWeapons: Boolean
+	val scan5StarWeapons: Boolean
+	val scan4StarWeapons: Boolean
+	val scan3StarWeapons: Boolean
+
+	// Artifact Scan
+	val enableScanArtifacts: Boolean
+	val scan5StarArtifacts: Boolean
+	val scan4StarArtifacts: Boolean
+	val scan3StarArtifacts: Boolean
+
 	init {
 		Log.d(tag, "Loading settings from SharedPreferences to memory...")
 
 		val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(myContext)
 
 		debugMode = sharedPreferences.getBoolean("debugMode", false)
+
+		// Weapon Scan settings.
+		enableScanWeapons = sharedPreferences.getBoolean("enableScanWeapons", false)
+		scan5StarWeapons = sharedPreferences.getBoolean("scan5StarWeapons", false)
+		scan4StarWeapons = sharedPreferences.getBoolean("scan4StarWeapons", false)
+		scan3StarWeapons = sharedPreferences.getBoolean("scan3StarWeapons", false)
+
+		// Artifact Scan settings.
+		enableScanArtifacts = sharedPreferences.getBoolean("enableScanArtifacts", false)
+		scan5StarArtifacts = sharedPreferences.getBoolean("scan5StarArtifacts", false)
+		scan4StarArtifacts = sharedPreferences.getBoolean("scan4StarArtifacts", false)
+		scan3StarArtifacts = sharedPreferences.getBoolean("scan3StarArtifacts", false)
 
 		// Android-specific settings.
 		enableDelayTap = sharedPreferences.getBoolean("enableDelayTap", false)

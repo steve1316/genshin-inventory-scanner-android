@@ -1,6 +1,7 @@
 package com.steve1316.genshin_inventory_scanner_android.bot
 
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
+import com.steve1316.genshin_inventory_scanner_android.data.Artifact
 import com.steve1316.genshin_inventory_scanner_android.data.Data
 import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
@@ -205,5 +206,174 @@ class Scan(private val game: Game) {
 	 */
 	fun getLocked(): Boolean {
 		return game.imageUtils.findImage("lock", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null
+	}
+
+	fun getArtifactName(): String {
+		var tries = 3
+		var thresholdDiff = 0.0
+		while (tries > 0) {
+			val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			val formattedName = toPascalCase(artifactName)
+
+			Data.artifactSets.forEach { artifactSet ->
+				artifactSet.value.forEach { artifactType ->
+					if (artifactType.value == formattedName) {
+						return formattedName
+					}
+				}
+			}
+
+			thresholdDiff += 5.0
+
+			tries -= 1
+		}
+		val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0)
+		return toPascalCase(artifactName)
+	}
+
+	fun getArtifactSetNameAndType(artifactName: String): Pair<String, String> {
+		Data.artifactSets.forEach { artifactSet ->
+			artifactSet.value.forEach { artifactType ->
+				if (artifactType.value == artifactName) {
+					return Pair(artifactSet.key, artifactType.key)
+				}
+			}
+		}
+
+		game.printToLog("[SCAN] Failed to find the corresponding set to the artifact: $artifactName", tag, isWarning = true)
+		return Pair("", "")
+	}
+
+	fun getArtifactLevel(): String {
+		return game.imageUtils.findTextTesseract((game.backpackLocation.x + 1490).toInt(), (game.backpackLocation.y + 475).toInt(), 66, 33, customThreshold = 170.0, reuseSourceBitmap = true)
+	}
+
+	fun getArtifactRarity(): String {
+		return if (game.imageUtils.findImage("artifact_rarity_5", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+			"5"
+		} else if (game.imageUtils.findImage("artifact_rarity_4", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+			"4"
+		} else if (game.imageUtils.findImage("artifact_rarity_3", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+			"3"
+		} else if ((game.imageUtils.findImage("artifact_rarity_2", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null)) {
+			"2"
+		} else if ((game.imageUtils.findImage("artifact_rarity_1", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null)) {
+			"1"
+		} else {
+			game.printToLog("[SCAN] Failed to detect the rarity of this artifact.", tag, isWarning = true)
+			"0"
+		}
+	}
+
+	fun getArtifactMainStat(artifactType: String, artifactLevel: Int): Pair<String, String> {
+		return when (artifactType) {
+			"flower" -> {
+				Pair("hp", Artifact.hpStats[artifactLevel].toString())
+			}
+			"plume" -> {
+				Pair("atk", Artifact.atkStats[artifactLevel].toString())
+			}
+			"sands" -> {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("enerRech_", Artifact.enerRech_Stats[artifactLevel].toString())
+				} else {
+					game.printToLog("[SCAN] Failed to detect the main stat for this Sands artifact.", tag, isWarning = true)
+					Pair("", "")
+				}
+			}
+			"goblet" -> {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_anemo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("anemo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_geo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("geo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_electro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("electro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_hydro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("hydro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_pyro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("pyro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_cryo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("cryo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_dendro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("dendro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("physical_dmg_", Artifact.physical_dmg_Stats[artifactLevel].toString())
+				} else {
+					game.printToLog("[SCAN] Failed to detect the main stat for this Goblet artifact.", tag, isWarning = true)
+					Pair("", "")
+				}
+			}
+			"circlet" -> {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_critRate_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("critRate_", Artifact.critRate_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_critDMG_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("critDMG_", Artifact.critDMG_Stats[artifactLevel].toString())
+				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+					Pair("heal_", Artifact.heal_Stats[artifactLevel].toString())
+				} else {
+					game.printToLog("[SCAN] Failed to detect the main stat for this Circlet artifact.", tag, isWarning = true)
+					Pair("", "")
+				}
+			}
+			else -> {
+				game.printToLog("[SCAN] Invalid artifact type was passed in. Skipping main stat detection...", tag, isError = true)
+				Pair("", "")
+			}
+		}
+	}
+
+	fun getArtifactSubStats(): MutableMap<String, String> {
+		val substats: MutableMap<String, String> = mutableMapOf()
+
+		getArtifactName()
+
+		val substatLocations = game.imageUtils.findAll("artifact_substat", region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight))
+		substatLocations.forEach { location ->
+			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
+			val formattedSubstat = substat.split("+") as ArrayList<String>
+			formattedSubstat[0] = formattedSubstat[0].uppercase(Locale.ROOT)
+			if (formattedSubstat[0] == "ATK" || formattedSubstat[0] == "HP" || formattedSubstat[0] == "DEF") {
+				if (formattedSubstat[1].contains("%")) formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT) + "_"
+				else formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
+			} else if (formattedSubstat[0] == "ELEMENTAL MASTERY") {
+				formattedSubstat[0] = "eleMas"
+			} else if (formattedSubstat[0] == "ENERGY RECHARGE") {
+				formattedSubstat[0] = "enerRech" + "_"
+			} else if (formattedSubstat[0] == "CRIT RATE") {
+				formattedSubstat[0] = "critRate" + "_"
+			} else if (formattedSubstat[0] == "CRIT DMG") {
+				formattedSubstat[0] = "critDMG" + "_"
+			} else {
+				formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
+			}
+
+			substats[formattedSubstat[0]] = formattedSubstat[1]
+		}
+
+		return substats
 	}
 }

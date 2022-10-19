@@ -27,6 +27,18 @@ const Settings = () => {
         setTimeout(() => setSnackbarOpen(false), 1500)
     }, [bsc.readyStatus])
 
+    useEffect(() => {
+        if (!bsc.settings.weapons.scan5StarWeapons && !bsc.settings.weapons.scan4StarWeapons && !bsc.settings.weapons.scan3StarWeapons) {
+            bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan5StarWeapons: true } })
+        }
+    }, [bsc.settings.weapons])
+
+    useEffect(() => {
+        if (!bsc.settings.artifacts.scan5StarArtifacts && !bsc.settings.artifacts.scan4StarArtifacts && !bsc.settings.artifacts.scan3StarArtifacts) {
+            bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scan5StarArtifacts: true } })
+        }
+    }, [bsc.settings.artifacts])
+
     //////////////////////////////////////////////////
     //////////////////////////////////////////////////
     // Rendering
@@ -34,17 +46,79 @@ const Settings = () => {
     const renderScanSettings = () => {
         return (
             <View>
-                <TitleDivider title="Categories to Scan" subtitle="Customize which categories in the inventory to scan." hasIcon={true} iconName="bag-personal" iconColor="#000" />
-
-                <Divider style={{ marginBottom: 10 }} />
-                <Text style={{ marginBottom: 10, color: "black" }}>{`Tested at 1080p screen resolution.`}</Text>
-                <Divider style={{ marginBottom: 10 }} />
+                <TitleDivider
+                    title="Categories to Scan"
+                    subtitle={`Customize which categories in the inventory to scan.\nTested at 1080p screen resolution.`}
+                    hasIcon={true}
+                    iconName="bag-personal"
+                    iconColor="#000"
+                />
 
                 <CustomCheckbox
-                    text="Scan Weapons"
+                    text="Enable Scan for Weapons"
                     isChecked={bsc.settings.weapons.enableScanWeapons}
                     onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, enableScanWeapons: !bsc.settings.weapons.enableScanWeapons } })}
                 />
+
+                {bsc.settings.weapons.enableScanWeapons ? (
+                    <View>
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+                        <Text style={{ marginBottom: 10, color: "black" }}>{`5* Weapon scanning is the default.`}</Text>
+
+                        <View style={{ alignItems: "center" }}>
+                            <CustomCheckbox
+                                text="Scan 5* Weapons"
+                                isChecked={bsc.settings.weapons.scan5StarWeapons}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan5StarWeapons: !bsc.settings.weapons.scan5StarWeapons } })}
+                            />
+                            <CustomCheckbox
+                                text="Scan 4* Weapons"
+                                isChecked={bsc.settings.weapons.scan4StarWeapons}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan4StarWeapons: !bsc.settings.weapons.scan4StarWeapons } })}
+                            />
+                            <CustomCheckbox
+                                text="Scan 3* Weapons"
+                                isChecked={bsc.settings.weapons.scan3StarWeapons}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan3StarWeapons: !bsc.settings.weapons.scan3StarWeapons } })}
+                            />
+                        </View>
+
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+                    </View>
+                ) : null}
+
+                <CustomCheckbox
+                    text="Enable Scan for Artifacts"
+                    isChecked={bsc.settings.artifacts.enableScanArtifacts}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, enableScanArtifacts: !bsc.settings.artifacts.enableScanArtifacts } })}
+                />
+
+                {bsc.settings.artifacts.enableScanArtifacts ? (
+                    <View>
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+                        <Text style={{ marginBottom: 10, color: "black" }}>{`5* Artifact scanning is the default.`}</Text>
+
+                        <View style={{ alignItems: "center" }}>
+                            <CustomCheckbox
+                                text="Scan 5* Artifacts"
+                                isChecked={bsc.settings.artifacts.scan5StarArtifacts}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scan5StarArtifacts: !bsc.settings.artifacts.scan5StarArtifacts } })}
+                            />
+                            <CustomCheckbox
+                                text="Scan 4* Artifacts"
+                                isChecked={bsc.settings.artifacts.scan4StarArtifacts}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scan4StarArtifacts: !bsc.settings.artifacts.scan4StarArtifacts } })}
+                            />
+                            <CustomCheckbox
+                                text="Scan 3* Artifacts"
+                                isChecked={bsc.settings.artifacts.scan3StarArtifacts}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scan3StarArtifacts: !bsc.settings.artifacts.scan3StarArtifacts } })}
+                            />
+                        </View>
+
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+                    </View>
+                ) : null}
             </View>
         )
     }

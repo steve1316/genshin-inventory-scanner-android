@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.StartModule
+import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanArtifacts
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanWeapons
 import com.steve1316.genshin_inventory_scanner_android.data.ConfigData
 import com.steve1316.genshin_inventory_scanner_android.utils.ImageUtils
@@ -159,6 +160,11 @@ class Game(private val myContext: Context) {
 			if (configData.enableScanWeapons) {
 				val scanWeapons = ScanWeapons(this)
 				scanWeapons.start()
+			}
+
+			if (configData.enableScanArtifacts) {
+				val scanArtifacts = ScanArtifacts(this)
+				scanArtifacts.start()
 			}
 		} else {
 			throw Exception("Unable to detect if the bot is at the Inventory screen.")
