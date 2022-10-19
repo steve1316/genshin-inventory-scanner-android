@@ -11,4 +11,8 @@ class Weapon {
 	var refinement by Delegates.notNull<Int>()
 	lateinit var location: String
 	var lock by Delegates.notNull<Boolean>()
+
+	override fun toString(): String {
+		return "Name: $key, Level: $level, Ascension: $ascension, Refinement: $refinement, Equipped By: $location, Locked: $lock"
+	}
 }
