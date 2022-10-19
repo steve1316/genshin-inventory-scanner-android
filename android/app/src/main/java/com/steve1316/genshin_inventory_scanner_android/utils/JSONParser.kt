@@ -81,7 +81,13 @@ class JSONParser {
 		Data.artifactSets.clear()
 		for (i in 0 until artifactJSONArray.length()) {
 			val artifactSet = artifactJSONArray.getJSONObject(i)
-			Data.artifactSets.add(artifactSet["name"] as String)
+			Data.artifactSets[artifactSet["name"] as String] = mutableMapOf()
+
+			Data.artifactSets[artifactSet["name"] as String]?.put("flower", artifactSet.getString("flower"))
+			Data.artifactSets[artifactSet["name"] as String]?.put("plume", artifactSet.getString("plume"))
+			Data.artifactSets[artifactSet["name"] as String]?.put("sands", artifactSet.getString("sands"))
+			Data.artifactSets[artifactSet["name"] as String]?.put("goblet", artifactSet.getString("goblet"))
+			Data.artifactSets[artifactSet["name"] as String]?.put("circlet", artifactSet.getString("circlet"))
 		}
 
 		Log.d(loggerTag, "Loaded in data for ${Data.artifactSets.size} artifact sets.")

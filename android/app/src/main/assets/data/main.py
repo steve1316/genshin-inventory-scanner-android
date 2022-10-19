@@ -173,11 +173,11 @@ class GenshinDataScraper:
                 json_data = json.loads(response.text)
                 data.append({
                     "name": GenshinDataScraper.convert_to_pascal_case(json_data["name"]),
-                    "flower": json_data["flower"]["name"],
-                    "plume": json_data["plume"]["name"],
-                    "sands": json_data["sands"]["name"],
-                    "goblet": json_data["goblet"]["name"],
-                    "circlet": json_data["circlet"]["name"],
+                    "flower": GenshinDataScraper.convert_to_pascal_case(json_data["flower"]["name"]),
+                    "plume": GenshinDataScraper.convert_to_pascal_case(json_data["plume"]["name"]),
+                    "sands": GenshinDataScraper.convert_to_pascal_case(json_data["sands"]["name"]),
+                    "goblet": GenshinDataScraper.convert_to_pascal_case(json_data["goblet"]["name"]),
+                    "circlet": GenshinDataScraper.convert_to_pascal_case(json_data["circlet"]["name"]),
                 })
             except Exception:
                 continue
