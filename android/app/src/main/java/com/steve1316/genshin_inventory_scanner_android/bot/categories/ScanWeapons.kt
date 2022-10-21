@@ -2,6 +2,7 @@ package com.steve1316.genshin_inventory_scanner_android.bot.categories
 
 import com.steve1316.genshin_inventory_scanner_android.MainActivity
 import com.steve1316.genshin_inventory_scanner_android.bot.Game
+import com.steve1316.genshin_inventory_scanner_android.data.Weapon
 import com.steve1316.genshin_inventory_scanner_android.utils.BotService
 import org.opencv.core.Point
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
@@ -20,6 +21,8 @@ class ScanWeapons(private val game: Game) {
 	private var firstSearchComplete = false
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
+
+	private var weaponList: ArrayList<Weapon> = arrayListOf()
 
 	private fun printInitialInfo(): String {
 		var startWith5Stars = false
@@ -53,6 +56,11 @@ class ScanWeapons(private val game: Game) {
 
 	private fun isSearchDone(): Boolean {
 		return (search5StarComplete && search4StarComplete && search3StarComplete)
+	}
+
+	private fun validateRarity(rarity: String): Boolean {
+		return (game.configData.scan5StarWeapons && !search5StarComplete && (rarity == "5")) || (game.configData.scan4StarWeapons && !search4StarComplete && (rarity == "4")) ||
+				(game.configData.scan3StarWeapons && !search3StarComplete && (rarity == "3"))
 	}
 
 	private fun currentSearchCompleted() {
@@ -201,12 +209,10 @@ class ScanWeapons(private val game: Game) {
 		// Reset the scroll view.
 		game.scanUtils.resetScrollScreen()
 
-		var locations: ArrayList<Point> = arrayListOf()
-
 		while (!isSearchDone()) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
 
-			locations = search()
+			val locations: ArrayList<Point> = search()
 			game.printToLog("[SCAN_WEAPONS] Found ${locations.size} locations: $locations.", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
@@ -229,35 +235,35 @@ class ScanWeapons(private val game: Game) {
 				// Now scan each weapon in each location.
 				locations.forEach {
 					// Select the weapon.
-//					game.gestureUtils.tap(it.x, it.y, "item_level")
+					game.gestureUtils.tap(it.x, it.y, "item_level")
 
-//					val (weaponName, weaponRarity) = game.scanUtils.getWeaponNameAndRarity()
-//					if (validateRarity(weaponRarity)) {
-//						val (weaponLevel, weaponAscensionLevel) = game.scanUtils.getWeaponLevelAndAscension()
-//						val weaponRefinementLevel = game.scanUtils.getRefinementLevel()
-//						val weaponEquippedBy = game.scanUtils.getEquippedBy()
-//						val weaponLocked = game.scanUtils.getLocked()
-//
-//						try {
-//							val weaponObject = Weapon().apply {
-//								key = weaponName
-//								level = weaponLevel.toInt()
-//								ascension = weaponAscensionLevel.toInt()
-//								refinement = weaponRefinementLevel.toInt()
-//								location = weaponEquippedBy
-//								lock = weaponLocked
-//							}
-//
-//							weaponList.add(weaponObject)
-//
-//							game.printToLog("[SCAN_WEAPONS] Weapon scanned: $weaponObject\n", tag)
-//						} catch (e: Exception) {
-//							game.printToLog(
-//								"[ERROR] Weapon failed to scan: (Name: $weaponName, Level: $weaponLevel, Ascension: $weaponAscensionLevel, " +
-//										"Refinement: $weaponRefinementLevel, Equipped By: $weaponEquippedBy, Locked: $weaponLocked)\n", tag, isError = true
-//							)
-//						}
-//					}
+					val (weaponName, weaponRarity) = game.scanUtils.getWeaponNameAndRarity()
+					if (validateRarity(weaponRarity)) {
+						val (weaponLevel, weaponAscensionLevel) = game.scanUtils.getWeaponLevelAndAscension()
+						val weaponRefinementLevel = game.scanUtils.getRefinementLevel()
+						val weaponEquippedBy = game.scanUtils.getEquippedBy()
+						val weaponLocked = game.scanUtils.getLocked()
+
+						try {
+							val weaponObject = Weapon().apply {
+								key = weaponName
+								level = weaponLevel.toInt()
+								ascension = weaponAscensionLevel.toInt()
+								refinement = weaponRefinementLevel.toInt()
+								location = weaponEquippedBy
+								lock = weaponLocked
+							}
+
+							weaponList.add(weaponObject)
+
+							game.printToLog("[SCAN_WEAPONS] Weapon scanned: $weaponObject\n", tag)
+						} catch (e: Exception) {
+							game.printToLog(
+								"[ERROR] Weapon failed to scan: (Name: $weaponName, Level: $weaponLevel, Ascension: $weaponAscensionLevel, " +
+										"Refinement: $weaponRefinementLevel, Equipped By: $weaponEquippedBy, Locked: $weaponLocked)\n", tag, isError = true
+							)
+						}
+					}
 				}
 			}
 
@@ -280,5 +286,7 @@ class ScanWeapons(private val game: Game) {
 				)
 			}
 		}
+
+		game.printToLog("[SCAN_WEAPONS] Weapon scan completed with ${weaponList.size} scanned.", tag)
 	}
 }
