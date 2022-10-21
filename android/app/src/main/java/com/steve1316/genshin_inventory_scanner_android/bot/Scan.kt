@@ -156,6 +156,7 @@ class Scan(private val game: Game) {
 				if (failedOnce) {
 					failAttempts -= 1
 					if (failAttempts < 0) {
+						game.printToLog("[SCAN] Exceeded 5 fail attempts. Setting search ascension level to: $weaponAscensionLevel", tag, isWarning = true)
 						maxAscensionLevel = i
 						failAttempts = 5
 					}
@@ -176,6 +177,10 @@ class Scan(private val game: Game) {
 		return Pair("1", "0")
 	}
 
+	fun resetWeaponAscensionLevel() {
+		maxAscensionLevel = 6
+		failAttempts = 5
+	}
 	/**
 	 * Detects the weapon's refinement level.
 	 *

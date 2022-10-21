@@ -90,6 +90,7 @@ class ScanWeapons(private val game: Game) {
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 5* Weapons has been completed.", tag, isWarning = true)
 			search5StarComplete = true
+			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else if (game.configData.scan4StarWeapons && !search4StarComplete && (game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
@@ -97,12 +98,14 @@ class ScanWeapons(private val game: Game) {
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 4* Weapons has been completed.", tag, isWarning = true)
 			search4StarComplete = true
+			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else if (game.configData.scan3StarWeapons && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 3* Weapons has been completed.", tag, isWarning = true)
 			search3StarComplete = true
+			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else {
 			false
