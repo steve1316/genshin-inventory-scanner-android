@@ -23,25 +23,36 @@ class ScanWeapons(private val game: Game) {
 	private var subsequentSearchMaxSearches = 7
 
 	private fun printInitialInfo(): String {
+		var startWith5Stars = false
+		var startWith4Stars = false
 		var message = if (game.configData.scan5StarWeapons) {
+			startWith5Stars = true
 			"5* Weapons"
 		} else if (game.configData.scan4StarWeapons) {
+			startWith4Stars = true
 			"4* Weapons"
 		} else {
 			"3* Weapons"
 		}
 
-		val booleanArray: BooleanArray = booleanArrayOf(game.configData.scan5StarWeapons, game.configData.scan4StarWeapons, game.configData.scan3StarWeapons)
-		if (booleanArray.count { it } > 1) {
-			message += if (game.configData.scan4StarWeapons) ", 4* Weapons" else ""
-			message += if (game.configData.scan3StarWeapons) ", 3* Weapons" else ""
+		if (startWith5Stars) {
+			if (game.configData.scan4StarWeapons) {
+				message += ", 4* Weapons"
+			}
+
+			if (game.configData.scan3StarWeapons) {
+				message += ", 3* Weapons"
+			}
+		} else if (startWith4Stars) {
+			if (game.configData.scan3StarWeapons) {
+				message += ", 3* Weapons"
+			}
 		}
 
 		return message
 	}
 
 	private fun isSearchDone(): Boolean {
-		Log.w(tag, "${(search5StarComplete && search4StarComplete && search3StarComplete)}")
 		return (search5StarComplete && search4StarComplete && search3StarComplete)
 	}
 
@@ -58,21 +69,33 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
-	private fun checkIfSearchCompleted() {
+	private fun checkIfSearchCompleted(): Boolean {
 		val region = if (enableFullRegionSearch) {
 			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
 		} else {
 			intArrayOf(0, MPS.displayHeight - (MPS.displayHeight / 3), MPS.displayWidth, MPS.displayHeight / 3)
 		}
 
-		if (game.configData.scan5StarWeapons && !search5StarComplete && (game.imageUtils.findAll("artifact_level_4", region = region, customConfidence = 0.95).size != 0 ||
-					game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0)) {
+		return if (game.configData.scan5StarWeapons && !search5StarComplete && (game.imageUtils.findAll("artifact_level_4", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
 			search5StarComplete = true
-		} else if (game.configData.scan4StarWeapons && !search4StarComplete && game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0) {
+			true
+		} else if (game.configData.scan4StarWeapons && !search4StarComplete && (game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
 			search4StarComplete = true
+			true
 		} else if (game.configData.scan3StarWeapons && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
-					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)) {
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
 			search3StarComplete = true
+			true
+		} else {
+			false
 		}
 	}
 
@@ -125,7 +148,7 @@ class ScanWeapons(private val game: Game) {
 			Log.w(tag, "SEARCH: first search less than max in full region")
 			skipScroll = true
 			firstSearchComplete = true
-			currentSearchCompleted()
+//			currentSearchCompleted()
 		}
 
 		// Cover the case where the first search found nothing.
@@ -134,7 +157,9 @@ class ScanWeapons(private val game: Game) {
 			enableFullRegionSearch = false
 			enableSingleRowSearch = false
 			skipScroll = true
-			firstSearchComplete = false
+			if (!checkIfSearchCompleted()) {
+				firstSearchComplete = false
+			}
 		}
 	}
 
@@ -173,8 +198,10 @@ class ScanWeapons(private val game: Game) {
 	private fun scrollRow(locationSize: Int) {
 		// Different scrolling behavior based on whether this is the first run.
 		if (!skipScroll && enableFullRegionSearch) {
+			Log.w(tag, "Scrolling first row")
 			game.scanUtils.scrollFirstRow()
 		} else if (!skipScroll && locationSize != 0 || enableSingleRowSearch) {
+			Log.w(tag, "Scrolling subsequent row")
 			game.scanUtils.scrollSubsequentRow()
 		}
 	}
