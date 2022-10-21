@@ -141,14 +141,17 @@ class ScanWeapons(private val game: Game) {
 			enableFullRegionSearch = false
 			enableSingleRowSearch = true
 			firstSearchComplete = true
+			game.scanUtils.scrollFirstRow()
 		}
 
-		// Cover the case where the first search found less than the maximum. For the next search, do a full region scan.
+		// Cover the case where the first search found less than the maximum.
 		else if (locationSize != 0 && locationSize < firstSearchMaxSearches) {
 			Log.w(tag, "SEARCH: first search less than max in full region")
+			enableFullRegionSearch = false
+			enableSingleRowSearch = true
 			skipScroll = true
 			firstSearchComplete = true
-//			currentSearchCompleted()
+			game.scanUtils.scrollFirstRow()
 		}
 
 		// Cover the case where the first search found nothing.
@@ -176,6 +179,7 @@ class ScanWeapons(private val game: Game) {
 		else if (locationSize != 0 && locationSize == subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
 			Log.w(tag, "SEARCH: subsequent search is max in row")
 			skipScroll = false
+			game.scanUtils.scrollSubsequentRow()
 		}
 
 		// Cover the case where matches found in single row search was not the maximum.
@@ -195,32 +199,20 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
-	private fun scrollRow(locationSize: Int) {
-		// Different scrolling behavior based on whether this is the first run.
-		if (!skipScroll && enableFullRegionSearch) {
-			Log.w(tag, "Scrolling first row")
-			game.scanUtils.scrollFirstRow()
-		} else if (!skipScroll && locationSize != 0 || enableSingleRowSearch) {
-			Log.w(tag, "Scrolling subsequent row")
-			game.scanUtils.scrollSubsequentRow()
-		}
-	}
-
 	fun start() {
 		game.printToLog("**************************************", tag)
 		game.printToLog("[SCAN_WEAPONS] WEAPON SCAN STARTING...", tag)
 		game.printToLog("[SCAN_WEAPONS] ${printInitialInfo()}", tag)
 		game.printToLog("**************************************", tag)
 
+		// Reset the scroll view.
+		game.scanUtils.resetScrollScreen()
+
 		var locations: ArrayList<Point> = arrayListOf()
 
 		while (!isSearchDone()) {
 			if (!BotService.isRunning) {
 				throw Exception()
-			}
-
-			if (firstSearchComplete) {
-				scrollRow(locations.size)
 			}
 
 			locations = search()
