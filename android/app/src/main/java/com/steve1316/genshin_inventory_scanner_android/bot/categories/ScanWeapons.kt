@@ -24,6 +24,11 @@ class ScanWeapons(private val game: Game) {
 
 	private var weaponList: ArrayList<Weapon> = arrayListOf()
 
+	/**
+	 * Prints the initial information before starting the overall search process.
+	 *
+	 * @return The formatted string containing the initial information.
+	 */
 	private fun printInitialInfo(): String {
 		var startWith5Stars = false
 		var startWith4Stars = false
@@ -54,15 +59,30 @@ class ScanWeapons(private val game: Game) {
 		return message
 	}
 
+	/**
+	 * Checks if the search process can be ended.
+	 *
+	 * @return True when all search queries have been completed.
+	 */
 	private fun isSearchDone(): Boolean {
 		return (search5StarComplete && search4StarComplete && search3StarComplete)
 	}
 
+	/**
+	 * Validates the rarity of the weapon.
+	 *
+	 * @param rarity The scanned rarity from the OCR.
+	 * @return True if the rarity from the OCR is valid.
+	 */
 	private fun validateRarity(rarity: String): Boolean {
 		return (game.configData.scan5StarWeapons && !search5StarComplete && (rarity == "5")) || (game.configData.scan4StarWeapons && !search4StarComplete && (rarity == "4")) ||
 				(game.configData.scan3StarWeapons && !search3StarComplete && (rarity == "3"))
 	}
 
+	/**
+	 * Checks if the current search has been completed and mark it as such.
+	 *
+	 */
 	private fun currentSearchCompleted() {
 		if (game.configData.scan5StarWeapons && !search5StarComplete) {
 			game.printToLog("[SCAN_WEAPONS] Finished scanning for 5* Weapons...", tag, isWarning = true)
@@ -76,6 +96,11 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
+	/**
+	 * An additional check for if the current search has been completed which is determined by the existence of the other rarities. Reset the weapon ascension level in the search query if so.
+	 *
+	 * @return True if the search for the current rarity has been completed.
+	 */
 	private fun checkIfSearchCompleted(): Boolean {
 		val region = if (enableFullRegionSearch) {
 			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
@@ -112,6 +137,11 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Performs a search query via a full region scan or row scan.
+	 *
+	 * @return List of found matches for the current rarity.
+	 */
 	private fun search(): ArrayList<Point> {
 		val region = if (enableFullRegionSearch) {
 			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
@@ -131,6 +161,11 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Perform cleanup for first time search with special logic for edge cases.
+	 *
+	 * @param locationSize Number of matches found from the search query.
+	 */
 	private fun searchCleanupFirstTime(locationSize: Int) {
 		// Cover the case where the first search found all the bot needed.
 		val booleanArray: BooleanArray = booleanArrayOf(game.configData.scan5StarWeapons, game.configData.scan4StarWeapons, game.configData.scan3StarWeapons)
@@ -174,6 +209,11 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Perform cleanup for subsequent searches with special logic for edge cases.
+	 *
+	 * @param locationSize Number of matches found from the search query.
+	 */
 	private fun searchCleanupSubsequent(locationSize: Int) {
 		// Cover the case where the number of matches found in the full region search was the maximum or less than.
 		if (locationSize != 0 && locationSize <= subsequentSearchMaxSearches && enableFullRegionSearch && !enableSingleRowSearch) {
@@ -203,6 +243,10 @@ class ScanWeapons(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Starts the search process and process through all search queries.
+	 *
+	 */
 	fun start() {
 		game.printToLog("**************************************", tag)
 		game.printToLog("[SCAN_WEAPONS] WEAPON SCAN STARTING...", tag)

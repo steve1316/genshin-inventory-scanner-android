@@ -27,6 +27,10 @@ class Scan(private val game: Game) {
 		game.printToLog("[SCAN] Finished resetting scroll level.", tag)
 	}
 
+	/**
+	 * Reset flags to their default values. Used when transitioning to a new search.
+	 *
+	 */
 	fun reset() {
 		failAttempts = 5
 		maxAscensionLevel = 6
@@ -177,6 +181,10 @@ class Scan(private val game: Game) {
 		return Pair("1", "0")
 	}
 
+	/**
+	 * Resets the internal weapon ascension level for searches. Happens when a rarity changes during a search.
+	 *
+	 */
 	fun resetWeaponAscensionLevel() {
 		maxAscensionLevel = 6
 		failAttempts = 5
