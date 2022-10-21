@@ -13,6 +13,7 @@ class Scan(private val game: Game) {
 	private var failAttempts = 5
 	private var maxAscensionLevel = 6
 	private var scrollDiff = 0L
+	private var scrollDuration = 0L
 
 	/**
 	 * Resets the scroll level of the current category back to the top.
@@ -49,13 +50,15 @@ class Scan(private val game: Game) {
 	 */
 	fun scrollSubsequentRow() {
 		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
-		game.gestureUtils.swipe(900f, 800f, 900f, 695f - scrollDiff, duration = 200L)
+		game.gestureUtils.swipe(900f, 800f, 900f, 695f - scrollDiff, duration = 200L + scrollDuration)
 		game.wait(1.0)
 
-		// Increment the difference. Scroll momentum will require a reset after 4 scrolls to make sure that scroll motion stays consistent.
+		// Increment the difference of the scrolling and the duration that it takes. Scroll momentum will require a reset after 2 scrolls to make sure that scroll motion stays consistent.
 		scrollDiff += 8L
-		if (scrollDiff % 24L == 0L) {
+		scrollDuration += 25L
+		if (scrollDiff % 16L == 0L) {
 			scrollDiff = 0L
+			scrollDuration = 0L
 		}
 	}
 
