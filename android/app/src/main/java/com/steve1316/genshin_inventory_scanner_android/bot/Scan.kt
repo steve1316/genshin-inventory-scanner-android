@@ -59,7 +59,7 @@ class Scan(private val game: Game) {
 
 		// Increment the difference of the scrolling and the duration that it takes. Scroll momentum will require a reset after 2 scrolls to make sure that scroll motion stays consistent.
 		scrollDiff += 8L
-		scrollDuration += 25L
+		scrollDuration += 10L
 		if (scrollDiff % 16L == 0L) {
 			scrollDiff = 0L
 			scrollDuration = 0L
