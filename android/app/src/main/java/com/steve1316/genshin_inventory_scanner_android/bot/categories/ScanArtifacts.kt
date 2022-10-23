@@ -331,8 +331,8 @@ class ScanArtifacts(private val game: Game) {
 							game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
 						} catch (e: Exception) {
 							game.printToLog(
-								"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, " +
-										"Equipped By: $equipped, Locked: $locked, Substats: $artifactSubStats)\n", tag, isError = true
+								"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +
+										"Main Stat: $artifactMainStat, Substats: $artifactSubStats, Equipped By: $equipped, Locked: $locked)\n", tag, isError = true
 							)
 						}
 					}

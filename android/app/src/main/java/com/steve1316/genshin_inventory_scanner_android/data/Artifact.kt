@@ -15,7 +15,7 @@ class Artifact {
 	lateinit var substats: ArrayList<Substat>
 
 	override fun toString(): String {
-		return "Set: $setKey, Type: $slotKey, Level: $level, Rarity: $rarity, Main Stat: $mainStatKey, Equipped By: $location, Locked: $lock, Substats: $substats"
+		return "Set: $setKey, Type: $slotKey, Level: $level, Rarity: $rarity, Main Stat: $mainStatKey, Substats: $substats, Equipped By: $location, Locked: $lock"
 	}
 
 	companion object {
