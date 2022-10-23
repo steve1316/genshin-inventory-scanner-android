@@ -3,6 +3,7 @@ package com.steve1316.genshin_inventory_scanner_android.bot.categories
 import com.steve1316.genshin_inventory_scanner_android.MainActivity
 import com.steve1316.genshin_inventory_scanner_android.bot.Game
 import com.steve1316.genshin_inventory_scanner_android.data.Artifact
+import com.steve1316.genshin_inventory_scanner_android.utils.BotService
 import org.opencv.core.Point
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
@@ -10,15 +11,17 @@ class ScanArtifacts(private val game: Game) {
 	private val tag: String = "${MainActivity.loggerTag}ScanArtifacts"
 	private val debugMode = game.configData.debugMode
 
-	private var firstRun = true
-	private var firstSearchCompleted = false
-	private var search5StarComplete = false
-	private var search4StarComplete = false
-	private var search3StarComplete = false
+	private var enableFullRegionSearch = true
+	private var enableSingleRowSearch = false
 
-	private var previousRow1: ArrayList<Point> = arrayListOf(Point(1.0, 1.0))
-	private var previousRow2: ArrayList<Point> = arrayListOf(Point(2.0, 2.0))
-	private var alternateRow: Boolean = false
+	private var search5StarComplete = !game.configData.scan5StarArtifacts
+	private var search4StarComplete = !game.configData.scan4StarArtifacts
+	private var search3StarComplete = !game.configData.scan3StarArtifacts
+
+	private var firstSearchComplete = false
+	private var firstSearchMaxSearches = 21
+	private var subsequentSearchMaxSearches = 7
+
 	private var currentRarity = "5"
 
 	private var artifactList: ArrayList<Artifact> = arrayListOf()
@@ -32,86 +35,253 @@ class ScanArtifacts(private val game: Game) {
 			"3"
 		}
 	}
+
+	/**
+	 * Prints the initial information before starting the overall search process.
+	 *
+	 * @return The formatted string containing the initial information.
+	 */
+	private fun printInitialInfo(): String {
+		var startWith5Stars = false
+		var startWith4Stars = false
+		var message = if (game.configData.scan5StarArtifacts) {
+			startWith5Stars = true
+			"5* Artifacts"
+		} else if (game.configData.scan4StarArtifacts) {
+			startWith4Stars = true
+			"4* Artifacts"
+		} else {
+			"3* Artifacts"
+		}
+
+		if (startWith5Stars) {
+			if (game.configData.scan4StarArtifacts) {
+				message += ", 4* Artifacts"
+			}
+
+			if (game.configData.scan3StarArtifacts) {
+				message += ", 3* Artifacts"
+			}
+		} else if (startWith4Stars) {
+			if (game.configData.scan3StarArtifacts) {
+				message += ", 3* Artifacts"
+			}
+		}
+
+		return message
+	}
+
+	/**
+	 * Checks if the search process can be ended.
+	 *
+	 * @return True when all search queries have been completed.
+	 */
+	private fun isSearchDone(): Boolean {
+		return (search5StarComplete && search4StarComplete && search3StarComplete)
+	}
+
+	/**
+	 * Validates the rarity of the artifact.
+	 *
+	 * @param rarity The scanned rarity from the OCR.
+	 * @return True if the rarity from the OCR is valid.
+	 */
+	private fun validateRarity(rarity: String): Boolean {
+		return (game.configData.scan5StarArtifacts && !search5StarComplete && (rarity == "5")) || (game.configData.scan4StarArtifacts && !search4StarComplete && (rarity == "4")) ||
+				(game.configData.scan3StarArtifacts && !search3StarComplete && (rarity == "3"))
+	}
+
+	/**
+	 * Checks if the current search has been completed and mark it as such.
+	 *
+	 */
+	private fun currentSearchCompleted() {
+		if (game.configData.scan5StarArtifacts && !search5StarComplete) {
+			game.printToLog("[SCAN_ARTIFACTS] Finished scanning for 5* Artifacts...", tag, isWarning = true)
+			search5StarComplete = true
+		} else if (game.configData.scan4StarArtifacts && !search4StarComplete) {
+			game.printToLog("[SCAN_ARTIFACTS] Finished scanning for 4* Artifacts...", tag, isWarning = true)
+			search4StarComplete = true
+			currentRarity = "4"
+		} else if (game.configData.scan3StarArtifacts && !search3StarComplete) {
+			game.printToLog("[SCAN_ARTIFACTS] Finished scanning for 3* Artifacts...", tag, isWarning = true)
+			search3StarComplete = true
+			currentRarity = "3"
+		}
+	}
+
+	/**
+	 * An additional check for if the current search has been completed which is determined by the existence of the other rarities. Reset the weapon ascension level in the search query if so.
+	 *
+	 * @return True if the search for the current rarity has been completed.
+	 */
+	private fun checkIfSearchCompleted(): Boolean {
+		val region = if (enableFullRegionSearch) {
+			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
+		} else {
+			intArrayOf(0, MPS.displayHeight - (MPS.displayHeight / 3), MPS.displayWidth, MPS.displayHeight / 3)
+		}
+
+		return if (game.configData.scan5StarArtifacts && !search5StarComplete && (game.imageUtils.findAll("artifact_level_4", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
+			game.printToLog("[SCAN_ARTIFACTS] Search for 5* Artifacts has been completed.", tag, isWarning = true)
+			search5StarComplete = true
+			true
+		} else if (game.configData.scan4StarArtifacts && !search4StarComplete && (game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
+			game.printToLog("[SCAN_ARTIFACTS] Search for 4* Artifacts has been completed.", tag, isWarning = true)
+			search4StarComplete = true
+			currentRarity = "4"
+			true
+		} else if (game.configData.scan3StarArtifacts && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
+					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
+		) {
+			game.printToLog("[SCAN_ARTIFACTS] Search for 3* Artifacts has been completed.", tag, isWarning = true)
+			search3StarComplete = true
+			currentRarity = "3"
+			true
+		} else {
+			false
+		}
+	}
+
+	/**
+	 * Performs a search query via a full region scan or row scan.
+	 *
+	 * @return List of found matches for the current rarity.
+	 */
+	private fun search(): ArrayList<Point> {
+		val region = if (enableFullRegionSearch) {
 			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
 		} else {
 			intArrayOf(0, MPS.displayHeight - (MPS.displayHeight / 3), MPS.displayWidth, MPS.displayHeight / 3)
 		}
 
 		return if (game.configData.scan5StarArtifacts && !search5StarComplete) {
-			game.imageUtils.findAll("artifact_level_5", region = region, customConfidence = 0.7)
+			return game.imageUtils.findAll("artifact_level_5", region = region, customConfidence = 0.95)
 		} else if (game.configData.scan4StarArtifacts && !search4StarComplete) {
-			game.imageUtils.findAll("artifact_level_4", region = region, customConfidence = 0.7)
+			return game.imageUtils.findAll("artifact_level_4", region = region, customConfidence = 0.95)
 		} else if (game.configData.scan3StarArtifacts && !search3StarComplete) {
-			game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.7)
+			return game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95)
 		} else {
+			game.printToLog("[SCAN_ARTIFACTS] Search came up with no matches.", tag, isError = true)
 			arrayListOf()
 		}
 	}
 
-	private fun validateSearchCheck(locations: ArrayList<Point>) {
-		if (game.configData.scan5StarArtifacts && !search5StarComplete && locations.size == 0) {
-			search5StarComplete = true
-		} else if (game.configData.scan4StarArtifacts && !search4StarComplete && locations.size == 0) {
-			search4StarComplete = true
-		} else if (game.configData.scan3StarArtifacts && !search3StarComplete && locations.size == 0) {
-			search3StarComplete = true
-		}
-
-		if (locations.size != 0) firstSearchCompleted = true
-
-		if (firstSearchCompleted) {
-			if (alternateRow) previousRow1 = locations
-			else previousRow2 = locations
-		}
-
-		alternateRow = !alternateRow
-	}
-
-	private fun isSearchDone(): Boolean {
-		return previousRow1 != previousRow2
-	}
-
-	private fun printInitialInfo(): String {
-		var message = if (game.configData.scan5StarArtifacts) {
-			"5* Artifacts"
-		} else if (game.configData.scan4StarArtifacts) {
-			"4* Artifacts"
-		} else {
-			"3* Artifacts"
-		}
-
-		message += if (game.configData.scan4StarArtifacts) ", 4* Artifacts" else ""
-		message += if (game.configData.scan3StarArtifacts) ", 3* Artifacts" else ""
-
-		return message
-	}
-
 	/**
-	 * Starts the process to scan artifacts in the inventory.
+	 * Perform cleanup for first time search with special logic for edge cases.
 	 *
+	 * @param locationSize Number of matches found from the search query.
 	 */
-	fun start() {
-		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2) == null && !game.findAndPress("category_unselected_artifacts", tries = 2)) {
-			game.printToLog("[ERROR] Unable to start Artifact scan.", tag, isError = true)
+	private fun searchCleanupFirstTime(locationSize: Int) {
+		// Cover the case where the first search found all the bot needed.
+		val booleanArray: BooleanArray = booleanArrayOf(game.configData.scan5StarArtifacts, game.configData.scan4StarArtifacts, game.configData.scan3StarArtifacts)
+		if (locationSize != 0 && locationSize < firstSearchMaxSearches && booleanArray.count { it } == 1) {
+			game.printToLog("[SCAN_ARTIFACTS] First search is less than the max in the full region scan for the only rarity selected.", tag, isWarning = true)
+			search5StarComplete = true
+			search4StarComplete = true
+			search3StarComplete = true
+			enableFullRegionSearch = false
+			enableSingleRowSearch = false
+			firstSearchComplete = true
 			return
 		}
 
+		// Cover the case where the first search found all the bot needed and was at the maximum.
+		else if (locationSize != 0 && locationSize == firstSearchMaxSearches) {
+			game.printToLog("[SCAN_ARTIFACTS] First search is the max in the full region scan.", tag, isWarning = true)
+			enableFullRegionSearch = false
+			enableSingleRowSearch = true
+			firstSearchComplete = true
+			game.scanUtils.scrollFirstRow()
+		}
+
+		// Cover the case where the first search found less than the maximum.
+		else if (locationSize != 0 && locationSize < firstSearchMaxSearches) {
+			game.printToLog("[SCAN_ARTIFACTS] First search less than the max in the full region scan.", tag, isWarning = true)
+			enableFullRegionSearch = false
+			enableSingleRowSearch = true
+			firstSearchComplete = true
+			game.scanUtils.scrollFirstRow()
+		}
+
+		// Cover the case where the first search found nothing.
+		else if (locationSize == 0) {
+			game.printToLog("[SCAN_ARTIFACTS] First search found no matches in the full region scan.", tag, isWarning = true)
+			enableFullRegionSearch = false
+			enableSingleRowSearch = false
+			if (!checkIfSearchCompleted()) {
+				firstSearchComplete = false
+			}
+		}
+	}
+
+	/**
+	 * Perform cleanup for subsequent searches with special logic for edge cases.
+	 *
+	 * @param locationSize Number of matches found from the search query.
+	 */
+	private fun searchCleanupSubsequent(locationSize: Int) {
+		// Cover the case where the number of matches found in the full region search was the maximum or less than.
+		if (locationSize != 0 && locationSize <= subsequentSearchMaxSearches && enableFullRegionSearch && !enableSingleRowSearch) {
+			game.printToLog("[SCAN_ARTIFACTS] Subsequent search less than the max in the full region scan.", tag, isWarning = true)
+			enableFullRegionSearch = false
+			enableSingleRowSearch = true
+		}
+
+		// Cover the case where the number of matches in the single row search was the entire row.
+		else if (locationSize != 0 && locationSize == subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
+			game.printToLog("[SCAN_ARTIFACTS] Subsequent search is the max in the row scan.", tag, isWarning = true)
+			game.scanUtils.scrollSubsequentRow()
+		}
+
+		// Cover the case where matches found in single row search was not the maximum. End this rarity search and prep for the next rarity search.
+		else if (locationSize != 0 && locationSize < subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
+			game.printToLog("[SCAN_ARTIFACTS] Subsequent search less than the max in the row scan.", tag, isWarning = true)
+			currentSearchCompleted()
+		}
+
+		// Cover the case where no matches found in either full region or single row search.
+		else if (locationSize == 0) {
+			game.printToLog("[SCAN_ARTIFACTS] Subsequent search found no matches in the row scan.", tag, isWarning = true)
+			enableFullRegionSearch = false
+			enableSingleRowSearch = true
+			checkIfSearchCompleted()
+		}
+	}
+
+	/**
+	 * Starts the search process and process through all search queries.
+	 *
+	 */
+	fun start() {
 		game.printToLog("**************************************", tag)
 		game.printToLog("[SCAN_ARTIFACTS] ARTIFACT SCAN STARTING...", tag)
 		game.printToLog("[SCAN_ARTIFACTS] ${printInitialInfo()}", tag)
 		game.printToLog("**************************************", tag)
 
 		// Reset the scroll view.
-		game.scanUtils.resetScrollScreen()
+//		game.scanUtils.resetScrollScreen()
 
-		// Collect the locations of all artifacts whose image asset can be found.
-		while (isSearchDone()) {
-			val locations: ArrayList<Point> = search()
-			validateSearchCheck(locations)
+		while (!isSearchDone()) {
+			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
+
+			val tempLocations: ArrayList<Point> = search()
+
+			// Deep copy the list of locations to prevent concurrent modification.
+			val locations = tempLocations.map { it.clone() } as ArrayList
+
+			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} locations: $locations.", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
 				// For every subsequent search, only search for the very last row as every other row above has been processed already.
-				if (!firstRun) {
+				if (!enableFullRegionSearch) {
 					// Now iterate through the array backwards and keep only the locations from the last row.
 					val reversedLocations = locations.reversed()
 					locations.clear()
@@ -126,51 +296,66 @@ class ScanArtifacts(private val game: Game) {
 					locations.reverse()
 				}
 
-				if (debugMode) game.printToLog("[DEBUG] ${locations.size} Artifacts: $locations", tag, isWarning = true)
-				game.printToLog("[DEBUG] ${locations.size} Artifacts: $locations", tag, isWarning = true)
-
 				// Now scan each artifact in each location.
 				locations.forEach {
 					// Select the artifact.
-					game.gestureUtils.tap(it.x, it.y, "artifact_level_5")
+					game.gestureUtils.tap(it.x, it.y, "item_level")
 
 					val artifactName = game.scanUtils.getArtifactName()
-					val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
+					val artifactRarity = currentRarity
+					if (validateRarity(artifactRarity)) {
+						val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
 
-					val artifactLevel = game.scanUtils.getArtifactLevel()
-					val artifactRarity = game.scanUtils.getArtifactRarity()
+						val artifactLevel = game.scanUtils.getArtifactLevel()
 
-					val equipped = game.scanUtils.getEquippedBy()
-					val locked = game.scanUtils.getLocked()
+						val equipped = game.scanUtils.getEquippedBy()
+						val locked = game.scanUtils.getLocked()
 
-					game.printToLog("DEBUG: $artifactName, $artifactSetName, $artifactType, $artifactLevel, $artifactRarity, $equipped, $locked", tag, isWarning = true)
+						val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel.toInt()).first
+						val artifactSubStats: ArrayList<Artifact.Companion.Substat> = game.scanUtils.getArtifactSubStats()
 
-					val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel.toInt()).first
-					val artifactSubStats: MutableMap<String, String> = game.scanUtils.getArtifactSubStats()
+						try {
+							val artifactObject = Artifact().apply {
+								setKey = artifactSetName
+								slotKey = artifactType
+								level = artifactLevel.toInt()
+								rarity = artifactRarity.toInt()
+								mainStatKey = artifactMainStat
+								location = equipped
+								lock = locked
+								substats = artifactSubStats
+							}
 
-					val artifactObject = Artifact().apply {
-						setKey = artifactSetName
-						slotKey = artifactType
-						level = artifactLevel.toInt()
-						rarity = artifactRarity.toInt()
-						mainStatKey = artifactMainStat
-						location = equipped
-						lock = locked
-						substats = artifactSubStats
+							artifactList.add(artifactObject)
+
+							game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
+						} catch (e: Exception) {
+							game.printToLog(
+								"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, " +
+										"Equipped By: $equipped, Locked: $locked, Substats: $artifactSubStats)\n", tag, isError = true
+							)
+						}
 					}
-
-					artifactList.add(artifactObject)
-
-					game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
 				}
 			}
 
-			// Different scrolling behavior based on whether this is the first run.
-			if (firstRun) {
-				game.scanUtils.scrollFirstRow()
-				firstRun = false
-			} else if (locations.size != 0 || !firstSearchCompleted) {
-				game.scanUtils.scrollSubsequentRow()
+			if (!firstSearchComplete) {
+				searchCleanupFirstTime(locations.size)
+			} else {
+				searchCleanupSubsequent(locations.size)
+			}
+
+			if (debugMode) {
+				game.printToLog(
+					"[SCAN_ARTIFACTS][DEBUG] enableFullRegionSearch: $enableFullRegionSearch | enableSingleRowSearch: $enableSingleRowSearch | firstSearchComplete: $firstSearchComplete",
+					tag,
+					isWarning = true
+				)
+				game.printToLog(
+					"[SCAN_ARTIFACTS][DEBUG] search5StarComplete: $search5StarComplete | search4StarComplete: $search4StarComplete | search3StarComplete: $search3StarComplete",
+					tag,
+					isWarning = true
+				)
 			}
 		}
 
