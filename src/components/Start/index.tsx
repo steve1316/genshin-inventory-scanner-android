@@ -138,7 +138,11 @@ const Start = () => {
 
     // Determine whether the program is ready to start.
     const handleReady = () => {
-        bsc.setReadyStatus(bsc.settings.weapons.enableScanWeapons || bsc.settings.artifacts.enableScanArtifacts)
+        bsc.setReadyStatus(
+            bsc.settings.weapons.enableScanWeapons ||
+                bsc.settings.artifacts.enableScanArtifacts ||
+                (bsc.settings.misc.enableTestSingleSearch && (bsc.settings.misc.testSearchWeapon || bsc.settings.misc.testSearchArtifact))
+        )
     }
 
     return null

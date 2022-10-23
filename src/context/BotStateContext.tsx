@@ -14,7 +14,10 @@ export interface Settings {
         scan3StarArtifacts: boolean
     }
     misc: {
-        debugMode: boolean
+        debugMode: boolean,
+        enableTestSingleSearch: boolean
+        testSearchWeapon: boolean
+        testSearchArtifact: boolean
     }
 }
 
@@ -34,6 +37,9 @@ export const defaultSettings: Settings = {
     },
     misc: {
         debugMode: false,
+        enableTestSingleSearch: false,
+        testSearchWeapon: false,
+        testSearchArtifact: false
     },
 }
 

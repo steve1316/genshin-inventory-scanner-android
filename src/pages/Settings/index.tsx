@@ -39,6 +39,18 @@ const Settings = () => {
         }
     }, [bsc.settings.artifacts])
 
+    useEffect(() => {
+        if (bsc.settings.misc.testSearchWeapon) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: false } })
+        }
+    }, [bsc.settings.misc.testSearchWeapon])
+
+    useEffect(() => {
+        if (bsc.settings.misc.testSearchArtifact) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false } })
+        }
+    }, [bsc.settings.misc.testSearchArtifact])
+
     //////////////////////////////////////////////////
     //////////////////////////////////////////////////
     // Rendering
@@ -134,6 +146,31 @@ const Settings = () => {
                     text="Enable Debug Mode"
                     subtitle="Check this to enable more detailed log messages and debugging screenshots to be saved to the /temp/ folder."
                 />
+
+                <CustomCheckbox
+                    isChecked={bsc.settings.misc.enableTestSingleSearch}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: !bsc.settings.misc.enableTestSingleSearch } })}
+                    text="Enable Test Single Search"
+                    subtitle="Check this to enable single scan for the currently selected weapon/artifact/etc on the screen."
+                />
+
+                {bsc.settings.misc.enableTestSingleSearch ? (
+                    <View>
+                        <CustomCheckbox
+                            isChecked={bsc.settings.misc.testSearchWeapon}
+                            onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: !bsc.settings.misc.testSearchWeapon } })}
+                            text="Test Single Weapon Scan"
+                            subtitle="Check this to test scanning the currently selected weapon. Only one can be active at a time."
+                        />
+
+                        <CustomCheckbox
+                            isChecked={bsc.settings.misc.testSearchArtifact}
+                            onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: !bsc.settings.misc.testSearchArtifact } })}
+                            text="Test Single Artifact Scan"
+                            subtitle="Check this to test scanning the currently selected artifact. Only one can be active at a time."
+                        />
+                    </View>
+                ) : null}
             </View>
         )
     }
