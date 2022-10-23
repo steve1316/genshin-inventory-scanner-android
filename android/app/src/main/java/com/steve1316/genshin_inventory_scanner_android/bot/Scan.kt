@@ -370,6 +370,11 @@ class Scan(private val game: Game) {
 				formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
 			}
 
+			// Cover edge cases here.
+			if (formattedSubstat[1] == "1") {
+				formattedSubstat[1] = "11"
+			}
+
 			substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
 		}
 
