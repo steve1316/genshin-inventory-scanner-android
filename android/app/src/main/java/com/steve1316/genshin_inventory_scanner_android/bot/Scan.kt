@@ -256,7 +256,7 @@ class Scan(private val game: Game) {
 			}
 		}
 
-		game.printToLog("[SCAN] Failed to find the corresponding set to the artifact: $artifactName", tag, isWarning = true)
+		game.printToLog("[SCAN] Failed to find the corresponding set to the artifact: $artifactName", tag, isError = true)
 		return Pair("", "")
 	}
 
@@ -284,7 +284,7 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("enerRech_", Artifact.enerRech_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Sands artifact.", tag, isWarning = true)
+					game.printToLog("[SCAN] Failed to detect the main stat for this Sands artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
@@ -314,7 +314,7 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("physical_dmg_", Artifact.physical_dmg_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Goblet artifact.", tag, isWarning = true)
+					game.printToLog("[SCAN] Failed to detect the main stat for this Goblet artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
@@ -334,7 +334,7 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("heal_", Artifact.heal_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Circlet artifact.", tag, isWarning = true)
+					game.printToLog("[SCAN] Failed to detect the main stat for this Circlet artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
