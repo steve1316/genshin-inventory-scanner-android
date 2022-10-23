@@ -12,7 +12,7 @@ class Artifact {
 	lateinit var mainStatKey: String
 	lateinit var location: String
 	var lock by Delegates.notNull<Boolean>()
-	lateinit var substats: MutableMap<String, String>
+	lateinit var substats: ArrayList<Substat>
 
 	override fun toString(): String {
 		return "Set: $setKey, Type: $slotKey, Level: $level, Rarity: $rarity, Main Stat: $mainStatKey, Equipped By: $location, Locked: $lock, Substats: $substats"
@@ -20,6 +20,8 @@ class Artifact {
 
 	companion object {
 		// Stats from https://genshin-impact.fandom.com/wiki/Artifact/Scaling
+
+		data class Substat(val key: String, val value: String)
 
 		val hpStats: MutableMap<Int, Int> = mutableMapOf(
 			0 to 717,

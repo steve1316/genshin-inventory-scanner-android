@@ -345,16 +345,16 @@ class Scan(private val game: Game) {
 		}
 	}
 
-	fun getArtifactSubStats(): MutableMap<String, String> {
-		val substats: MutableMap<String, String> = mutableMapOf()
-
-		getArtifactName()
+	fun getArtifactSubStats(): ArrayList<Artifact.Companion.Substat> {
+		val substats: ArrayList<Artifact.Companion.Substat> = arrayListOf()
 
 		val substatLocations = game.imageUtils.findAll("artifact_substat", region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight))
-		substatLocations.forEach { location ->
-			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
+		substatLocations.forEach {
+			val substat = game.imageUtils.findTextTesseract((it.x + 25).toInt(), (it.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
+
 			val formattedSubstat = substat.split("+") as ArrayList<String>
 			formattedSubstat[0] = formattedSubstat[0].uppercase(Locale.ROOT)
+
 			if (formattedSubstat[0] == "ATK" || formattedSubstat[0] == "HP" || formattedSubstat[0] == "DEF") {
 				if (formattedSubstat[1].contains("%")) formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT) + "_"
 				else formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
@@ -370,7 +370,7 @@ class Scan(private val game: Game) {
 				formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
 			}
 
-			substats[formattedSubstat[0]] = formattedSubstat[1]
+			substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
 		}
 
 		return substats
