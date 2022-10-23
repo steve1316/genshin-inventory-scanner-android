@@ -155,14 +155,13 @@ class Game(private val myContext: Context) {
 
 		if (initializationCheck()) {
 			backpackLocation = imageUtils.findImage("backpack")!!
-			printToLog("Backpack: $backpackLocation")
 
-			if (configData.enableScanWeapons) {
+			if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
 				val scanWeapons = ScanWeapons(this)
 				scanWeapons.start()
 			}
 
-			if (configData.enableScanArtifacts) {
+			if ((configData.enableScanArtifacts && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchArtifact)) {
 				val scanArtifacts = ScanArtifacts(this)
 				scanArtifacts.start()
 			}

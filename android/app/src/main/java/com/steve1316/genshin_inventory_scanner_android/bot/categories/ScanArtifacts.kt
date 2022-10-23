@@ -26,6 +26,8 @@ class ScanArtifacts(private val game: Game) {
 
 	private var artifactList: ArrayList<Artifact> = arrayListOf()
 
+	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchArtifact
+
 	init {
 		currentRarity = if (game.configData.scan5StarArtifacts) {
 			"5"
@@ -261,13 +263,56 @@ class ScanArtifacts(private val game: Game) {
 	 *
 	 */
 	fun start() {
-		game.printToLog("**************************************", tag)
-		game.printToLog("[SCAN_ARTIFACTS] ARTIFACT SCAN STARTING...", tag)
-		game.printToLog("[SCAN_ARTIFACTS] ${printInitialInfo()}", tag)
-		game.printToLog("**************************************", tag)
+		// Reset the scroll view or perform a test single search.
+		if (!testSingleSearch) {
+			game.printToLog("**************************************", tag)
+			game.printToLog("[SCAN_ARTIFACTS] ARTIFACT SCAN STARTING...", tag)
+			game.printToLog("[SCAN_ARTIFACTS] ${printInitialInfo()}", tag)
+			game.printToLog("**************************************", tag)
 
-		// Reset the scroll view.
-//		game.scanUtils.resetScrollScreen()
+			game.scanUtils.resetScrollScreen()
+		} else {
+			game.printToLog("**************************************", tag)
+			game.printToLog("[SCAN_ARTIFACTS] TESTING SINGLE SEARCH...", tag)
+			game.printToLog("[SCAN_ARTIFACTS] Note: Rarity is not tested here as it is automatically handled during normal operation.", tag)
+			game.printToLog("**************************************", tag)
+
+			val artifactName = game.scanUtils.getArtifactName()
+			val artifactRarity = "0"
+			val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
+
+			val artifactLevel = game.scanUtils.getArtifactLevel()
+
+			val equipped = game.scanUtils.getEquippedBy()
+			val locked = game.scanUtils.getLocked()
+
+			val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel.toInt()).first
+			val artifactSubStats: ArrayList<Artifact.Companion.Substat> = game.scanUtils.getArtifactSubStats()
+
+			try {
+				val artifactObject = Artifact().apply {
+					setKey = artifactSetName
+					slotKey = artifactType
+					level = artifactLevel.toInt()
+					rarity = artifactRarity.toInt()
+					mainStatKey = artifactMainStat
+					location = equipped
+					lock = locked
+					substats = artifactSubStats
+				}
+
+				artifactList.add(artifactObject)
+
+				game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
+			} catch (e: Exception) {
+				game.printToLog(
+					"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +
+							"Main Stat: $artifactMainStat, Substats: $artifactSubStats, Equipped By: $equipped, Locked: $locked)\n", tag, isError = true
+				)
+			}
+
+			return
+		}
 
 		while (!isSearchDone()) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")

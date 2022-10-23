@@ -30,6 +30,11 @@ class ConfigData(myContext: Context) {
 	val scan4StarArtifacts: Boolean
 	val scan3StarArtifacts: Boolean
 
+	// Misc
+	val enableTestSingleSearch: Boolean
+	val testSearchWeapon: Boolean
+	val testSearchArtifact: Boolean
+
 	init {
 		Log.d(tag, "Loading settings from SharedPreferences to memory...")
 
@@ -55,6 +60,11 @@ class ConfigData(myContext: Context) {
 		confidence = sharedPreferences.getFloat("confidence", 0.8f).toDouble() / 100.0
 		confidenceAll = sharedPreferences.getFloat("confidenceAll", 0.8f).toDouble() / 100.0
 		customScale = sharedPreferences.getFloat("customScale", 1.0f).toDouble()
+
+		// Misc
+		enableTestSingleSearch = sharedPreferences.getBoolean("enableTestSingleSearch", false)
+		testSearchWeapon = sharedPreferences.getBoolean("testSearchWeapon", false)
+		testSearchArtifact = sharedPreferences.getBoolean("testSearchArtifact", false)
 
 		Log.d(tag, "Successfully loaded settings from SharedPreferences to memory.")
 	}

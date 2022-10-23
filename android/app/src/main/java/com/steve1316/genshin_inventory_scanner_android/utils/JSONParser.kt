@@ -57,6 +57,9 @@ class JSONParser {
 			val miscObj = jObj.getJSONObject("misc")
 			sharedPreferences.edit {
 				putBoolean("debugMode", miscObj.getBoolean("debugMode"))
+				putBoolean("enableTestSingleSearch", miscObj.getBoolean("enableTestSingleSearch"))
+				putBoolean("testSearchWeapon", miscObj.getBoolean("testSearchWeapon"))
+				putBoolean("testSearchArtifact", miscObj.getBoolean("testSearchArtifact"))
 				commit()
 			}
 		} catch (e: Exception) {

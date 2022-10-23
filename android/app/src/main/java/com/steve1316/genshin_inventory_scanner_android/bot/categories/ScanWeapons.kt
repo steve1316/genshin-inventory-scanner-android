@@ -24,6 +24,8 @@ class ScanWeapons(private val game: Game) {
 
 	private var weaponList: ArrayList<Weapon> = arrayListOf()
 
+	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchWeapon
+
 	/**
 	 * Prints the initial information before starting the overall search process.
 	 *
@@ -248,13 +250,47 @@ class ScanWeapons(private val game: Game) {
 	 *
 	 */
 	fun start() {
-		game.printToLog("**************************************", tag)
-		game.printToLog("[SCAN_WEAPONS] WEAPON SCAN STARTING...", tag)
-		game.printToLog("[SCAN_WEAPONS] ${printInitialInfo()}", tag)
-		game.printToLog("**************************************", tag)
+		// Reset the scroll view or perform a test single search.
+		if (!testSingleSearch) {
+			game.printToLog("**************************************", tag)
+			game.printToLog("[SCAN_WEAPONS] WEAPON SCAN STARTING...", tag)
+			game.printToLog("[SCAN_WEAPONS] ${printInitialInfo()}", tag)
+			game.printToLog("**************************************", tag)
 
-		// Reset the scroll view.
-		game.scanUtils.resetScrollScreen()
+			game.scanUtils.resetScrollScreen()
+		} else {
+			game.printToLog("**************************************", tag)
+			game.printToLog("[SCAN_WEAPONS] TESTING SINGLE SEARCH...", tag)
+			game.printToLog("**************************************", tag)
+
+			val (weaponName, _) = game.scanUtils.getWeaponNameAndRarity()
+			val (weaponLevel, weaponAscensionLevel) = game.scanUtils.getWeaponLevelAndAscension()
+			val weaponRefinementLevel = game.scanUtils.getRefinementLevel()
+			val weaponEquippedBy = game.scanUtils.getEquippedBy()
+			val weaponLocked = game.scanUtils.getLocked()
+
+			try {
+				val weaponObject = Weapon().apply {
+					key = weaponName
+					level = weaponLevel.toInt()
+					ascension = weaponAscensionLevel.toInt()
+					refinement = weaponRefinementLevel.toInt()
+					location = weaponEquippedBy
+					lock = weaponLocked
+				}
+
+				weaponList.add(weaponObject)
+
+				game.printToLog("[SCAN_WEAPONS] Weapon scanned: $weaponObject\n", tag)
+			} catch (e: Exception) {
+				game.printToLog(
+					"[ERROR] Weapon failed to scan: (Name: $weaponName, Level: $weaponLevel, Ascension: $weaponAscensionLevel, " +
+							"Refinement: $weaponRefinementLevel, Equipped By: $weaponEquippedBy, Locked: $weaponLocked)\n", tag, isError = true
+				)
+			}
+
+			return
+		}
 
 		while (!isSearchDone()) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
