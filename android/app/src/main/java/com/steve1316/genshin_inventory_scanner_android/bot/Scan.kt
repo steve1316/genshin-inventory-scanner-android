@@ -264,23 +264,6 @@ class Scan(private val game: Game) {
 		return game.imageUtils.findTextTesseract((game.backpackLocation.x + 1490).toInt(), (game.backpackLocation.y + 475).toInt(), 66, 33, customThreshold = 170.0, reuseSourceBitmap = true)
 	}
 
-	fun getArtifactRarity(): String {
-		return if (game.imageUtils.findImage("artifact_rarity_5", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
-			"5"
-		} else if (game.imageUtils.findImage("artifact_rarity_4", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
-			"4"
-		} else if (game.imageUtils.findImage("artifact_rarity_3", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
-			"3"
-		} else if ((game.imageUtils.findImage("artifact_rarity_2", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null)) {
-			"2"
-		} else if ((game.imageUtils.findImage("artifact_rarity_1", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null)) {
-			"1"
-		} else {
-			game.printToLog("[SCAN] Failed to detect the rarity of this artifact.", tag, isWarning = true)
-			"0"
-		}
-	}
-
 	fun getArtifactMainStat(artifactType: String, artifactLevel: Int): Pair<String, String> {
 		return when (artifactType) {
 			"flower" -> {

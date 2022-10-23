@@ -19,11 +19,19 @@ class ScanArtifacts(private val game: Game) {
 	private var previousRow1: ArrayList<Point> = arrayListOf(Point(1.0, 1.0))
 	private var previousRow2: ArrayList<Point> = arrayListOf(Point(2.0, 2.0))
 	private var alternateRow: Boolean = false
+	private var currentRarity = "5"
 
 	private var artifactList: ArrayList<Artifact> = arrayListOf()
 
-	fun search(): ArrayList<Point> {
-		val region = if (firstRun) {
+	init {
+		currentRarity = if (game.configData.scan5StarArtifacts) {
+			"5"
+		} else if (game.configData.scan4StarArtifacts) {
+			"4"
+		} else {
+			"3"
+		}
+	}
 			intArrayOf(0, 0, MPS.displayWidth - (MPS.displayWidth / 3), MPS.displayHeight)
 		} else {
 			intArrayOf(0, MPS.displayHeight - (MPS.displayHeight / 3), MPS.displayWidth, MPS.displayHeight / 3)
