@@ -730,7 +730,7 @@ class ImageUtils(context: Context, private val game: Game) {
 		tessBaseAPI.stop()
 
 		mostRecent++
-		if (mostRecent > 5) {
+		if (mostRecent > 10) {
 			mostRecent = 1
 		}
 
