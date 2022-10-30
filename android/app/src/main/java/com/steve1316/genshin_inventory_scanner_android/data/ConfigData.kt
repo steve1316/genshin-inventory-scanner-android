@@ -30,10 +30,15 @@ class ConfigData(myContext: Context) {
 	val scan4StarArtifacts: Boolean
 	val scan3StarArtifacts: Boolean
 
+	// Material Scan
+	val enableScanMaterials: Boolean
+	val enableScanCharacterDevelopmentItems: Boolean
+
 	// Misc
 	val enableTestSingleSearch: Boolean
 	val testSearchWeapon: Boolean
 	val testSearchArtifact: Boolean
+	val testSearchMaterial: Boolean
 
 	init {
 		Log.d(tag, "Loading settings from SharedPreferences to memory...")
@@ -54,6 +59,10 @@ class ConfigData(myContext: Context) {
 		scan4StarArtifacts = sharedPreferences.getBoolean("scan4StarArtifacts", false)
 		scan3StarArtifacts = sharedPreferences.getBoolean("scan3StarArtifacts", false)
 
+		// Material Scan settings.
+		enableScanMaterials = sharedPreferences.getBoolean("enableScanMaterials", false)
+		enableScanCharacterDevelopmentItems = sharedPreferences.getBoolean("enableScanCharacterDevelopmentItems", false)
+
 		// Android-specific settings.
 		enableDelayTap = sharedPreferences.getBoolean("enableDelayTap", false)
 		delayTapMilliseconds = sharedPreferences.getInt("delayTapMilliseconds", 1000)
@@ -65,6 +74,7 @@ class ConfigData(myContext: Context) {
 		enableTestSingleSearch = sharedPreferences.getBoolean("enableTestSingleSearch", false)
 		testSearchWeapon = sharedPreferences.getBoolean("testSearchWeapon", false)
 		testSearchArtifact = sharedPreferences.getBoolean("testSearchArtifact", false)
+		testSearchMaterial = sharedPreferences.getBoolean("testSearchMaterial", false)
 
 		Log.d(tag, "Successfully loaded settings from SharedPreferences to memory.")
 	}

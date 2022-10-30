@@ -54,12 +54,23 @@ class JSONParser {
 		}
 
 		try {
+			val materialsObj = jObj.getJSONObject("materials")
+			sharedPreferences.edit {
+				putBoolean("enableScanMaterials", materialsObj.getBoolean("enableScanMaterials"))
+				putBoolean("enableScanCharacterDevelopmentItems", materialsObj.getBoolean("enableScanCharacterDevelopmentItems"))
+				commit()
+			}
+		} catch (e: Exception) {
+		}
+
+		try {
 			val miscObj = jObj.getJSONObject("misc")
 			sharedPreferences.edit {
 				putBoolean("debugMode", miscObj.getBoolean("debugMode"))
 				putBoolean("enableTestSingleSearch", miscObj.getBoolean("enableTestSingleSearch"))
 				putBoolean("testSearchWeapon", miscObj.getBoolean("testSearchWeapon"))
 				putBoolean("testSearchArtifact", miscObj.getBoolean("testSearchArtifact"))
+				putBoolean("testSearchMaterial", miscObj.getBoolean("testSearchMaterial"))
 				commit()
 			}
 		} catch (e: Exception) {

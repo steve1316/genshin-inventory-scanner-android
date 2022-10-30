@@ -3,6 +3,7 @@ package com.steve1316.genshin_inventory_scanner_android.bot
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.data.Artifact
 import com.steve1316.genshin_inventory_scanner_android.data.Data
+import org.opencv.core.Point
 import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
@@ -20,11 +21,25 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun resetScrollScreen() {
-		game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
-		game.findAndPress("reorder")
-		game.findAndPress("reorder")
-		game.wait(1.0)
-		game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+		if ((game.configData.enableScanMaterials || game.configData.enableScanCharacterDevelopmentItems) && (game.configData.enableScanWeapons || game.configData.enableScanArtifacts)) {
+			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+		} else if (game.configData.enableScanWeapons || game.configData.enableScanArtifacts) {
+			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
+			game.findAndPress("reorder")
+			game.findAndPress("reorder")
+			game.wait(1.0)
+			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+		}
 	}
 
 	/**
@@ -189,6 +204,7 @@ class Scan(private val game: Game) {
 		maxAscensionLevel = 6
 		failAttempts = 5
 	}
+
 	/**
 	 * Detects the weapon's refinement level.
 	 *
@@ -372,6 +388,7 @@ class Scan(private val game: Game) {
 
 			// Cover edge cases here.
 			if (formattedSubstat[1] == "1") {
+				game.printToLog("[SCAN] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
 				formattedSubstat[1] = "11"
 			}
 
@@ -379,5 +396,65 @@ class Scan(private val game: Game) {
 		}
 
 		return substats
+	}
+
+	fun getMaterialName(): String {
+		var tries = 3
+		var thresholdDiff = 0.0
+		while (tries > 0) {
+			val materialName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 180.0 - thresholdDiff)
+			val formattedName = toPascalCase(materialName)
+
+			Data.materials.forEach { material ->
+				if (material == formattedName) {
+					return formattedName
+				}
+			}
+
+			Data.characterDevelopmentItems.forEach { characterDevelopmentItem ->
+				if (characterDevelopmentItem == formattedName) {
+					return formattedName
+				}
+			}
+
+			thresholdDiff += 5.0
+
+			tries -= 1
+		}
+
+		game.printToLog("[SCAN] Failed to match material name to any in the database. Forcing the result through now...", tag, isError = true)
+		val itemName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, reuseSourceBitmap = true)
+		return toPascalCase(itemName)
+	}
+
+	fun getMaterialAmountFirstTime(location: Point): Int {
+		val offset = Point(-75.0, 70.0)
+		val regionWidth = 140
+		val regionHeight = 35
+
+		val result = game.imageUtils.findTextTesseract((location.x + offset.x).toInt(), (location.y + offset.y).toInt(), regionWidth, regionHeight, customThreshold = 150.0, reuseSourceBitmap = true)
+		return try {
+			result.toInt()
+		} catch (e: Exception) {
+			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning -1 for now...", tag, isError = true)
+			-1
+		}
+	}
+
+	fun getMaterialAmountSubsequent(): Int {
+		val location = game.imageUtils.findMaterialLocation()
+
+		if (location == null) {
+			game.printToLog("Failed", tag, isError = true)
+			return -1
+		}
+
+		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 150.0, reuseSourceBitmap = true)
+		return try {
+			result.toInt()
+		} catch (e: Exception) {
+			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning -1 for now...", tag, isWarning = true)
+			-1
+		}
 	}
 }

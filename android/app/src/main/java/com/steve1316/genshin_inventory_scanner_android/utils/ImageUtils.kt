@@ -3,7 +3,6 @@ package com.steve1316.genshin_inventory_scanner_android.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
@@ -734,5 +733,19 @@ class ImageUtils(context: Context, private val game: Game) {
 		if (debugMode) game.printToLog("[TESSERACT] Text detection finished in ${System.currentTimeMillis() - startTime}ms.", tag)
 
 		return result
+	}
+
+	fun findMaterialLocation(): Point? {
+		val tempBitmap = Bitmap.createBitmap(tesseractSourceBitmap, (game.backpackLocation.x + 1825).toInt(), (game.backpackLocation.y + 210).toInt(), 185, 200)
+		val scaledBitmap = Bitmap.createScaledBitmap(tempBitmap, (tempBitmap.width / 1.80).toInt(), (tempBitmap.height / 1.80).toInt(), true)
+		val cvImage = Mat()
+
+		Utils.bitmapToMat(scaledBitmap, cvImage)
+		Imgcodecs.imwrite("$matchFilePath/item_image.png", cvImage)
+		val templateBitmap: Bitmap = BitmapFactory.decodeFile("$matchFilePath/item_image.png")
+
+		val resultFlag: Boolean = match(tesseractSourceBitmap, templateBitmap, customConfidence = 0.70, useSingleScale = true)
+		return if (resultFlag) matchLocation
+		else null
 	}
 }
