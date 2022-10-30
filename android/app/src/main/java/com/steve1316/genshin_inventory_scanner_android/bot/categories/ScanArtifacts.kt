@@ -263,6 +263,11 @@ class ScanArtifacts(private val game: Game) {
 	 *
 	 */
 	fun start() {
+		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2) == null && !game.findAndPress("category_unselected_artifacts", tries = 2)) {
+			game.printToLog("[ERROR] Could not make the category active and thus could not start the Artifact scan..", tag, isError = true)
+			return
+		}
+
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
 			game.printToLog("**************************************", tag)
