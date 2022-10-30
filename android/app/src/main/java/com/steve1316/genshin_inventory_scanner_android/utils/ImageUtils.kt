@@ -579,7 +579,11 @@ class ImageUtils(context: Context, private val game: Game) {
 			game.printToLog("[DEBUG] Found match locations for $templateName: $matchLocations.", tag = tag)
 		}
 
-		return matchLocations
+		// Deep copy the list of locations to prevent concurrent modification.
+		val locations = matchLocations.map { it.clone() } as ArrayList
+		matchLocations.clear()
+
+		return locations
 	}
 
 	/**

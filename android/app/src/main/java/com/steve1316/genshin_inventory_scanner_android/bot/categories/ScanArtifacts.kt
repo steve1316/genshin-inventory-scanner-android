@@ -322,10 +322,7 @@ class ScanArtifacts(private val game: Game) {
 		while (!isSearchDone()) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
 
-			val tempLocations: ArrayList<Point> = search()
-
-			// Deep copy the list of locations to prevent concurrent modification.
-			val locations = tempLocations.map { it.clone() } as ArrayList
+			val locations: ArrayList<Point> = search()
 
 			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} locations: $locations.", tag, isWarning = true)
 
