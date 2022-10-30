@@ -19,6 +19,7 @@ class ScanWeapons(private val game: Game) {
 	private var search3StarComplete = !game.configData.scan3StarWeapons
 
 	private var firstSearchComplete = false
+	private var firstSearchLessThanMax = false
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
 
@@ -191,9 +192,19 @@ class ScanWeapons(private val game: Game) {
 			game.scanUtils.scrollFirstRow()
 		}
 
-		// Cover the case where the first search found less than the maximum.
-		else if (locationSize != 0 && locationSize < firstSearchMaxSearches) {
-			game.printToLog("[SCAN_WEAPONS] First search less than the max in the full region scan.", tag, isWarning = true)
+		// Cover the case where the first search found less than the maximum. End the search for this rarity and move on to the next. The next scan will be a full scan again but without scrolling.
+		else if (locationSize != 0 && locationSize < firstSearchMaxSearches && !firstSearchLessThanMax) {
+			game.printToLog("[SCAN_WEAPONS] First search less than the max in the full region scan. Next scan will be a full region scan again.", tag, isWarning = true)
+			enableFullRegionSearch = true
+			enableSingleRowSearch = false
+			firstSearchComplete = false
+			firstSearchLessThanMax = true
+			checkIfSearchCompleted()
+		}
+
+		// Cover the case where the "first" search found less than the maximum. Switch to row scanning for every search after this.
+		else if (locationSize != 0 && locationSize < firstSearchMaxSearches && firstSearchLessThanMax) {
+			game.printToLog("[SCAN_WEAPONS] \"First\" search less than the max in the full region scan. Switching to row scan.", tag, isWarning = true)
 			enableFullRegionSearch = false
 			enableSingleRowSearch = true
 			firstSearchComplete = true
