@@ -41,15 +41,21 @@ const Settings = () => {
 
     useEffect(() => {
         if (bsc.settings.misc.testSearchWeapon) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: false, testSearchMaterial: false } })
         }
     }, [bsc.settings.misc.testSearchWeapon])
 
     useEffect(() => {
         if (bsc.settings.misc.testSearchArtifact) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchMaterial: false } })
         }
     }, [bsc.settings.misc.testSearchArtifact])
+
+    useEffect(() => {
+        if (bsc.settings.misc.testSearchMaterial) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchArtifact: false } })
+        }
+    }, [bsc.settings.misc.testSearchMaterial])
 
     //////////////////////////////////////////////////
     //////////////////////////////////////////////////
@@ -131,6 +137,20 @@ const Settings = () => {
                         <Divider style={{ marginBottom: 10, marginTop: 10 }} />
                     </View>
                 ) : null}
+
+                <CustomCheckbox
+                    text="Enable Scan for Materials"
+                    isChecked={bsc.settings.materials.enableScanMaterials}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, materials: { ...bsc.settings.materials, enableScanMaterials: !bsc.settings.materials.enableScanMaterials } })}
+                />
+
+                <CustomCheckbox
+                    text="Enable Scan for Character Development Items"
+                    isChecked={bsc.settings.materials.enableScanCharacterDevelopmentItems}
+                    onPress={() =>
+                        bsc.setSettings({ ...bsc.settings, materials: { ...bsc.settings.materials, enableScanCharacterDevelopmentItems: !bsc.settings.materials.enableScanCharacterDevelopmentItems } })
+                    }
+                />
             </View>
         )
     }
@@ -168,6 +188,13 @@ const Settings = () => {
                             onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: !bsc.settings.misc.testSearchArtifact } })}
                             text="Test Single Artifact Scan"
                             subtitle="Check this to test scanning the currently selected artifact. Only one can be active at a time."
+                        />
+
+                        <CustomCheckbox
+                            isChecked={bsc.settings.misc.testSearchMaterial}
+                            onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchMaterial: !bsc.settings.misc.testSearchMaterial } })}
+                            text="Test Single Material Scan"
+                            subtitle="Check this to test scanning the currently selected material. Can also be used for a character development item. Only one can be active at a time."
                         />
                     </View>
                 ) : null}

@@ -13,11 +13,16 @@ export interface Settings {
         scan4StarArtifacts: boolean
         scan3StarArtifacts: boolean
     }
+    materials: {
+        enableScanMaterials: boolean
+        enableScanCharacterDevelopmentItems: boolean
+    }
     misc: {
-        debugMode: boolean,
+        debugMode: boolean
         enableTestSingleSearch: boolean
         testSearchWeapon: boolean
         testSearchArtifact: boolean
+        testSearchMaterial: boolean
     }
 }
 
@@ -35,11 +40,15 @@ export const defaultSettings: Settings = {
         scan4StarArtifacts: false,
         scan3StarArtifacts: false,
     },
+    materials: {
+        enableScanMaterials: false,
+        enableScanCharacterDevelopmentItems: false,
+    },
     misc: {
         debugMode: false,
         enableTestSingleSearch: false,
         testSearchWeapon: false,
-        testSearchArtifact: false
+        testSearchArtifact: false,
     },
 }
 
