@@ -3,6 +3,9 @@ package com.steve1316.genshin_inventory_scanner_android.bot
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.steve1316.genshin_inventory_scanner_android.BuildConfig
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.StartModule
@@ -151,6 +154,73 @@ class Game(private val myContext: Context) {
 		return (imageUtils.findImage("backpack") != null)
 	}
 
+	private fun constructWeaponArray(weapons: ArrayList<Weapon>): JsonArray {
+		val result = JsonArray()
+
+		weapons.forEach {
+			val obj = JsonObject()
+			obj.apply {
+				addProperty("key", it.key)
+				addProperty("level", it.level)
+				addProperty("ascension", it.ascension)
+				addProperty("refinement", it.refinement)
+				addProperty("location", it.location)
+				addProperty("lock", it.lock)
+			}
+
+			result.add(obj)
+		}
+
+		return result
+	}
+
+	private fun constructArtifactArray(artifacts: ArrayList<Artifact>): JsonArray {
+		val result = JsonArray()
+
+		artifacts.forEach {
+			val obj = JsonObject()
+			obj.apply {
+				addProperty("setKey", it.setKey)
+				addProperty("slotKey", it.slotKey)
+				addProperty("level", it.level)
+				addProperty("rarity", it.rarity)
+				addProperty("mainStatKey", it.mainStatKey)
+				addProperty("location", it.location)
+				addProperty("lock", it.lock)
+				add("substats", constructArtifactSubstatsArray(it.substats))
+			}
+
+			result.add(obj)
+		}
+
+		return result
+	}
+
+	private fun constructArtifactSubstatsArray(substats: ArrayList<Artifact.Companion.Substat>): JsonArray {
+		val result = JsonArray()
+
+		substats.forEach {
+			val obj = JsonObject()
+			obj.apply {
+				addProperty("key", it.key)
+				addProperty("value", it.value)
+			}
+
+			result.add(obj)
+		}
+
+		return result
+	}
+
+	private fun constructMaterialObject(materials: MutableMap<String, Int>): JsonObject {
+		val result = JsonObject()
+
+		materials.keys.forEach {
+			result.addProperty(it, materials[it])
+		}
+
+		return result
+	}
 
 	/**
 	 * Collect all of the scanned information into a JSON file in GOOD format.
@@ -176,23 +246,27 @@ class Game(private val myContext: Context) {
 			"GOOD @ ${current.format(sdf)}"
 		}
 
-		// Collect the weapon list into the JSON file.
-		val fileContent = """{
-	"format": "GOOD",
-	"version": 2,
-	"source": "Genshin Inventory Scanner Android v${BuildConfig.VERSION_NAME}",
-	"characters": [],
-	"artifacts": [],
-	"weapons": [],
-	"materials": {}
-}"""
+		// Construct the JSON object and collect all the data into it.
+		val jsonObject = JsonObject().apply {
+			addProperty("format", "GOOD")
+			addProperty("version", "2")
+			addProperty("source", "Genshin Inventory Scanner Android v${BuildConfig.VERSION_NAME}")
+			add("characters", null)
+			add("artifacts", constructArtifactArray(artifacts))
+			add("weapons", constructWeaponArray(weapons))
+			add("materials", constructMaterialObject(materials))
+		}
+
+		// Set up pretty printing via GSON.
+		val gson = GsonBuilder().setPrettyPrinting().create()
+		val prettyJSONString = gson.toJson(jsonObject)
 
 		// Now save the file.
 		val file = File(path, "$fileName.json")
 		if (!file.exists()) {
 			file.createNewFile()
 			file.printWriter().use { out ->
-				out.print(fileContent)
+				out.write(prettyJSONString)
 			}
 
 			printToLog("\n[INFO] Data saved into $fileName.json")
