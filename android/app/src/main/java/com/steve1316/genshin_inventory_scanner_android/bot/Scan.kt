@@ -19,25 +19,26 @@ class Scan(private val game: Game) {
 	/**
 	 * Resets the scroll level of the current category back to the top.
 	 *
+	 * @param pressReorder Defaults to true if scroll can be reset by pressing on the Reorder button.
 	 */
-	fun resetScrollScreen() {
-		if ((game.configData.enableScanMaterials || game.configData.enableScanCharacterDevelopmentItems) && (game.configData.enableScanWeapons || game.configData.enableScanArtifacts)) {
-			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
-			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+	fun resetScrollScreen(pressReorder: Boolean = true) {
+		if (pressReorder) {
+			game.printToLog("\n[SCAN] Now resetting the scroll level for this category by pressing the Reorder button...", tag)
+			game.findAndPress("reorder")
+			game.findAndPress("reorder")
 			game.wait(1.0)
-			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
-			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
-			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
-			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
-		} else if (game.configData.enableScanWeapons || game.configData.enableScanArtifacts) {
+		} else {
 			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
-			game.findAndPress("reorder")
-			game.findAndPress("reorder")
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
+			game.wait(1.0)
+			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
 		}
 	}

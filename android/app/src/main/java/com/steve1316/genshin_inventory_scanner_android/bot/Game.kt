@@ -219,19 +219,24 @@ class Game(private val myContext: Context) {
 
 			// Begin scanning logic based on current settings.
 
+			val scanWeapons = ScanWeapons(this)
+			val scanArtifacts = ScanArtifacts(this)
+			val scanMaterials = ScanMaterials(this)
+
 			if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
-				val scanWeapons = ScanWeapons(this)
 				weapons = scanWeapons.start()
 			}
 
 			if ((configData.enableScanArtifacts && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchArtifact)) {
-				val scanArtifacts = ScanArtifacts(this)
 				artifacts = scanArtifacts.start()
 			}
 
-			if (configData.enableScanMaterials || configData.enableScanCharacterDevelopmentItems || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
-				val scanMaterials = ScanMaterials(this)
+			if (configData.enableScanMaterials || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
 				materials = scanMaterials.start()
+			}
+
+			if (configData.enableScanCharacterDevelopmentItems) {
+				materials += scanMaterials.start(searchCharacterDevelopmentItems = true)
 			}
 
 			// Compile all of the data acquired into a file in GOOD format.

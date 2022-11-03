@@ -49,37 +49,42 @@ class ScanMaterials(private val game: Game) {
 	/**
 	 * Starts the search process and process through all search queries.
 	 *
+	 * @param searchCharacterDevelopmentItems Determines whether to search for Materials first, followed by Character Development Items. Defaults to false.
 	 * @return List of materials along with their amounts scanned.
 	 */
-	fun start(): MutableMap<String, Int> {
-		if (game.configData.enableScanMaterials && game.imageUtils.findImage("category_selected_materials", tries = 2) == null &&
+	fun start(searchCharacterDevelopmentItems: Boolean = false): MutableMap<String, Int> {
+		if (game.configData.enableScanMaterials && !searchCharacterDevelopmentItems && game.imageUtils.findImage("category_selected_materials", tries = 2) == null &&
 			!game.findAndPress("category_unselected_materials", tries = 2) ||
-			(game.configData.enableScanCharacterDevelopmentItems && game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2) == null &&
+			(game.configData.enableScanCharacterDevelopmentItems && searchCharacterDevelopmentItems &&
+					game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2) == null &&
 					!game.findAndPress("category_unselected_characterdevelopmentitems", tries = 2))
 		) {
-			game.printToLog("[ERROR] Could not make the category active and thus could not start the Material scan..", tag, isError = true)
+			val category = if (searchCharacterDevelopmentItems) "Character Development Item" else "Material"
+			game.printToLog("[ERROR] Could not make the category active and thus could not start the $category scan..", tag, isError = true)
 			return mutableMapOf()
 		}
 
 		val materialList: MutableMap<String, Int> = mutableMapOf()
 
+		val categoryTag = if (searchCharacterDevelopmentItems) "CHARACTER_DEVELOPMENT_ITEMS" else "MATERIALS"
+
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
 			game.printToLog("**************************************", tag)
-			game.printToLog("[SCAN_MATERIALS] MATERIAL SCAN STARTING...", tag)
-			if (game.configData.enableScanMaterials) game.printToLog("[SCAN_MATERIALS] Materials", tag)
-			else if (game.configData.enableScanCharacterDevelopmentItems) game.printToLog("[SCAN_MATERIALS] Character Development Items", tag)
+			game.printToLog("[SCAN_$categoryTag] $categoryTag SCAN STARTING...", tag)
+			if (!searchCharacterDevelopmentItems) game.printToLog("[SCAN_MATERIALS] Materials", tag)
+			else game.printToLog("[SCAN_CHARACTER_DEVELOPMENT_ITEMS] Character Development Items", tag)
 			game.printToLog("**************************************", tag)
 
-			game.scanUtils.resetScrollScreen()
+			game.scanUtils.resetScrollScreen(pressReorder = false)
 		} else {
 			game.printToLog("**************************************", tag)
-			game.printToLog("[SCAN_MATERIALS] TESTING SINGLE SEARCH...", tag)
-			game.printToLog("[SCAN_MATERIALS] Note: Material amount is not tested here.", tag)
+			game.printToLog("[SCAN_SINGLE] TESTING SINGLE SEARCH...", tag)
+			game.printToLog("[SCAN_SINGLE] Note: Material amount is not tested here.", tag)
 			game.printToLog("**************************************", tag)
 
 			val materialName = game.scanUtils.getMaterialName()
-			game.printToLog("[SCAN_MATERIALS] Material scanned: $materialName\n", tag)
+			game.printToLog("[SCAN_SINGLE] Scanned: $materialName\n", tag)
 
 			return materialList
 		}
@@ -108,15 +113,15 @@ class ScanMaterials(private val game: Game) {
 								else game.scanUtils.getMaterialAmountSubsequent()
 
 								materialList[materialName] = amount
-								game.printToLog("[SCAN_MATERIALS] Material scanned: x$amount $materialName\n", tag)
+								game.printToLog("[SCAN_$categoryTag] Material scanned: x$amount $materialName\n", tag)
 							}
 						} catch (e: Exception) {
 							game.printToLog(
-								"[ERROR] Material failed to scan: (Name: $materialName, Amount: $amount)\n", tag, isError = true
+								"[ERROR] Failed to scan: (Name: $materialName, Amount: $amount)\n", tag, isError = true
 							)
 						}
 					} else {
-						game.printToLog("[SCAN_MATERIALS] Done\n", tag, isWarning = true)
+						game.printToLog("[SCAN_$categoryTag] Done\n", tag, isWarning = true)
 						searchComplete = true
 					}
 				}
@@ -130,7 +135,7 @@ class ScanMaterials(private val game: Game) {
 			}
 		}
 
-		game.printToLog("[SCAN_MATERIALS] Material scan completed with ${materialList.size} scanned.", tag)
+		game.printToLog("[SCAN_$categoryTag] Scan completed with ${materialList.size} scanned.", tag)
 
 		return materialList
 	}
