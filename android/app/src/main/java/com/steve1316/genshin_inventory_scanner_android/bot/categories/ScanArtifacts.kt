@@ -290,8 +290,8 @@ class ScanArtifacts(private val game: Game) {
 			game.scanUtils.resetScrollScreen()
 		} else {
 			game.printToLog("**************************************", tag)
-			game.printToLog("[SCAN_ARTIFACTS] TESTING SINGLE SEARCH...", tag)
-			game.printToLog("[SCAN_ARTIFACTS] Note: Rarity is not tested here as it is automatically handled during normal operation.", tag)
+			game.printToLog("[SCAN_SINGLE] TESTING SINGLE SEARCH...", tag)
+			game.printToLog("[SCAN_SINGLE] Note: Rarity is not tested here as it is automatically handled during normal operation.", tag)
 			game.printToLog("**************************************", tag)
 
 			val artifactName = game.scanUtils.getArtifactName()
@@ -320,7 +320,7 @@ class ScanArtifacts(private val game: Game) {
 
 				artifactList.add(artifactObject)
 
-				game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
+				game.printToLog("[SCAN_SINGLE] Artifact scanned: $artifactObject\n", tag)
 			} catch (e: Exception) {
 				game.printToLog(
 					"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +

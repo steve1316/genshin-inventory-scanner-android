@@ -277,7 +277,7 @@ class ScanWeapons(private val game: Game) {
 			game.scanUtils.resetScrollScreen()
 		} else {
 			game.printToLog("**************************************", tag)
-			game.printToLog("[SCAN_WEAPONS] TESTING SINGLE SEARCH...", tag)
+			game.printToLog("[SCAN_SINGLE] TESTING SINGLE SEARCH...", tag)
 			game.printToLog("**************************************", tag)
 
 			val (weaponName, _) = game.scanUtils.getWeaponNameAndRarity()
@@ -298,7 +298,7 @@ class ScanWeapons(private val game: Game) {
 
 				weaponList.add(weaponObject)
 
-				game.printToLog("[SCAN_WEAPONS] Weapon scanned: $weaponObject\n", tag)
+				game.printToLog("[SCAN_SINGLE] Weapon scanned: $weaponObject\n", tag)
 			} catch (e: Exception) {
 				game.printToLog(
 					"[ERROR] Weapon failed to scan: (Name: $weaponName, Level: $weaponLevel, Ascension: $weaponAscensionLevel, " +
