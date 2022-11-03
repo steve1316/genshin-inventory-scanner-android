@@ -33,8 +33,6 @@ class ScanMaterials(private val game: Game) {
 
 	private var firstSearchComplete = false
 
-	private var materialList: MutableMap<String, Int> = mutableMapOf()
-
 	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchMaterial
 
 	/**
@@ -51,16 +49,19 @@ class ScanMaterials(private val game: Game) {
 	/**
 	 * Starts the search process and process through all search queries.
 	 *
+	 * @return List of materials along with their amounts scanned.
 	 */
-	fun start() {
+	fun start(): MutableMap<String, Int> {
 		if (game.configData.enableScanMaterials && game.imageUtils.findImage("category_selected_materials", tries = 2) == null &&
 			!game.findAndPress("category_unselected_materials", tries = 2) ||
 			(game.configData.enableScanCharacterDevelopmentItems && game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2) == null &&
 					!game.findAndPress("category_unselected_characterdevelopmentitems", tries = 2))
 		) {
 			game.printToLog("[ERROR] Could not make the category active and thus could not start the Material scan..", tag, isError = true)
-			return
+			return mutableMapOf()
 		}
+
+		val materialList: MutableMap<String, Int> = mutableMapOf()
 
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
@@ -80,7 +81,7 @@ class ScanMaterials(private val game: Game) {
 			val materialName = game.scanUtils.getMaterialName()
 			game.printToLog("[SCAN_MATERIALS] Material scanned: $materialName\n", tag)
 
-			return
+			return materialList
 		}
 
 		while (!searchComplete) {
@@ -130,5 +131,7 @@ class ScanMaterials(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN_MATERIALS] Material scan completed with ${materialList.size} scanned.", tag)
+
+		return materialList
 	}
 }

@@ -23,8 +23,6 @@ class ScanWeapons(private val game: Game) {
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
 
-	private var weaponList: ArrayList<Weapon> = arrayListOf()
-
 	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchWeapon
 
 	/**
@@ -259,12 +257,15 @@ class ScanWeapons(private val game: Game) {
 	/**
 	 * Starts the search process and process through all search queries.
 	 *
+	 * @return List of scanned weapons.
 	 */
-	fun start() {
+	fun start(): ArrayList<Weapon> {
 		if (game.imageUtils.findImage("category_selected_weapons", tries = 2) == null && !game.findAndPress("category_unselected_weapons", tries = 2)) {
 			game.printToLog("[ERROR] Could not make the category active and thus could not start the Weapon scan..", tag, isError = true)
-			return
+			return arrayListOf()
 		}
+
+		val weaponList: ArrayList<Weapon> = arrayListOf()
 
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
@@ -305,7 +306,7 @@ class ScanWeapons(private val game: Game) {
 				)
 			}
 
-			return
+			return weaponList
 		}
 
 		while (!isSearchDone()) {
@@ -388,5 +389,7 @@ class ScanWeapons(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN_WEAPONS] Weapon scan completed with ${weaponList.size} scanned.", tag)
+
+		return weaponList
 	}
 }

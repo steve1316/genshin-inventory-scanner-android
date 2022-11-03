@@ -1,13 +1,17 @@
 package com.steve1316.genshin_inventory_scanner_android.bot
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import com.steve1316.genshin_inventory_scanner_android.BuildConfig
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.StartModule
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanArtifacts
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanMaterials
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanWeapons
+import com.steve1316.genshin_inventory_scanner_android.data.Artifact
 import com.steve1316.genshin_inventory_scanner_android.data.ConfigData
+import com.steve1316.genshin_inventory_scanner_android.data.Weapon
 import com.steve1316.genshin_inventory_scanner_android.utils.ImageUtils
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService
 import com.steve1316.genshin_inventory_scanner_android.utils.MessageLog
@@ -15,6 +19,11 @@ import com.steve1316.genshin_inventory_scanner_android.utils.MyAccessibilityServ
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.opencv.core.Point
+import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -142,10 +151,57 @@ class Game(private val myContext: Context) {
 		return (imageUtils.findImage("backpack") != null)
 	}
 
+
+	/**
+	 * Collect all of the scanned information into a JSON file in GOOD format.
+	 *
+	 * @param weapons List of scanned weapons.
+	 * @param artifacts List of scanned artifacts.
+	 * @param materials List of scanned materials/character development items.
+	 */
+	private fun compileIntoGOOD(weapons: ArrayList<Weapon>, artifacts: ArrayList<Artifact>, materials: MutableMap<String, Int>) {
+		printToLog("\n[INFO] Saving data into a JSON file in GOOD format now...")
+
+		// Generate a path to the root of the application folder in the Internal Storage.
+		val path = File(myContext.getExternalFilesDir(null)?.absolutePath ?: throw Exception("Could not generate a path to the folder to save the file in GOOD format."))
+
+		// Generate the file name.
+		val fileName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			val current = LocalDateTime.now()
+			val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+			"GOOD @ ${current.format(formatter)}"
+		} else {
+			val current = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+			val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+			"GOOD @ ${current.format(sdf)}"
+		}
+
+		// Collect the weapon list into the JSON file.
+		val fileContent = """{
+	"format": "GOOD",
+	"version": 2,
+	"source": "Genshin Inventory Scanner Android v${BuildConfig.VERSION_NAME}",
+	"characters": [],
+	"artifacts": [],
+	"weapons": [],
+	"materials": {}
+}"""
+
+		// Now save the file.
+		val file = File(path, "$fileName.json")
+		if (!file.exists()) {
+			file.createNewFile()
+			file.printWriter().use { out ->
+				out.print(fileContent)
+			}
+
+			printToLog("\n[INFO] Data saved into $fileName.json")
+		}
+	}
+
 	/**
 	 * Bot will begin automation here.
 	 *
-	 * @return
 	 */
 	fun start() {
 		val startTime: Long = System.currentTimeMillis()
@@ -155,22 +211,31 @@ class Game(private val myContext: Context) {
 		wait(2.0)
 
 		if (initializationCheck()) {
-			backpackLocation = imageUtils.findImage("backpack")!!
+			backpackLocation = imageUtils.findImage("backpack") ?: throw Exception("Bot needs to start at the Inventory screen.")
+
+			var weapons: ArrayList<Weapon> = arrayListOf()
+			var artifacts: ArrayList<Artifact> = arrayListOf()
+			var materials: MutableMap<String, Int> = mutableMapOf()
+
+			// Begin scanning logic based on current settings.
 
 			if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
 				val scanWeapons = ScanWeapons(this)
-				scanWeapons.start()
+				weapons = scanWeapons.start()
 			}
 
 			if ((configData.enableScanArtifacts && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchArtifact)) {
 				val scanArtifacts = ScanArtifacts(this)
-				scanArtifacts.start()
+				artifacts = scanArtifacts.start()
 			}
 
 			if (configData.enableScanMaterials || configData.enableScanCharacterDevelopmentItems || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
 				val scanMaterials = ScanMaterials(this)
-				scanMaterials.start()
+				materials = scanMaterials.start()
 			}
+
+			// Compile all of the data acquired into a file in GOOD format.
+			compileIntoGOOD(weapons, artifacts, materials)
 		} else {
 			throw Exception("Unable to detect if the bot is at the Inventory screen.")
 		}

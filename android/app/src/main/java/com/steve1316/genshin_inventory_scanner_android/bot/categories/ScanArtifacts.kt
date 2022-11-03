@@ -25,8 +25,6 @@ class ScanArtifacts(private val game: Game) {
 
 	private var currentRarity = "5"
 
-	private var artifactList: ArrayList<Artifact> = arrayListOf()
-
 	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchArtifact
 
 	init {
@@ -272,12 +270,15 @@ class ScanArtifacts(private val game: Game) {
 	/**
 	 * Starts the search process and process through all search queries.
 	 *
+	 * @return List of scanned artifacts.
 	 */
-	fun start() {
+	fun start(): ArrayList<Artifact> {
 		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2) == null && !game.findAndPress("category_unselected_artifacts", tries = 2)) {
 			game.printToLog("[ERROR] Could not make the category active and thus could not start the Artifact scan..", tag, isError = true)
-			return
+			return arrayListOf()
 		}
+
+		val artifactList: ArrayList<Artifact> = arrayListOf()
 
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
@@ -327,7 +328,7 @@ class ScanArtifacts(private val game: Game) {
 				)
 			}
 
-			return
+			return artifactList
 		}
 
 		while (!isSearchDone()) {
@@ -418,5 +419,7 @@ class ScanArtifacts(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN_ARTIFACTS] Artifact scan completed with ${artifactList.size} scanned.", tag)
+
+		return artifactList
 	}
 }
