@@ -366,8 +366,8 @@ class Scan(private val game: Game) {
 		val substats: ArrayList<Artifact.Companion.Substat> = arrayListOf()
 
 		val substatLocations = game.imageUtils.findAll("artifact_substat", region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight))
-		substatLocations.forEach {
-			val substat = game.imageUtils.findTextTesseract((it.x + 25).toInt(), (it.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
+		substatLocations.forEach { location ->
+			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
 
 			val formattedSubstat = substat.split("+") as ArrayList<String>
 			formattedSubstat[0] = formattedSubstat[0].uppercase(Locale.ROOT)
@@ -392,6 +392,9 @@ class Scan(private val game: Game) {
 				game.printToLog("[SCAN] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
 				formattedSubstat[1] = "11"
 			}
+
+			// Remove all letters that got mixed into the substat value.
+			formattedSubstat[1] = formattedSubstat[1].filter { if (it != '.') it.isDigit() else true }
 
 			substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
 		}
