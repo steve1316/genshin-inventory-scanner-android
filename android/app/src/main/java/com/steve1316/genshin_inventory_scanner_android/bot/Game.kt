@@ -203,7 +203,7 @@ class Game(private val myContext: Context) {
 			val obj = JsonObject()
 			obj.apply {
 				addProperty("key", it.key)
-				addProperty("value", it.value)
+				addProperty("value", it.value.toDouble())
 			}
 
 			result.add(obj)
