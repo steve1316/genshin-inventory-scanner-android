@@ -226,7 +226,7 @@ class Scan(private val game: Game) {
 				(game.backpackLocation.x + 1705).toInt(), (game.backpackLocation.y + 815).toInt(), 360, 40, customThreshold = 170.0,
 				reuseSourceBitmap = true
 			)
-			result.replace("|", "").trim()
+			toPascalCase(result.replace("|", "").trim())
 		} else {
 			""
 		}
