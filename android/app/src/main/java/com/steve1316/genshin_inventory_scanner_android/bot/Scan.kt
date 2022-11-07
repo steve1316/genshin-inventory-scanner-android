@@ -340,11 +340,13 @@ class Scan(private val game: Game) {
 				}
 			}
 
-			thresholdDiff += 5.0
+			thresholdDiff += 10.0
 
 			tries -= 1
 		}
-		val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0)
+
+		game.printToLog("[SCAN] Failed to match artifact name to any in the database. Forcing the result through now...", tag, isError = true)
+		val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55)
 		return toPascalCase(artifactName)
 	}
 
