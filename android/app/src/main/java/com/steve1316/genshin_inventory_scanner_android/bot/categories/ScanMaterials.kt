@@ -68,6 +68,9 @@ class ScanMaterials(private val game: Game) {
 
 		val categoryTag = if (searchCharacterDevelopmentItems) "CHARACTER_DEVELOPMENT_ITEMS" else "MATERIALS"
 
+		searchComplete = false
+		firstSearchComplete = false
+
 		// Reset the scroll view or perform a test single search.
 		if (!testSingleSearch) {
 			game.printToLog("**************************************", tag)
