@@ -478,6 +478,18 @@ class ImageUtils(context: Context, private val game: Game) {
 		}
 	}
 
+	private fun getSourceScreenshot(): Bitmap {
+		while(true) {
+			val bitmap = MediaProjectionService.takeScreenshotNow(saveImage = debugMode)
+			if (bitmap != null) {
+				return bitmap
+			} else {
+				game.printToLog("[WARNING] Source bitmap is null. Waiting a second before trying again.", tag = tag, isWarning = true)
+				game.wait(1.0)
+			}
+		}
+	}
+
 	/**
 	 * Finds the location of the specified image from the /images/ folder inside assets.
 	 *
@@ -699,7 +711,7 @@ class ImageUtils(context: Context, private val game: Game) {
 		val startTime: Long = System.currentTimeMillis()
 
 		val sourceBitmap: Bitmap = if (!reuseSourceBitmap) {
-			tesseractSourceBitmap = MediaProjectionService.takeScreenshotNow(saveImage = debugMode)!!
+			tesseractSourceBitmap = getSourceScreenshot()
 			tesseractSourceBitmap
 		} else {
 			tesseractSourceBitmap
