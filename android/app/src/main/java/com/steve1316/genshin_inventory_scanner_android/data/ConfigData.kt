@@ -34,11 +34,16 @@ class ConfigData(myContext: Context) {
 	val enableScanMaterials: Boolean
 	val enableScanCharacterDevelopmentItems: Boolean
 
+	// Character Scan
+	val enableScanCharacters: Boolean
+	val travelerName: String
+
 	// Misc
 	val enableTestSingleSearch: Boolean
 	val testSearchWeapon: Boolean
 	val testSearchArtifact: Boolean
 	val testSearchMaterial: Boolean
+	val testSearchCharacter: Boolean
 
 	init {
 		Log.d(tag, "Loading settings from SharedPreferences to memory...")
@@ -63,6 +68,10 @@ class ConfigData(myContext: Context) {
 		enableScanMaterials = sharedPreferences.getBoolean("enableScanMaterials", false)
 		enableScanCharacterDevelopmentItems = sharedPreferences.getBoolean("enableScanCharacterDevelopmentItems", false)
 
+		// Character Scan settings.
+		enableScanCharacters = sharedPreferences.getBoolean("enableScanCharacters", false)
+		travelerName = sharedPreferences.getString("travelerName", "").toString()
+
 		// Android-specific settings.
 		enableDelayTap = sharedPreferences.getBoolean("enableDelayTap", false)
 		delayTapMilliseconds = sharedPreferences.getInt("delayTapMilliseconds", 1000)
@@ -75,6 +84,7 @@ class ConfigData(myContext: Context) {
 		testSearchWeapon = sharedPreferences.getBoolean("testSearchWeapon", false)
 		testSearchArtifact = sharedPreferences.getBoolean("testSearchArtifact", false)
 		testSearchMaterial = sharedPreferences.getBoolean("testSearchMaterial", false)
+		testSearchCharacter = sharedPreferences.getBoolean("testSearchCharacter", false)
 
 		Log.d(tag, "Successfully loaded settings from SharedPreferences to memory.")
 	}

@@ -64,6 +64,16 @@ class JSONParser {
 		}
 
 		try {
+			val charactersObj = jObj.getJSONObject("characters")
+			sharedPreferences.edit {
+				putBoolean("enableScanCharacters", charactersObj.getBoolean("enableScanCharacters"))
+				putString("travelerName", charactersObj.getString("travelerName"))
+				commit()
+			}
+		} catch (e: Exception) {
+		}
+
+		try {
 			val miscObj = jObj.getJSONObject("misc")
 			sharedPreferences.edit {
 				putBoolean("debugMode", miscObj.getBoolean("debugMode"))
@@ -71,6 +81,7 @@ class JSONParser {
 				putBoolean("testSearchWeapon", miscObj.getBoolean("testSearchWeapon"))
 				putBoolean("testSearchArtifact", miscObj.getBoolean("testSearchArtifact"))
 				putBoolean("testSearchMaterial", miscObj.getBoolean("testSearchMaterial"))
+				putBoolean("testSearchCharacter", miscObj.getBoolean("testSearchCharacter"))
 				commit()
 			}
 		} catch (e: Exception) {
