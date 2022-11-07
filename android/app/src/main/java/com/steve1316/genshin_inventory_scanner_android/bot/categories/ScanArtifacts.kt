@@ -346,7 +346,7 @@ class ScanArtifacts(private val game: Game) {
 					locations.clear()
 					val finalYCoordinate = reversedLocations[0].y
 					reversedLocations.forEach { location ->
-						if (location.y == finalYCoordinate) {
+						if (location.y == finalYCoordinate || location.y + 1 == finalYCoordinate || location.y - 1 == finalYCoordinate) {
 							locations.add(location)
 						}
 					}
