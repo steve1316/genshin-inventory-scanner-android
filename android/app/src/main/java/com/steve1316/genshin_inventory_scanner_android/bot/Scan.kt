@@ -149,25 +149,81 @@ class Scan(private val game: Game) {
 				weaponAscensionLevel = i.toString()
 				weaponLevel = when (i) {
 					6 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 200.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 200.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					5 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 200.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 200.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					4 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 200.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 200.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					3 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 110.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 110.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					2 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 180.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 180.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					1 -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 200.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 200.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 					else -> {
-						game.imageUtils.findTextTesseract((game.backpackLocation.x + 1535).toInt(), (game.backpackLocation.y + 480).toInt(), 53, 30, customThreshold = 200.0, reuseSourceBitmap = true)
+						game.imageUtils.findTextTesseract(
+							(game.backpackLocation.x + 1535).toInt(),
+							(game.backpackLocation.y + 480).toInt(),
+							53,
+							30,
+							customThreshold = 200.0,
+							reuseSourceBitmap = true,
+							detectDigitsOnly = true
+						)
 					}
 				}
 
@@ -212,7 +268,15 @@ class Scan(private val game: Game) {
 	 * @return Weapon Refinement Level
 	 */
 	fun getRefinementLevel(): String {
-		return game.imageUtils.findTextTesseract((game.backpackLocation.x + 1490).toInt(), (game.backpackLocation.y + 530).toInt(), 35, 35, customThreshold = 170.0, reuseSourceBitmap = true)
+		return game.imageUtils.findTextTesseract(
+			(game.backpackLocation.x + 1490).toInt(),
+			(game.backpackLocation.y + 530).toInt(),
+			35,
+			35,
+			customThreshold = 170.0,
+			reuseSourceBitmap = true,
+			detectDigitsOnly = true
+		)
 	}
 
 	/**
@@ -278,7 +342,15 @@ class Scan(private val game: Game) {
 	}
 
 	fun getArtifactLevel(): String {
-		return game.imageUtils.findTextTesseract((game.backpackLocation.x + 1490).toInt(), (game.backpackLocation.y + 475).toInt(), 66, 33, customThreshold = 170.0, reuseSourceBitmap = true)
+		return game.imageUtils.findTextTesseract(
+			(game.backpackLocation.x + 1490).toInt(),
+			(game.backpackLocation.y + 475).toInt(),
+			66,
+			33,
+			customThreshold = 170.0,
+			reuseSourceBitmap = true,
+			detectDigitsOnly = true
+		)
 	}
 
 	fun getArtifactMainStat(artifactType: String, artifactLevel: Int): Pair<String, String> {
@@ -436,7 +508,15 @@ class Scan(private val game: Game) {
 		val regionWidth = 140
 		val regionHeight = 35
 
-		val result = game.imageUtils.findTextTesseract((location.x + offset.x).toInt(), (location.y + offset.y).toInt(), regionWidth, regionHeight, customThreshold = 145.0, reuseSourceBitmap = true)
+		val result = game.imageUtils.findTextTesseract(
+			(location.x + offset.x).toInt(),
+			(location.y + offset.y).toInt(),
+			regionWidth,
+			regionHeight,
+			customThreshold = 145.0,
+			reuseSourceBitmap = true,
+			detectDigitsOnly = true
+		)
 		return try {
 			result.toInt()
 		} catch (e: Exception) {
@@ -453,7 +533,7 @@ class Scan(private val game: Game) {
 			return 0
 		}
 
-		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 145.0, reuseSourceBitmap = true)
+		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 145.0, reuseSourceBitmap = true, detectDigitsOnly = true)
 		return try {
 			result.toInt()
 		} catch (e: Exception) {

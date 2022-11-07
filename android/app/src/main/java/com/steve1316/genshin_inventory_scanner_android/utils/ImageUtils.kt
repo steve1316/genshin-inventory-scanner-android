@@ -29,6 +29,7 @@ class ImageUtils(context: Context, private val game: Game) {
 
 	private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 	private val tessBaseAPI: TessBaseAPI
+	private val tessDigitsBaseAPI: TessBaseAPI
 
 	////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////
@@ -82,9 +83,9 @@ class ImageUtils(context: Context, private val game: Game) {
 		val matchFilePath: String = myContext.getExternalFilesDir(null)?.absolutePath + "/temp"
 		updateMatchFilePath(matchFilePath)
 
-		// Uncomment the below line to initialize Tesseract for the purposes of OCR text recognition.
-		initTesseract("eng.traineddata")
 		tessBaseAPI = TessBaseAPI()
+		tessDigitsBaseAPI = TessBaseAPI()
+		initTesseract("eng.traineddata")
 	}
 
 	/**
@@ -656,11 +657,23 @@ class ImageUtils(context: Context, private val game: Game) {
 				input.close()
 				output.flush()
 				output.close()
+
 				game.printToLog("[INFO] Finished Tesseract initialization.", tag = tag)
 			} catch (e: IOException) {
 				game.printToLog("[ERROR] IO EXCEPTION: ${e.stackTraceToString()}", tag = tag, isError = true)
 			}
 		}
+
+		tessBaseAPI.init(myContext.getExternalFilesDir(null)?.absolutePath + "/tesseract/", "eng")
+		tessDigitsBaseAPI.init(myContext.getExternalFilesDir(null)?.absolutePath + "/tesseract/", "eng")
+
+		tessDigitsBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "!?@#\$%&*()<>_-+=/:;'\\\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+		tessDigitsBaseAPI.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "0123456789")
+		tessDigitsBaseAPI.setVariable("classify_bln_numeric_mode", "1")
+
+		// Set the Page Segmentation Mode to '--psm 7' or "Treat the image as a single text line" according to https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html#page-segmentation-method
+		tessBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE
+		tessDigitsBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE
 	}
 
 	/**
@@ -674,10 +687,14 @@ class ImageUtils(context: Context, private val game: Game) {
 	 * @param customThreshold Minimum threshold value. Defaults to 130.
 	 * @param customThreshMaxVal Maximum threshold value. Defaults to 255.
 	 * @param reuseSourceBitmap Reuses the source bitmap from the previous call. Defaults to false which will retake the source bitmap.
+	 * @param detectDigitsOnly True if detection should focus on digits only.
 	 *
 	 * @return The detected String in the cropped region.
 	 */
-	fun findTextTesseract(x: Int, y: Int, width: Int, height: Int, thresh: Boolean = true, customThreshold: Double = 130.0, customThreshMaxVal: Double = 255.0, reuseSourceBitmap: Boolean = false):
+	fun findTextTesseract(
+		x: Int, y: Int, width: Int, height: Int, thresh: Boolean = true, customThreshold: Double = 130.0, customThreshMaxVal: Double = 255.0, reuseSourceBitmap: Boolean = false,
+		detectDigitsOnly: Boolean = false
+	):
 			String {
 		val startTime: Long = System.currentTimeMillis()
 
@@ -688,7 +705,6 @@ class ImageUtils(context: Context, private val game: Game) {
 			tesseractSourceBitmap
 		}
 
-		tessBaseAPI.init(myContext.getExternalFilesDir(null)?.absolutePath + "/tesseract/", "eng")
 		if (debugMode) game.printToLog("\n[TESSERACT] Starting text detection now...", tag)
 
 		// Read in the new screenshot and crop it.
@@ -701,11 +717,15 @@ class ImageUtils(context: Context, private val game: Game) {
 			Imgcodecs.imwrite("$matchFilePath/tesseract_result_${mostRecent}_a.png", cvImage)
 		}
 
+		// Grayscale the cropped image.
+		val grayImage = Mat()
+		Imgproc.cvtColor(cvImage, grayImage, Imgproc.COLOR_RGB2GRAY)
+
 		// Thresh the grayscale cropped image to make black and white.
 		val resultBitmap: Bitmap = croppedBitmap
 		if (thresh) {
 			val bwImage = Mat()
-			Imgproc.threshold(cvImage, bwImage, customThreshold, customThreshMaxVal, Imgproc.THRESH_BINARY)
+			Imgproc.threshold(grayImage, bwImage, customThreshold, customThreshMaxVal, Imgproc.THRESH_BINARY)
 			Utils.matToBitmap(bwImage, resultBitmap)
 
 			// Save the cropped image before converting it to black and white in order to troubleshoot issues related to differing device sizes and cropping.
@@ -714,20 +734,29 @@ class ImageUtils(context: Context, private val game: Game) {
 			}
 		}
 
-		tessBaseAPI.setImage(resultBitmap)
-
-		// Set the Page Segmentation Mode to '--psm 7' or "Treat the image as a single text line" according to https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html#page-segmentation-method
-		tessBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE
+		if (detectDigitsOnly) {
+			tessDigitsBaseAPI.setImage(resultBitmap)
+		} else {
+			tessBaseAPI.setImage(resultBitmap)
+		}
 
 		var result = "empty!"
 		try {
 			// Finally, detect text on the cropped region.
-			result = tessBaseAPI.utF8Text
+			result = if (detectDigitsOnly) {
+				tessDigitsBaseAPI.utF8Text
+			} else {
+				tessBaseAPI.utF8Text
+			}
 		} catch (e: Exception) {
 			game.printToLog("[ERROR] Cannot perform OCR: ${e.stackTraceToString()}", tag, isError = true)
 		}
 
-		tessBaseAPI.stop()
+		if (detectDigitsOnly) {
+			tessDigitsBaseAPI.stop()
+		} else {
+			tessBaseAPI.stop()
+		}
 
 		mostRecent++
 		if (mostRecent > 10) {
