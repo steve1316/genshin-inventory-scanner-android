@@ -13,8 +13,9 @@ class Scan(private val game: Game) {
 
 	private var failAttempts = 5
 	private var maxAscensionLevel = 6
-	private var scrollDiff = 0L
-	private var scrollDuration = 0L
+
+	private var scrollTapDelay = 0.0
+	private var scrollAttempts = 0
 
 	/**
 	 * Resets the scroll level of the current category back to the top.
@@ -50,7 +51,6 @@ class Scan(private val game: Game) {
 	fun reset() {
 		failAttempts = 5
 		maxAscensionLevel = 6
-		scrollDiff = 0L
 	}
 
 	/**
@@ -70,16 +70,29 @@ class Scan(private val game: Game) {
 	 */
 	fun scrollSubsequentRow() {
 		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
-		game.gestureUtils.swipe(900f, 800f, 900f, 695f - scrollDiff, duration = 200L + scrollDuration)
-		game.wait(1.0)
 
-		// Increment the difference of the scrolling and the duration that it takes. Scroll momentum will require a reset after 2 scrolls to make sure that scroll motion stays consistent.
-		scrollDiff += 8L
-		scrollDuration += 10L
-		if (scrollDiff % 16L == 0L) {
-			scrollDiff = 0L
-			scrollDuration = 0L
+		game.gestureUtils.swipe(900f, 800f, 900f, 650f)
+
+		val delay = if (0.85 + scrollTapDelay == 1.00) {
+			scrollTapDelay = 0.0
+			0.85
+		} else {
+			0.85 + scrollTapDelay
 		}
+
+		if (scrollAttempts % 10 == 0) scrollTapDelay += 0.01
+		scrollAttempts += 1
+
+		game.wait(delay)
+		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
+		game.wait(0.5)
+	}
+
+	fun scrollRowSlightly() {
+		game.printToLog("\n[SCAN] Scrolling subsequent row moderately up...", tag, isError = true)
+		game.gestureUtils.swipe(900f, 800f, 900f, 740f)
+		game.wait(0.5)
+	}
 	}
 
 	/**

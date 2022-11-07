@@ -263,7 +263,11 @@ class ScanArtifacts(private val game: Game) {
 			game.printToLog("[SCAN_ARTIFACTS] Subsequent search found no matches in the row scan.", tag, isWarning = true)
 			enableFullRegionSearch = false
 			enableSingleRowSearch = true
-			checkIfSearchCompleted()
+
+			// Cover the edge case where the scroll is slightly in between the grid elements so nudge the screen up just a little bit.
+			if (!checkIfSearchCompleted()) {
+				game.scanUtils.scrollRowSlightly()
+			}
 		}
 	}
 
