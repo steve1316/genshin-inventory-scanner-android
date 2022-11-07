@@ -124,6 +124,8 @@ class Scan(private val game: Game) {
 		var resultWeaponName = ""
 		while (tries > 0) {
 			val weaponName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			if (debugMode) game.printToLog("[DEBUG] Scanned the weapon name: $weaponName", tag)
+
 			val formattedWeaponName = toPascalCase(weaponName)
 
 			Data.weapons.forEach { weapon ->
@@ -133,7 +135,6 @@ class Scan(private val game: Game) {
 			}
 
 			thresholdDiff += 5.0
-
 			tries -= 1
 		}
 
@@ -323,6 +324,8 @@ class Scan(private val game: Game) {
 		var thresholdDiff = 0.0
 		while (tries > 0) {
 			val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			if (debugMode) game.printToLog("[DEBUG] Scanned the artifact name: $artifactName", tag)
+
 			val formattedName = toPascalCase(artifactName)
 
 			Data.artifactSets.forEach { artifactSet ->
@@ -492,6 +495,8 @@ class Scan(private val game: Game) {
 		var thresholdDiff = 0.0
 		while (tries > 0) {
 			val materialName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 180.0 - thresholdDiff)
+			if (debugMode) game.printToLog("[DEBUG] Scanned the material name: $materialName", tag)
+
 			val formattedName = toPascalCase(materialName)
 
 			Data.materials.forEach { material ->
