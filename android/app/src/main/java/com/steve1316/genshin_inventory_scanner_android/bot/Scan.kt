@@ -128,11 +128,15 @@ class Scan(private val game: Game) {
 
 			val formattedWeaponName = toPascalCase(weaponName)
 
+			var correctWeaponName = "empty"
 			Data.weapons.forEach { weapon ->
 				if (weapon.key == formattedWeaponName) {
 					resultWeaponName = formattedWeaponName
+					correctWeaponName = formattedWeaponName
 				}
 			}
+
+			if (formattedWeaponName == correctWeaponName) break
 
 			thresholdDiff += 5.0
 			tries -= 1
