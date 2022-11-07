@@ -282,6 +282,9 @@
         "name": "CuihuaWood"
     },
     {
+        "name": "DakasBell"
+    },
+    {
         "name": "DamagedMask"
     },
     {
@@ -558,6 +561,9 @@
         "name": "HellfireButterfly"
     },
     {
+        "name": "HennaBerry"
+    },
+    {
         "name": "HerosWit"
     },
     {
@@ -747,6 +753,9 @@
         "name": "Mint"
     },
     {
+        "name": "MirrorOfMushin"
+    },
+    {
         "name": "MistFlowerCorolla"
     },
     {
@@ -820,6 +829,9 @@
     },
     {
         "name": "NarukawaUkai"
+    },
+    {
+        "name": "NaturesTrueFruit"
     },
     {
         "name": "NilotpalaLotus"
@@ -972,6 +984,9 @@
         "name": "Pufferfish"
     },
     {
+        "name": "PuppetStrings"
+    },
+    {
         "name": "PurpleShirakodai"
     },
     {
@@ -979,6 +994,9 @@
     },
     {
         "name": "Qingxin"
+    },
+    {
+        "name": "QuelledCreeper"
     },
     {
         "name": "RadiantPrism"
@@ -994,9 +1012,6 @@
     },
     {
         "name": "RecruitsInsignia"
-    },
-    {
-        "name": "Redcrest"
     },
     {
         "name": "RedDye"
