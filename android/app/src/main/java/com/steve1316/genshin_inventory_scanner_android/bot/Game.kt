@@ -154,7 +154,11 @@ class Game(private val myContext: Context) {
 	 */
 	private fun initializationCheck(): Boolean {
 		printToLog("[INIT] Performing an initialization check...")
-		return (imageUtils.findImage("backpack") != null)
+		return if ((!configData.enableTestSingleSearch && !configData.enableScanCharacters) || (configData.enableTestSingleSearch && !configData.testSearchCharacter)) {
+			imageUtils.findImage("backpack") != null
+		} else {
+			true
+		}
 	}
 
 	private fun constructWeaponArray(weapons: ArrayList<Weapon>): JsonArray {
@@ -312,7 +316,9 @@ class Game(private val myContext: Context) {
 		wait(2.0)
 
 		if (initializationCheck()) {
-			backpackLocation = imageUtils.findImage("backpack") ?: throw Exception("Bot needs to start at the Inventory screen.")
+			if ((!configData.enableTestSingleSearch && !configData.enableScanCharacters) || (configData.enableTestSingleSearch && !configData.testSearchCharacter)) {
+				backpackLocation = imageUtils.findImage("backpack") ?: throw Exception("Bot needs to start at the Inventory screen.")
+			}
 
 			var weapons: ArrayList<Weapon> = arrayListOf()
 			var artifacts: ArrayList<Artifact> = arrayListOf()
@@ -334,11 +340,11 @@ class Game(private val myContext: Context) {
 				artifacts = scanArtifacts.start()
 			}
 
-			if (configData.enableScanMaterials || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
+			if ((configData.enableScanMaterials && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
 				materials = scanMaterials.start()
 			}
 
-			if (configData.enableScanCharacterDevelopmentItems) {
+			if ((configData.enableScanCharacterDevelopmentItems && !configData.enableTestSingleSearch)) {
 				materials += scanMaterials.start(searchCharacterDevelopmentItems = true)
 			}
 
@@ -347,7 +353,7 @@ class Game(private val myContext: Context) {
 			}
 
 			// Compile all of the data acquired into a file in GOOD format.
-			compileIntoGOOD(weapons, artifacts, materials)
+			if (!configData.enableTestSingleSearch) compileIntoGOOD(weapons, artifacts, materials, characters)
 		} else {
 			throw Exception("Unable to detect if the bot is at the Inventory screen.")
 		}
