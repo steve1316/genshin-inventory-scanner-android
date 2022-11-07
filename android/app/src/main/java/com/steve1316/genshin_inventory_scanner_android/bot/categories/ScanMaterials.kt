@@ -60,7 +60,7 @@ class ScanMaterials(private val game: Game) {
 					!game.findAndPress("category_unselected_characterdevelopmentitems", tries = 2))
 		) {
 			val category = if (searchCharacterDevelopmentItems) "Character Development Item" else "Material"
-			game.printToLog("[ERROR] Could not make the category active and thus could not start the $category scan..", tag, isError = true)
+			game.printToLog("[ERROR] Could not make the category active and thus could not start the $category scan...", tag, isError = true)
 			return mutableMapOf()
 		}
 

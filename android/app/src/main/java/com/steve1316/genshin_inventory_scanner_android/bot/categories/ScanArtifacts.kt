@@ -274,7 +274,7 @@ class ScanArtifacts(private val game: Game) {
 	 */
 	fun start(): ArrayList<Artifact> {
 		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2) == null && !game.findAndPress("category_unselected_artifacts", tries = 2)) {
-			game.printToLog("[ERROR] Could not make the category active and thus could not start the Artifact scan..", tag, isError = true)
+			game.printToLog("[ERROR] Could not make the category active and thus could not start the Artifact scan...", tag, isError = true)
 			return arrayListOf()
 		}
 

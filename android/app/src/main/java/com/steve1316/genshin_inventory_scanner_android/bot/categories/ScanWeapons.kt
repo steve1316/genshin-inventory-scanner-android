@@ -261,7 +261,7 @@ class ScanWeapons(private val game: Game) {
 	 */
 	fun start(): ArrayList<Weapon> {
 		if (game.imageUtils.findImage("category_selected_weapons", tries = 2) == null && !game.findAndPress("category_unselected_weapons", tries = 2)) {
-			game.printToLog("[ERROR] Could not make the category active and thus could not start the Weapon scan..", tag, isError = true)
+			game.printToLog("[ERROR] Could not make the category active and thus could not start the Weapon scan...", tag, isError = true)
 			return arrayListOf()
 		}
 
