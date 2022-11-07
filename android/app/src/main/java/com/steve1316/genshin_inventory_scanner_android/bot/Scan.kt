@@ -3,7 +3,10 @@ package com.steve1316.genshin_inventory_scanner_android.bot
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.data.Artifact
 import com.steve1316.genshin_inventory_scanner_android.data.Data
+import net.ricecode.similarity.JaroWinklerStrategy
+import net.ricecode.similarity.StringSimilarityServiceImpl
 import org.opencv.core.Point
+import java.text.DecimalFormat
 import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
@@ -16,6 +19,9 @@ class Scan(private val game: Game) {
 
 	private var scrollTapDelay = 0.0
 	private var scrollAttempts = 0
+	private var characterScrollAttempts = 0
+	private var characterScrollDiff = 0f
+	private var characterScrollDuration = 0L
 
 	/**
 	 * Resets the scroll level of the current category back to the top.
@@ -93,6 +99,29 @@ class Scan(private val game: Game) {
 		game.gestureUtils.swipe(900f, 800f, 900f, 740f)
 		game.wait(0.5)
 	}
+
+	fun scrollFirstCharacterRow() {
+		game.printToLog("\n[SCAN] Scrolling the character row down...", tag)
+		game.gestureUtils.swipe(200f, 800f, 200f, 600f)
+
+		scrollTapDelay = 0.0
+
+		game.wait(0.5)
+	}
+
+	fun scrollSubsequentCharacterRow() {
+		game.gestureUtils.swipe(200f, 800f, 200f, 640f - characterScrollDiff, duration = 500L - characterScrollDuration)
+
+		if (characterScrollAttempts % 6 == 0) {
+			characterScrollDiff = 0f
+			characterScrollDuration = 0L
+		} else if (characterScrollAttempts % 2 == 0) {
+			characterScrollDiff += 10f
+			characterScrollDuration += 10L
+		}
+
+		characterScrollAttempts += 1
+		game.wait(0.5)
 	}
 
 	/**
@@ -564,5 +593,159 @@ class Scan(private val game: Game) {
 			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 0 for now...", tag, isWarning = true)
 			0
 		}
+	}
+
+	fun getCharacterName(exitLocation: Point): String {
+		val service = StringSimilarityServiceImpl(JaroWinklerStrategy())
+		val decimalFormat = DecimalFormat("#.###")
+		val textSimilarityConfidence = 0.85
+
+		var tries = 5
+		var thresholdDiff = 0.0
+		while (tries > 0) {
+			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 195.0 - thresholdDiff)
+			if (true) game.printToLog("[DEBUG] Scanned the character name: $name", tag)
+
+			val formattedCharacterName = toPascalCase(name)
+
+			if (toPascalCase(game.configData.travelerName) == formattedCharacterName) {
+				return formattedCharacterName
+			} else {
+				Data.characters.forEach {
+					val score = decimalFormat.format(service.score(it, formattedCharacterName)).toDouble()
+					if (score >= textSimilarityConfidence) {
+						return it
+					}
+				}
+			}
+
+			thresholdDiff += 5.0
+			tries -= 1
+		}
+
+		game.printToLog("[SCAN] Failed to match Character name with the ones in the database.", tag, isError = true)
+
+		return ""
+	}
+
+	fun getCharacterLevel(exitLocation: Point): Int {
+		var level = game.imageUtils.findTextTesseract((exitLocation.x - 375).toInt(), (exitLocation.y + 200).toInt(), 65, 40, customThreshold = 170.0, detectDigitsOnly = true)
+		level = level.filter { if (it != '.') it.isDigit() else true }
+		return try {
+			level.toInt()
+		} catch (e: Exception) {
+			game.printToLog("[SCAN] Failed to convert the Character level of $level to an integer. Returning 1 for now...", tag, isWarning = true)
+			1
+		}
+	}
+
+	fun getCharacterAscensionLevel(): Int {
+		return game.imageUtils.findAll("character_ascension_star", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight), customConfidence = 0.8)
+			.size
+	}
+
+	fun getCharacterConstellationLevel(): Int {
+		if (!game.findAndPress("character_constellation", tries = 2) && game.imageUtils.findImage("character_constellation_selected", tries = 2) == null) {
+			game.printToLog("[SCAN] Failed to go to the Constellations page. Returning 0 for now...", tag, isError = true)
+			return 0
+		}
+
+		game.wait(1.0)
+
+		return 6 - game.imageUtils.findAll("character_constellation_locked", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight)).size
+	}
+
+	fun getCharacterTalentLevels(characterName: String, characterConstellationLevel: Int = 0): ArrayList<Int> {
+		if (!game.findAndPress("character_talents", tries = 2) && game.imageUtils.findImage("character_talents_selected", tries = 2) == null) {
+			game.printToLog("[SCAN] Failed to go to the Talents page. Returning 1's for now...", tag, isError = true)
+			return arrayListOf(1, 1, 1)
+		}
+
+		val hasConstellation3 = (characterConstellationLevel == 3)
+		val hasConstellation5 = (characterConstellationLevel >= 5)
+
+		game.wait(1.0)
+
+		// Cover edge cases where certain characters have a special dash that is positioned in between the skill and the burst.
+		val characterExceptions: ArrayList<String> = arrayListOf("KamisatoAyaka", "Mona")
+
+		val result = arrayListOf<Int>()
+		var index = 1
+
+		var levelLocations = game.imageUtils.findAll(
+			"character_talents_level", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight),
+			customConfidence = 0.7
+		)
+
+		if (levelLocations.size < 3) {
+			var levelTries = 5
+			var confidenceDiff = 0.5
+			while (levelTries > 0) {
+				levelLocations = game.imageUtils.findAll(
+					"character_talents_level", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight),
+					customConfidence = 0.7 - confidenceDiff
+				)
+
+				if (levelLocations.size >= 3) {
+					break
+				}
+
+				confidenceDiff += 0.1
+				levelTries -= 1
+			}
+		}
+
+		levelLocations.forEach { location ->
+			if (index == 1 || index == 2 || (index == 3 && !characterExceptions.contains(characterName)) || (index == 4 && characterExceptions.contains(characterName))) {
+				var resultLevel = 0
+				var tries = 3
+				var thresholdDiff = 0.0
+
+				while (tries > 0) {
+					var level = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 15).toInt(), 40, 35, customThreshold = 180.0 - thresholdDiff, detectDigitsOnly = true)
+					level = level.filter { if (it != '.') it.isDigit() else true }
+
+					// Cover edge cases after scanning here.
+					if (level == "0") {
+						game.printToLog("[SCAN] Detected value of \"0\". Changing it to \"10\".", tag, isWarning = true)
+						level = "10"
+					}
+
+					resultLevel = try {
+						if (level.toInt() > 13) {
+							game.printToLog("[SCAN] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
+							10
+						}
+						else level.toInt()
+					} catch (e: Exception) {
+						// For talents boosted by constellation, the number 11 would be assumed if scan fails.
+						if (tries == 1 && (hasConstellation3 || hasConstellation5)) {
+							game.printToLog("[SCAN] Failed to scan for Talent $index. However, talent has been boosted by constellation so changing it to \"11\" by default...", tag, isWarning = true)
+							11
+						} else {
+							game.printToLog("[SCAN] Failed to convert Talent $index level of $level to an integer. Trying again for $tries more tries...", tag, isWarning = true)
+							tries -= 1
+							0
+						}
+					}
+
+					if (resultLevel != 0) {
+						break
+					} else if (tries <= 0) {
+						resultLevel = 1
+						break
+					}
+
+					game.wait(0.10)
+					thresholdDiff += 10.0
+				}
+
+				result.add(resultLevel)
+			}
+
+			index += 1
+		}
+
+		return result
 	}
 }

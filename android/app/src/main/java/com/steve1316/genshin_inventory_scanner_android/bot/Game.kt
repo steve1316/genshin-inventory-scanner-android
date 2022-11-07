@@ -10,9 +10,11 @@ import com.steve1316.genshin_inventory_scanner_android.BuildConfig
 import com.steve1316.genshin_inventory_scanner_android.MainActivity.loggerTag
 import com.steve1316.genshin_inventory_scanner_android.StartModule
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanArtifacts
+import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanCharacters
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanMaterials
 import com.steve1316.genshin_inventory_scanner_android.bot.categories.ScanWeapons
 import com.steve1316.genshin_inventory_scanner_android.data.Artifact
+import com.steve1316.genshin_inventory_scanner_android.data.CharacterData
 import com.steve1316.genshin_inventory_scanner_android.data.ConfigData
 import com.steve1316.genshin_inventory_scanner_android.data.Weapon
 import com.steve1316.genshin_inventory_scanner_android.utils.ImageUtils
@@ -290,12 +292,14 @@ class Game(private val myContext: Context) {
 			var weapons: ArrayList<Weapon> = arrayListOf()
 			var artifacts: ArrayList<Artifact> = arrayListOf()
 			var materials: MutableMap<String, Int> = mutableMapOf()
+			var characters: ArrayList<CharacterData> = arrayListOf()
 
 			// Begin scanning logic based on current settings.
 
 			val scanWeapons = ScanWeapons(this)
 			val scanArtifacts = ScanArtifacts(this)
 			val scanMaterials = ScanMaterials(this)
+			val scanCharacters = ScanCharacters(this)
 
 			if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
 				weapons = scanWeapons.start()
@@ -311,6 +315,10 @@ class Game(private val myContext: Context) {
 
 			if (configData.enableScanCharacterDevelopmentItems) {
 				materials += scanMaterials.start(searchCharacterDevelopmentItems = true)
+			}
+
+			if ((configData.enableScanCharacters && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchCharacter)) {
+				characters = scanCharacters.start()
 			}
 
 			// Compile all of the data acquired into a file in GOOD format.
