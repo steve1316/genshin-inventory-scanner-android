@@ -30,6 +30,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 /**
  * Main driver for bot activity and navigation.
@@ -224,14 +225,38 @@ class Game(private val myContext: Context) {
 		return result
 	}
 
+	private fun constructCharacterArray(characters: ArrayList<CharacterData>): JsonArray {
+		val result = JsonArray()
+
+		characters.forEach {
+			val obj = JsonObject()
+			obj.apply {
+				addProperty("key", it.key)
+				addProperty("level", it.level)
+				addProperty("constellation", it.constellation)
+				addProperty("ascension", it.ascension)
+				add("talent", JsonObject().apply {
+					addProperty("auto", it.talent.auto)
+					addProperty("skill", it.talent.skill)
+					addProperty("burst", it.talent.burst)
+				})
+			}
+
+			result.add(obj)
+		}
+
+		return result
+	}
+
 	/**
 	 * Collect all of the scanned information into a JSON file in GOOD format.
 	 *
 	 * @param weapons List of scanned weapons.
 	 * @param artifacts List of scanned artifacts.
 	 * @param materials List of scanned materials/character development items.
+	 * @param characters List of scanned characters.
 	 */
-	private fun compileIntoGOOD(weapons: ArrayList<Weapon>, artifacts: ArrayList<Artifact>, materials: MutableMap<String, Int>) {
+	private fun compileIntoGOOD(weapons: ArrayList<Weapon>, artifacts: ArrayList<Artifact>, materials: MutableMap<String, Int>, characters: ArrayList<CharacterData>) {
 		printToLog("\n[INFO] Saving data into a JSON file in GOOD format now...")
 
 		// Generate a path to the root of the application folder in the Internal Storage.
@@ -253,7 +278,7 @@ class Game(private val myContext: Context) {
 			addProperty("format", "GOOD")
 			addProperty("version", "2")
 			addProperty("source", "Genshin Inventory Scanner Android v${BuildConfig.VERSION_NAME}")
-			add("characters", null)
+			add("characters", constructCharacterArray(characters))
 			add("artifacts", constructArtifactArray(artifacts))
 			add("weapons", constructWeaponArray(weapons))
 			add("materials", constructMaterialObject(materials))
