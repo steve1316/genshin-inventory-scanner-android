@@ -141,9 +141,11 @@ const Start = () => {
         bsc.setReadyStatus(
             bsc.settings.weapons.enableScanWeapons ||
                 bsc.settings.artifacts.enableScanArtifacts ||
-                (bsc.settings.misc.enableTestSingleSearch && (bsc.settings.misc.testSearchWeapon || bsc.settings.misc.testSearchArtifact || bsc.settings.misc.testSearchMaterial)) ||
+                (bsc.settings.misc.enableTestSingleSearch &&
+                    (bsc.settings.misc.testSearchWeapon || bsc.settings.misc.testSearchArtifact || bsc.settings.misc.testSearchMaterial || bsc.settings.misc.testSearchCharacter)) ||
                 bsc.settings.materials.enableScanMaterials ||
-                bsc.settings.materials.enableScanCharacterDevelopmentItems
+                bsc.settings.materials.enableScanCharacterDevelopmentItems ||
+                bsc.settings.characters.enableScanCharacters
         )
     }
 

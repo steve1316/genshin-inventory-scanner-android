@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, View } from "react-native"
 import TitleDivider from "../../components/TitleDivider"
 import CustomCheckbox from "../../components/CustomCheckbox"
 import { Divider, Text } from "react-native-elements"
+import { TextInput } from "react-native-paper"
 
 const styles = StyleSheet.create({
     root: {
@@ -28,10 +29,22 @@ const Settings = () => {
     }, [bsc.readyStatus])
 
     useEffect(() => {
+        if (bsc.settings.weapons.enableScanWeapons) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+        }
+    }, [bsc.settings.weapons.enableScanWeapons])
+
+    useEffect(() => {
         if (!bsc.settings.weapons.scan5StarWeapons && !bsc.settings.weapons.scan4StarWeapons && !bsc.settings.weapons.scan3StarWeapons) {
             bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan5StarWeapons: true } })
         }
     }, [bsc.settings.weapons])
+
+    useEffect(() => {
+        if (bsc.settings.artifacts.enableScanArtifacts) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+        }
+    }, [bsc.settings.artifacts.enableScanArtifacts])
 
     useEffect(() => {
         if (!bsc.settings.artifacts.scan5StarArtifacts && !bsc.settings.artifacts.scan4StarArtifacts && !bsc.settings.artifacts.scan3StarArtifacts) {
@@ -40,22 +53,58 @@ const Settings = () => {
     }, [bsc.settings.artifacts])
 
     useEffect(() => {
+        if (bsc.settings.materials.enableScanMaterials) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+        }
+    }, [bsc.settings.materials.enableScanMaterials])
+
+    useEffect(() => {
+        if (bsc.settings.materials.enableScanCharacterDevelopmentItems) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+        }
+    }, [bsc.settings.materials.enableScanCharacterDevelopmentItems])
+
+    useEffect(() => {
+        if (bsc.settings.characters.enableScanCharacters) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+        }
+    }, [bsc.settings.characters.enableScanCharacters])
+
+    useEffect(() => {
+        if (bsc.settings.misc.enableTestSingleSearch) {
+            bsc.setSettings({
+                ...bsc.settings,
+                weapons: { ...bsc.settings.weapons, enableScanWeapons: false },
+                artifacts: { ...bsc.settings.artifacts, enableScanArtifacts: false },
+                materials: { ...bsc.settings.materials, enableScanMaterials: false, enableScanCharacterDevelopmentItems: false },
+                characters: { ...bsc.settings.characters, enableScanCharacters: false },
+            })
+        }
+    }, [bsc.settings.misc.enableTestSingleSearch])
+
+    useEffect(() => {
         if (bsc.settings.misc.testSearchWeapon) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: false, testSearchMaterial: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchArtifact: false, testSearchMaterial: false, testSearchCharacter: false } })
         }
     }, [bsc.settings.misc.testSearchWeapon])
 
     useEffect(() => {
         if (bsc.settings.misc.testSearchArtifact) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchMaterial: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchMaterial: false, testSearchCharacter: false } })
         }
     }, [bsc.settings.misc.testSearchArtifact])
 
     useEffect(() => {
         if (bsc.settings.misc.testSearchMaterial) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchArtifact: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchArtifact: false, testSearchCharacter: false } })
         }
     }, [bsc.settings.misc.testSearchMaterial])
+
+    useEffect(() => {
+        if (bsc.settings.misc.testSearchCharacter) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchArtifact: false, testSearchMaterial: false } })
+        }
+    }, [bsc.settings.misc.testSearchCharacter])
 
     //////////////////////////////////////////////////
     //////////////////////////////////////////////////
@@ -64,6 +113,23 @@ const Settings = () => {
     const renderScanSettings = () => {
         return (
             <View>
+                <TitleDivider
+                    title="Traveler Name for Character Scan"
+                    subtitle={`Enter your name for the tool to correctly scan your Traveler if Character Scan is enabled.`}
+                    hasIcon={true}
+                    iconName="form-textbox"
+                    iconColor="#000"
+                />
+
+                <TextInput
+                    label="Traveler Name"
+                    right={<TextInput.Icon name="close" onPress={() => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, travelerName: "" } })} />}
+                    mode="outlined"
+                    value={bsc.settings.characters.travelerName}
+                    onChangeText={(value: string) => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, travelerName: value } })}
+                    autoComplete={false}
+                />
+
                 <TitleDivider
                     title="Categories to Scan"
                     subtitle={`Customize which categories in the inventory to scan.\nTested at 1080p screen resolution.`}
@@ -151,6 +217,12 @@ const Settings = () => {
                         bsc.setSettings({ ...bsc.settings, materials: { ...bsc.settings.materials, enableScanCharacterDevelopmentItems: !bsc.settings.materials.enableScanCharacterDevelopmentItems } })
                     }
                 />
+
+                <CustomCheckbox
+                    text="Enable Scan for Characters"
+                    isChecked={bsc.settings.characters.enableScanCharacters}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, enableScanCharacters: !bsc.settings.characters.enableScanCharacters } })}
+                />
             </View>
         )
     }
@@ -171,7 +243,7 @@ const Settings = () => {
                     isChecked={bsc.settings.misc.enableTestSingleSearch}
                     onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: !bsc.settings.misc.enableTestSingleSearch } })}
                     text="Enable Test Single Search"
-                    subtitle="Check this to enable single scan for the currently selected weapon/artifact/etc on the screen."
+                    subtitle="Check this to enable single scan for the currently selected weapon/artifact/etc on the screen. You need to enable one of the tests below in order to proceed."
                 />
 
                 {bsc.settings.misc.enableTestSingleSearch ? (
@@ -195,6 +267,13 @@ const Settings = () => {
                             onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchMaterial: !bsc.settings.misc.testSearchMaterial } })}
                             text="Test Single Material Scan"
                             subtitle="Check this to test scanning the currently selected material. Can also be used for a character development item. Only one can be active at a time."
+                        />
+
+                        <CustomCheckbox
+                            isChecked={bsc.settings.misc.testSearchCharacter}
+                            onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchCharacter: !bsc.settings.misc.testSearchCharacter } })}
+                            text="Test Single Character Scan"
+                            subtitle="Check this to test scanning the currently selected Character. Only one can be active at a time."
                         />
                     </View>
                 ) : null}

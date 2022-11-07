@@ -17,12 +17,17 @@ export interface Settings {
         enableScanMaterials: boolean
         enableScanCharacterDevelopmentItems: boolean
     }
+    characters: {
+        enableScanCharacters: boolean
+        travelerName: string
+    }
     misc: {
         debugMode: boolean
         enableTestSingleSearch: boolean
         testSearchWeapon: boolean
         testSearchArtifact: boolean
         testSearchMaterial: boolean
+        testSearchCharacter: boolean
     }
 }
 
@@ -44,11 +49,17 @@ export const defaultSettings: Settings = {
         enableScanMaterials: false,
         enableScanCharacterDevelopmentItems: false,
     },
+    characters: {
+        enableScanCharacters: false,
+        travelerName: "",
+    },
     misc: {
         debugMode: false,
         enableTestSingleSearch: false,
         testSearchWeapon: false,
         testSearchArtifact: false,
+        testSearchMaterial: false,
+        testSearchCharacter: false,
     },
 }
 
