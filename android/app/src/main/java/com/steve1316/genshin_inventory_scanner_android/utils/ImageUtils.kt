@@ -684,7 +684,7 @@ class ImageUtils(context: Context, private val game: Game) {
 		tessDigitsBaseAPI.setVariable("classify_bln_numeric_mode", "1")
 
 		// Set the Page Segmentation Mode to '--psm 7' or "Treat the image as a single text line" according to https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html#page-segmentation-method
-		tessBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE
+		tessBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_BLOCK
 		tessDigitsBaseAPI.pageSegMode = TessBaseAPI.PageSegMode.PSM_SINGLE_LINE
 	}
 
