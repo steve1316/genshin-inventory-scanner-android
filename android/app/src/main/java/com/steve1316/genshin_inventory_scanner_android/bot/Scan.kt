@@ -24,6 +24,10 @@ class Scan(private val game: Game) {
 	private var characterScrollAttempts = 0
 	private var characterScrollDiff = 0f
 	private var characterScrollDuration = 0L
+	private val stringSimilarityService = StringSimilarityServiceImpl(JaroWinklerStrategy())
+	private val decimalFormat = DecimalFormat("#.###")
+	private val textSimilarityConfidence = 0.85
+
 	fun setBackpackLocation() {
 		if (backpackLocation == null) {
 			backpackLocation = game.imageUtils.findImage("backpack", tries = 1)!!
@@ -139,7 +143,7 @@ class Scan(private val game: Game) {
 	 */
 	private fun toPascalCase(str: String): String {
 		val cleanedString = str.replace("'", "").replace("’", "").replace("-", " ").replace("(", "")
-			.replace(")", "").replace(":", "")
+			.replace(")", "").replace(":", "").replace("\n", " ")
 		val split = cleanedString.split(" ")
 		val result = arrayListOf<String>()
 		split.forEach { word ->
@@ -166,7 +170,8 @@ class Scan(private val game: Game) {
 
 			var correctWeaponName = "empty"
 			Data.weapons.forEach { weapon ->
-				if (weapon.key == formattedWeaponName) {
+				val score = decimalFormat.format(stringSimilarityService.score(weapon.key, formattedWeaponName)).toDouble()
+				if (score >= textSimilarityConfidence) {
 					resultWeaponName = formattedWeaponName
 					correctWeaponName = formattedWeaponName
 				}
@@ -178,9 +183,8 @@ class Scan(private val game: Game) {
 			tries -= 1
 		}
 
-		var weaponRarity = ""
-
 		// Determine rarity.
+		var weaponRarity = ""
 		if (!Data.weapons[resultWeaponName].isNullOrBlank()) weaponRarity = Data.weapons[resultWeaponName] as String
 
 		if (debugMode) game.printToLog("[DEBUG] Weapon is: $resultWeaponName, Rarity is: $weaponRarity", tag)
@@ -370,7 +374,8 @@ class Scan(private val game: Game) {
 
 			Data.artifactSets.forEach { artifactSet ->
 				artifactSet.value.forEach { artifactType ->
-					if (artifactType.value == formattedName) {
+					val score = decimalFormat.format(stringSimilarityService.score(artifactType.value, formattedName)).toDouble()
+					if (score >= textSimilarityConfidence) {
 						return formattedName
 					}
 				}
@@ -603,15 +608,11 @@ class Scan(private val game: Game) {
 	}
 
 	fun getCharacterName(exitLocation: Point): String {
-		val service = StringSimilarityServiceImpl(JaroWinklerStrategy())
-		val decimalFormat = DecimalFormat("#.###")
-		val textSimilarityConfidence = 0.85
-
 		var tries = 5
 		var thresholdDiff = 0.0
 		while (tries > 0) {
 			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 195.0 - thresholdDiff)
-			if (true) game.printToLog("[DEBUG] Scanned the character name: $name", tag)
+			if (debugMode) game.printToLog("[DEBUG] Scanned the character name: $name", tag)
 
 			val formattedCharacterName = toPascalCase(name)
 
@@ -619,7 +620,7 @@ class Scan(private val game: Game) {
 				return formattedCharacterName
 			} else {
 				Data.characters.forEach {
-					val score = decimalFormat.format(service.score(it, formattedCharacterName)).toDouble()
+					val score = decimalFormat.format(stringSimilarityService.score(it, formattedCharacterName)).toDouble()
 					if (score >= textSimilarityConfidence) {
 						return it
 					}
@@ -722,8 +723,7 @@ class Scan(private val game: Game) {
 						if (level.toInt() > 13) {
 							game.printToLog("[SCAN] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
 							10
-						}
-						else level.toInt()
+						} else level.toInt()
 					} catch (e: Exception) {
 						// For talents boosted by constellation, the number 11 would be assumed if scan fails.
 						if (tries == 1 && (hasConstellation3 || hasConstellation5)) {
