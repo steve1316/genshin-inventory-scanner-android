@@ -363,6 +363,8 @@ class ScanArtifacts(private val game: Game) {
 
 				// Now scan each artifact in each location.
 				locations.forEach {
+					if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
+
 					// Select the artifact.
 					game.gestureUtils.tap(it.x, it.y, "item_level")
 

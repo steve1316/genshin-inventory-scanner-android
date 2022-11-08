@@ -151,6 +151,8 @@ class ScanCharacters(private val game: Game) {
 
 			locations.forEach {
 				if (!searchComplete) {
+					if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
+
 					// Select the Character by using the starting location and the grid offset.
 					game.gestureUtils.tap(characterStartingLocation.x + it.x, characterStartingLocation.y + it.y, "item_level")
 					if (!game.findAndPress("character_confirm", tries = 2)) game.findAndPress("character_level_up", tries = 2)

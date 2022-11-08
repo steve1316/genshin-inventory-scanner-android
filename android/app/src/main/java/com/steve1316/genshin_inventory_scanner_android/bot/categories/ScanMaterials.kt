@@ -101,6 +101,8 @@ class ScanMaterials(private val game: Game) {
 
 			locations.forEach {
 				if (!searchComplete) {
+					if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
+
 					// Select the item by using the backpack location and the grid offset.
 					game.gestureUtils.tap(game.scanUtils.backpackLocation!!.x + it.x, game.scanUtils.backpackLocation!!.y + it.y, "item_level")
 
