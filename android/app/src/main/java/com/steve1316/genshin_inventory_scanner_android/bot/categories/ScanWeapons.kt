@@ -250,10 +250,7 @@ class ScanWeapons(private val game: Game) {
 			game.printToLog("[SCAN_WEAPONS] Subsequent search found no matches in the row scan.", tag, isWarning = true)
 			enableFullRegionSearch = false
 			enableSingleRowSearch = true
-
-			if (checkIfSearchCompleted()) {
-				game.scanUtils.scrollRowSlightly()
-			}
+			checkIfSearchCompleted()
 		}
 	}
 
@@ -373,6 +370,9 @@ class ScanWeapons(private val game: Game) {
 						}
 					}
 				}
+
+				// Recover the scroll level if needed.
+				game.scanUtils.scrollRecovery(locations[0].y)
 			}
 
 			if (!firstSearchComplete) {

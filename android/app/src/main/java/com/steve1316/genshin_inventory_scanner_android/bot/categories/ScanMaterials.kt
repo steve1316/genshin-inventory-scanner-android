@@ -136,6 +136,9 @@ class ScanMaterials(private val game: Game) {
 				}
 			}
 
+			// Recover the scroll level if needed.
+			game.scanUtils.scrollRecovery(locations[0].y)
+
 			if (!firstSearchComplete && !searchComplete) {
 				game.scanUtils.scrollFirstRow()
 				firstSearchComplete = true

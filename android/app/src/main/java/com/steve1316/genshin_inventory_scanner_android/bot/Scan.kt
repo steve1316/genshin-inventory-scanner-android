@@ -19,11 +19,11 @@ class Scan(private val game: Game) {
 	private var failAttempts = 5
 	private var maxAscensionLevel = 6
 
-	private var scrollTapDelay = 0.0
-	private var scrollAttempts = 0
-	private var characterScrollAttempts = 0
+	private var scrollAttempts = 1
+	private var scrollDiff = 0f
+	private var characterScrollAttempts = 1
 	private var characterScrollDiff = 0f
-	private var characterScrollDuration = 0L
+
 	private val stringSimilarityService = StringSimilarityServiceImpl(JaroWinklerStrategy())
 	private val decimalFormat = DecimalFormat("#.###")
 	private val textSimilarityConfidence = 0.85
@@ -68,6 +68,11 @@ class Scan(private val game: Game) {
 	fun reset() {
 		failAttempts = 5
 		maxAscensionLevel = 6
+
+		scrollAttempts = 1
+		scrollDiff = 0f
+		characterScrollAttempts = 1
+		characterScrollDiff = 0f
 	}
 
 	/**
@@ -77,8 +82,8 @@ class Scan(private val game: Game) {
 	fun scrollFirstRow() {
 		game.printToLog("\n[SCAN] Scrolling the first row down...", tag)
 		reset()
-		game.gestureUtils.swipe(900f, 800f, 900f, 750f, duration = 200L)
-		game.wait(1.0)
+		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 90f, duration = 1000L)
+		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 	}
 
 	/**
@@ -88,51 +93,70 @@ class Scan(private val game: Game) {
 	fun scrollSubsequentRow() {
 		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
 
-		game.gestureUtils.swipe(900f, 800f, 900f, 650f)
+		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 240f - scrollDiff)
+		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 
-		val delay = if (0.85 + scrollTapDelay == 1.00) {
-			scrollTapDelay = 0.0
-			0.85
-		} else {
-			0.85 + scrollTapDelay
+		if (scrollAttempts % 6 == 0) {
+			// Alternate between even and odd increment levels by 10f or 0f to counteract the increasing acceleration caused by the scrolling.
+			if (debugMode) game.printToLog("[DEBUG] Scrolling diff increased by 10f", tag)
+			scrollDiff += 10f
+
+			if (scrollDiff % 2f == 0f) {
+				if (debugMode) game.printToLog("[DEBUG] Scrolling diff reset back to zero.", tag)
+				scrollDiff = 0f
+			}
 		}
 
-		if (scrollAttempts % 10 == 0) scrollTapDelay += 0.01
 		scrollAttempts += 1
-
-		game.wait(delay)
-		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
-		game.wait(0.5)
 	}
 
-	fun scrollRowSlightly() {
-		game.printToLog("\n[SCAN] Scrolling subsequent row moderately up...", tag, isError = true)
-		game.gestureUtils.swipe(900f, 800f, 900f, 740f)
-		game.wait(0.5)
+	fun scrollRecovery(y: Double) {
+		val maximumAllowed = 860f - 830f
+
+		if (y.toFloat() <= 860f - maximumAllowed) {
+			val recoveryAmount = 800f + (860f - (y - maximumAllowed).toFloat())
+			if (debugMode) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
+			game.gestureUtils.swipe(900f, 800f, 900f, recoveryAmount)
+			game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
+		}
+	}
+
+	fun scrollCharacterRecovery(y: Double) {
+		val maximumAllowed = 920f - 860f
+
+		if (y.toFloat() <= 920f - maximumAllowed) {
+			val recoveryAmount = 900f + (860f - (y - maximumAllowed).toFloat())
+			if (debugMode) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
+			game.gestureUtils.swipe(200f, 900f, 200f, recoveryAmount)
+			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
+		}
 	}
 
 	fun scrollFirstCharacterRow() {
 		game.printToLog("\n[SCAN] Scrolling the character row down...", tag)
-		game.gestureUtils.swipe(200f, 800f, 200f, 600f)
-
-		scrollTapDelay = 0.0
-
-		game.wait(0.5)
+		reset()
+		game.gestureUtils.swipe(200f, 900f, 200f, 900f - 30f, duration = 1000L)
+		game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 	}
 
 	fun scrollSubsequentCharacterRow() {
-		game.gestureUtils.swipe(200f, 800f, 200f, 640f - characterScrollDiff, duration = 500L - characterScrollDuration)
+		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
 
-		if (characterScrollAttempts % 6 == 0) {
-			characterScrollDiff = 0f
-			characterScrollDuration = 0L
-		} else if (characterScrollAttempts % 2 == 0) {
-			characterScrollDiff += 10f
-			characterScrollDuration += 10L
+		game.gestureUtils.swipe(200f, 900f, 200f, 900f - 240f - scrollDiff)
+		game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
+
+		if (scrollAttempts % 6 == 0) {
+			// Alternate between even and odd increment levels by 10f or 0f to counteract the increasing acceleration caused by the scrolling.
+			if (debugMode) game.printToLog("[DEBUG] Scrolling diff increased by 10f", tag)
+			scrollDiff += 10f
+
+			if (scrollDiff % 2f == 0f) {
+				if (debugMode) game.printToLog("[DEBUG] Scrolling diff reset back to zero.", tag)
+				scrollDiff = 0f
+			}
 		}
 
-		characterScrollAttempts += 1
-		game.wait(0.5)
+		scrollAttempts += 1
 	}
 
 	/**

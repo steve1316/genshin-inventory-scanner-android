@@ -12,7 +12,7 @@ class ScanCharacters(private val game: Game) {
 
 	private var searchComplete = false
 
-	// This grid is comprised of each row followed by the columns in the inner ArrayLists. For 1080p, the x's are spaced out by 175px and the y's are spaced out by 220px.
+	// This grid is comprised of each row followed by the columns in the inner ArrayLists. For 1080p, the x's are spaced out by 175px and the y's are spaced out by 220px except for the last row.
 	// Use the starting location to offset it by these for the location of each grid element on the screen.
 	private val gridOffsetRow1: ArrayList<Point> = arrayListOf(
 		Point(40.0, 175.0), Point(215.0, 175.0), Point(390.0, 175.0)
@@ -24,7 +24,7 @@ class ScanCharacters(private val game: Game) {
 		Point(40.0, 615.0), Point(215.0, 615.0), Point(390.0, 615.0)
 	)
 	private val gridOffsetRow4: ArrayList<Point> = arrayListOf(
-		Point(40.0, 735.0), Point(215.0, 735.0), Point(390.0, 735.0)
+		Point(40.0, 835.0), Point(215.0, 835.0), Point(390.0, 835.0)
 	)
 
 	private lateinit var characterStartingLocation: Point
@@ -144,6 +144,30 @@ class ScanCharacters(private val game: Game) {
 			return characterList
 		}
 
+//		game.scanUtils.scrollFirstCharacterRow()
+//
+//		var locations = game.imageUtils.findAll("character_level", intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService
+//			.displayWidth, MediaProjectionService.displayHeight / 4))
+//		game.printToLog("Found: $locations", tag)
+//		game.wait(0.75)
+//
+//		var tries = 1
+//		while (tries <= 100) {
+//			game.printToLog("Scrolling for the $tries time", tag)
+//
+//			game.scanUtils.scrollSubsequentCharacterRow()
+//			locations = game.imageUtils.findAll("character_level", intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService
+//				.displayWidth, MediaProjectionService.displayHeight / 4))
+//			game.printToLog("Found: $locations", tag)
+//
+//			game.scanUtils.scrollCharacterRecovery(locations[0].y)
+//
+//			tries += 1
+//			game.wait(0.75)
+//		}
+//
+//		return arrayListOf()
+
 		while (!searchComplete) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
 
@@ -205,6 +229,9 @@ class ScanCharacters(private val game: Game) {
 					game.wait(1.0)
 				}
 			}
+
+			// Recover the scroll level if needed.
+			game.scanUtils.scrollCharacterRecovery(locations[0].y)
 
 			if (!firstSearchComplete && !searchComplete) {
 				game.scanUtils.scrollFirstCharacterRow()
