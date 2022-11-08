@@ -282,6 +282,8 @@ class ScanArtifacts(private val game: Game) {
 			return arrayListOf()
 		}
 
+		game.scanUtils.setBackpackLocation()
+
 		val artifactList: ArrayList<Artifact> = arrayListOf()
 
 		// Reset the scroll view or perform a test single search.

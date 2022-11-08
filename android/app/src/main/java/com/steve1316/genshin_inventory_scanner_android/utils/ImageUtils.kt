@@ -781,7 +781,7 @@ class ImageUtils(context: Context, private val game: Game) {
 	}
 
 	fun findMaterialLocation(): Point? {
-		val tempBitmap = Bitmap.createBitmap(tesseractSourceBitmap, (game.backpackLocation.x + 1825).toInt(), (game.backpackLocation.y + 210).toInt(), 185, 200)
+		val tempBitmap = Bitmap.createBitmap(tesseractSourceBitmap, (game.scanUtils.backpackLocation!!.x + 1825).toInt(), (game.scanUtils.backpackLocation!!.y + 210).toInt(), 185, 200)
 		val scaledBitmap = Bitmap.createScaledBitmap(tempBitmap, (tempBitmap.width / 1.80).toInt(), (tempBitmap.height / 1.80).toInt(), true)
 		val cvImage = Mat()
 

@@ -45,8 +45,6 @@ class Game(private val myContext: Context) {
 	val gestureUtils: MyAccessibilityService = MyAccessibilityService.getInstance()
 	val scanUtils: Scan = Scan(this)
 
-	lateinit var backpackLocation: Point
-
 	/**
 	 * Returns a formatted string of the elapsed time since the bot started as HH:MM:SS format.
 	 *
@@ -144,20 +142,6 @@ class Game(private val myContext: Context) {
 			gestureUtils.tap(tempLocation.x, tempLocation.y, imageName)
 		} else {
 			false
-		}
-	}
-
-	/**
-	 * Perform an initialization check at the start.
-	 *
-	 * @return True if the required image asset is found on the screen.
-	 */
-	private fun initializationCheck(): Boolean {
-		printToLog("[INIT] Performing an initialization check...")
-		return if ((!configData.enableTestSingleSearch && !configData.enableScanCharacters) || (configData.enableTestSingleSearch && !configData.testSearchCharacter)) {
-			imageUtils.findImage("backpack") != null
-		} else {
-			true
 		}
 	}
 
@@ -315,48 +299,40 @@ class Game(private val myContext: Context) {
 
 		wait(2.0)
 
-		if (initializationCheck()) {
-			if ((!configData.enableTestSingleSearch && !configData.enableScanCharacters) || (configData.enableTestSingleSearch && !configData.testSearchCharacter)) {
-				backpackLocation = imageUtils.findImage("backpack") ?: throw Exception("Bot needs to start at the Inventory screen.")
-			}
+		var weapons: ArrayList<Weapon> = arrayListOf()
+		var artifacts: ArrayList<Artifact> = arrayListOf()
+		var materials: MutableMap<String, Int> = mutableMapOf()
+		var characters: ArrayList<CharacterData> = arrayListOf()
 
-			var weapons: ArrayList<Weapon> = arrayListOf()
-			var artifacts: ArrayList<Artifact> = arrayListOf()
-			var materials: MutableMap<String, Int> = mutableMapOf()
-			var characters: ArrayList<CharacterData> = arrayListOf()
+		// Begin scanning logic based on current settings.
 
-			// Begin scanning logic based on current settings.
+		val scanWeapons = ScanWeapons(this)
+		val scanArtifacts = ScanArtifacts(this)
+		val scanMaterials = ScanMaterials(this)
+		val scanCharacters = ScanCharacters(this)
 
-			val scanWeapons = ScanWeapons(this)
-			val scanArtifacts = ScanArtifacts(this)
-			val scanMaterials = ScanMaterials(this)
-			val scanCharacters = ScanCharacters(this)
-
-			if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
-				weapons = scanWeapons.start()
-			}
-
-			if ((configData.enableScanArtifacts && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchArtifact)) {
-				artifacts = scanArtifacts.start()
-			}
-
-			if ((configData.enableScanMaterials && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
-				materials = scanMaterials.start()
-			}
-
-			if ((configData.enableScanCharacterDevelopmentItems && !configData.enableTestSingleSearch)) {
-				materials += scanMaterials.start(searchCharacterDevelopmentItems = true)
-			}
-
-			if ((configData.enableScanCharacters && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchCharacter)) {
-				characters = scanCharacters.start()
-			}
-
-			// Compile all of the data acquired into a file in GOOD format.
-			if (!configData.enableTestSingleSearch) compileIntoGOOD(weapons, artifacts, materials, characters)
-		} else {
-			throw Exception("Unable to detect if the bot is at the Inventory screen.")
+		if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
+			weapons = scanWeapons.start()
 		}
+
+		if ((configData.enableScanArtifacts && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchArtifact)) {
+			artifacts = scanArtifacts.start()
+		}
+
+		if ((configData.enableScanMaterials && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchMaterial)) {
+			materials = scanMaterials.start()
+		}
+
+		if ((configData.enableScanCharacterDevelopmentItems && !configData.enableTestSingleSearch)) {
+			materials += scanMaterials.start(searchCharacterDevelopmentItems = true)
+		}
+
+		if ((configData.enableScanCharacters && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchCharacter)) {
+			characters = scanCharacters.start()
+		}
+
+		// Compile all of the data acquired into a file in GOOD format.
+		if (!configData.enableTestSingleSearch) compileIntoGOOD(weapons, artifacts, materials, characters)
 
 		val endTime: Long = System.currentTimeMillis()
 		val runTime: Long = endTime - startTime

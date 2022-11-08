@@ -14,6 +14,8 @@ class Scan(private val game: Game) {
 	private val tag: String = "${loggerTag}Game"
 	private val debugMode = game.configData.debugMode
 
+	var backpackLocation: Point? = null
+
 	private var failAttempts = 5
 	private var maxAscensionLevel = 6
 
@@ -22,6 +24,11 @@ class Scan(private val game: Game) {
 	private var characterScrollAttempts = 0
 	private var characterScrollDiff = 0f
 	private var characterScrollDuration = 0L
+	fun setBackpackLocation() {
+		if (backpackLocation == null) {
+			backpackLocation = game.imageUtils.findImage("backpack", tries = 1)!!
+		}
+	}
 
 	/**
 	 * Resets the scroll level of the current category back to the top.
@@ -152,7 +159,7 @@ class Scan(private val game: Game) {
 		var thresholdDiff = 0.0
 		var resultWeaponName = ""
 		while (tries > 0) {
-			val weaponName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			val weaponName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the weapon name: $weaponName", tag)
 
 			val formattedWeaponName = toPascalCase(weaponName)
@@ -197,8 +204,8 @@ class Scan(private val game: Game) {
 				weaponLevel = when (i) {
 					6 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 200.0,
@@ -208,8 +215,8 @@ class Scan(private val game: Game) {
 					}
 					5 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 200.0,
@@ -219,8 +226,8 @@ class Scan(private val game: Game) {
 					}
 					4 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 200.0,
@@ -230,8 +237,8 @@ class Scan(private val game: Game) {
 					}
 					3 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 110.0,
@@ -241,8 +248,8 @@ class Scan(private val game: Game) {
 					}
 					2 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 180.0,
@@ -252,8 +259,8 @@ class Scan(private val game: Game) {
 					}
 					1 -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 200.0,
@@ -263,8 +270,8 @@ class Scan(private val game: Game) {
 					}
 					else -> {
 						game.imageUtils.findTextTesseract(
-							(game.backpackLocation.x + 1535).toInt(),
-							(game.backpackLocation.y + 480).toInt(),
+							(backpackLocation!!.x + 1535).toInt(),
+							(backpackLocation!!.y + 480).toInt(),
 							53,
 							30,
 							customThreshold = 200.0,
@@ -316,8 +323,8 @@ class Scan(private val game: Game) {
 	 */
 	fun getRefinementLevel(): String {
 		return game.imageUtils.findTextTesseract(
-			(game.backpackLocation.x + 1490).toInt(),
-			(game.backpackLocation.y + 530).toInt(),
+			(backpackLocation!!.x + 1490).toInt(),
+			(backpackLocation!!.y + 530).toInt(),
 			35,
 			35,
 			customThreshold = 170.0,
@@ -334,7 +341,7 @@ class Scan(private val game: Game) {
 	fun getEquippedBy(): String {
 		return if (game.imageUtils.findImage("equipped", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 			val result = game.imageUtils.findTextTesseract(
-				(game.backpackLocation.x + 1705).toInt(), (game.backpackLocation.y + 815).toInt(), 360, 40, customThreshold = 170.0,
+				(backpackLocation!!.x + 1705).toInt(), (backpackLocation!!.y + 815).toInt(), 360, 40, customThreshold = 170.0,
 				reuseSourceBitmap = true
 			)
 			toPascalCase(result.replace("|", "").trim())
@@ -356,7 +363,7 @@ class Scan(private val game: Game) {
 		var tries = 3
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 65, customThreshold = 195.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the artifact name: $artifactName", tag)
 
 			val formattedName = toPascalCase(artifactName)
@@ -375,7 +382,7 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN] Failed to match artifact name to any in the database. Forcing the result through now...", tag, isError = true)
-		val artifactName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55)
+		val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55)
 		return toPascalCase(artifactName)
 	}
 
@@ -394,8 +401,8 @@ class Scan(private val game: Game) {
 
 	fun getArtifactLevel(): String {
 		return game.imageUtils.findTextTesseract(
-			(game.backpackLocation.x + 1490).toInt(),
-			(game.backpackLocation.y + 475).toInt(),
+			(backpackLocation!!.x + 1490).toInt(),
+			(backpackLocation!!.y + 475).toInt(),
 			66,
 			33,
 			customThreshold = 170.0,
@@ -552,7 +559,7 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN] Failed to match material name to any in the database. Forcing the result through now...", tag, isError = true)
-		val itemName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, reuseSourceBitmap = true)
+		val itemName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, reuseSourceBitmap = true)
 		return toPascalCase(itemName)
 	}
 

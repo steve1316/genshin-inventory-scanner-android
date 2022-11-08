@@ -268,6 +268,8 @@ class ScanWeapons(private val game: Game) {
 			return arrayListOf()
 		}
 
+		game.scanUtils.setBackpackLocation()
+
 		val weaponList: ArrayList<Weapon> = arrayListOf()
 
 		// Reset the scroll view or perform a test single search.
