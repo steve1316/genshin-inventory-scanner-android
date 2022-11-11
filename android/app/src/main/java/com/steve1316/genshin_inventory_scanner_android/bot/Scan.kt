@@ -610,8 +610,8 @@ class Scan(private val game: Game) {
 		return try {
 			result.toInt()
 		} catch (e: Exception) {
-			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 0 for now...", tag, isError = true)
-			0
+			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isError = true)
+			1
 		}
 	}
 
@@ -619,16 +619,16 @@ class Scan(private val game: Game) {
 		val location = game.imageUtils.findMaterialLocation()
 
 		if (location == null) {
-			game.printToLog("Failed to find cropped and resized image of material. Returning 0 for now...", tag, isError = true)
-			return 0
+			game.printToLog("Failed to find cropped and resized image of material. Returning 1 for now...", tag, isError = true)
+			return 1
 		}
 
 		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 145.0, reuseSourceBitmap = true, detectDigitsOnly = true)
 		return try {
 			result.toInt()
 		} catch (e: Exception) {
-			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 0 for now...", tag, isWarning = true)
-			0
+			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isWarning = true)
+			1
 		}
 	}
 
