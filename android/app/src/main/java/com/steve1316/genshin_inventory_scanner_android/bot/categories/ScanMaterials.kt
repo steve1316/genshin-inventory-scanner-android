@@ -107,6 +107,7 @@ class ScanMaterials(private val game: Game) {
 
 					// Select the item by using the backpack location and the grid offset.
 					game.gestureUtils.tap(game.scanUtils.backpackLocation!!.x + it.x, game.scanUtils.backpackLocation!!.y + it.y, "item_level")
+					game.wait(0.10)
 
 					var materialName = ""
 					var amount = 0
