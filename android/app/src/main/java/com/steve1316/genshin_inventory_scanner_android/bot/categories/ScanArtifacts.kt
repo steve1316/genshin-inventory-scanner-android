@@ -363,6 +363,7 @@ class ScanArtifacts(private val game: Game) {
 
 					// Select the artifact.
 					game.gestureUtils.tap(it.x, it.y, "item_level")
+					game.wait(0.10)
 
 					val artifactName = game.scanUtils.getArtifactName()
 					val artifactRarity = currentRarity

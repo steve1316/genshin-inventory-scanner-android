@@ -144,30 +144,6 @@ class ScanCharacters(private val game: Game) {
 			return characterList
 		}
 
-//		game.scanUtils.scrollFirstCharacterRow()
-//
-//		var locations = game.imageUtils.findAll("character_level", intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService
-//			.displayWidth, MediaProjectionService.displayHeight / 4))
-//		game.printToLog("Found: $locations", tag)
-//		game.wait(0.75)
-//
-//		var tries = 1
-//		while (tries <= 100) {
-//			game.printToLog("Scrolling for the $tries time", tag)
-//
-//			game.scanUtils.scrollSubsequentCharacterRow()
-//			locations = game.imageUtils.findAll("character_level", intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService
-//				.displayWidth, MediaProjectionService.displayHeight / 4))
-//			game.printToLog("Found: $locations", tag)
-//
-//			game.scanUtils.scrollCharacterRecovery(locations[0].y)
-//
-//			tries += 1
-//			game.wait(0.75)
-//		}
-//
-//		return arrayListOf()
-
 		while (!searchComplete) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
 
@@ -179,6 +155,7 @@ class ScanCharacters(private val game: Game) {
 
 					// Select the Character by using the starting location and the grid offset.
 					game.gestureUtils.tap(characterStartingLocation.x + it.x, characterStartingLocation.y + it.y, "item_level")
+					game.wait(0.10)
 					if (!game.findAndPress("character_confirm", tries = 2)) game.findAndPress("character_level_up", tries = 2)
 
 					game.wait(1.0)

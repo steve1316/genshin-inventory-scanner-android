@@ -94,6 +94,8 @@ class ScanMaterials(private val game: Game) {
 			return materialList
 		}
 
+		game.wait(0.25)
+
 		while (!searchComplete) {
 			if (!BotService.isRunning) throw InterruptedException("Stopping the bot and breaking out of the loop due to the Stop button being pressed")
 
