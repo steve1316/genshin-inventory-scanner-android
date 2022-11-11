@@ -49,13 +49,13 @@ class Scan(private val game: Game) {
 		} else {
 			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
+			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
+			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
+			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.wait(1.0)
+			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
 		}
@@ -66,6 +66,7 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun reset() {
+		game.printToLog("\n[SCAN] Resetting scroll and various flags back to default...", tag)
 		failAttempts = 5
 		maxAscensionLevel = 6
 
@@ -188,7 +189,7 @@ class Scan(private val game: Game) {
 		var thresholdDiff = 0.0
 		var resultWeaponName = ""
 		while (tries > 0) {
-			val weaponName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 195.0 - thresholdDiff)
+			val weaponName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 65, customThreshold = 180.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the weapon name: $weaponName", tag)
 
 			val formattedWeaponName = toPascalCase(weaponName)
@@ -392,7 +393,7 @@ class Scan(private val game: Game) {
 		var tries = 3
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 65, customThreshold = 195.0 - thresholdDiff)
+			val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 65, customThreshold = 180.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the artifact name: $artifactName", tag)
 
 			val formattedName = toPascalCase(artifactName)
@@ -412,7 +413,7 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN] Failed to match artifact name to any in the database. Forcing the result through now...", tag, isError = true)
-		val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55)
+		val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 150.0)
 		return toPascalCase(artifactName)
 	}
 
@@ -572,13 +573,15 @@ class Scan(private val game: Game) {
 			val formattedName = toPascalCase(materialName)
 
 			Data.materials.forEach { material ->
-				if (material == formattedName) {
+				val score = decimalFormat.format(stringSimilarityService.score(material, formattedName)).toDouble()
+				if (score >= textSimilarityConfidence) {
 					return formattedName
 				}
 			}
 
 			Data.characterDevelopmentItems.forEach { characterDevelopmentItem ->
-				if (characterDevelopmentItem == formattedName) {
+				val score = decimalFormat.format(stringSimilarityService.score(characterDevelopmentItem, formattedName)).toDouble()
+				if (score >= textSimilarityConfidence) {
 					return formattedName
 				}
 			}
@@ -589,7 +592,7 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[SCAN] Failed to match material name to any in the database. Forcing the result through now...", tag, isError = true)
-		val itemName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, reuseSourceBitmap = true)
+		val itemName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 150.0)
 		return toPascalCase(itemName)
 	}
 
@@ -603,7 +606,7 @@ class Scan(private val game: Game) {
 			(location.y + offset.y).toInt(),
 			regionWidth,
 			regionHeight,
-			customThreshold = 145.0,
+			customThreshold = 150.0,
 			reuseSourceBitmap = true,
 			detectDigitsOnly = true
 		)
@@ -623,7 +626,7 @@ class Scan(private val game: Game) {
 			return 1
 		}
 
-		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 145.0, reuseSourceBitmap = true, detectDigitsOnly = true)
+		val result = game.imageUtils.findTextTesseract((location.x - 65).toInt(), (location.y + 80).toInt(), 130, 25, customThreshold = 150.0, reuseSourceBitmap = true, detectDigitsOnly = true)
 		return try {
 			result.toInt()
 		} catch (e: Exception) {

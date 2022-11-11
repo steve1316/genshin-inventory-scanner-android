@@ -479,7 +479,7 @@ class ImageUtils(context: Context, private val game: Game) {
 	}
 
 	private fun getSourceScreenshot(): Bitmap {
-		while(true) {
+		while (true) {
 			val bitmap = MediaProjectionService.takeScreenshotNow(saveImage = debugMode)
 			if (bitmap != null) {
 				return bitmap
@@ -784,12 +784,16 @@ class ImageUtils(context: Context, private val game: Game) {
 		val tempBitmap = Bitmap.createBitmap(tesseractSourceBitmap, (game.scanUtils.backpackLocation!!.x + 1825).toInt(), (game.scanUtils.backpackLocation!!.y + 210).toInt(), 185, 200)
 		val scaledBitmap = Bitmap.createScaledBitmap(tempBitmap, (tempBitmap.width / 1.80).toInt(), (tempBitmap.height / 1.80).toInt(), true)
 		val cvImage = Mat()
-
 		Utils.bitmapToMat(scaledBitmap, cvImage)
-		Imgcodecs.imwrite("$matchFilePath/item_image.png", cvImage)
-		val templateBitmap: Bitmap = BitmapFactory.decodeFile("$matchFilePath/item_image.png")
 
-		val resultFlag: Boolean = match(tesseractSourceBitmap, templateBitmap, customConfidence = 0.70, useSingleScale = true)
+		if (debugMode) {
+			// Grayscale the cropped image.
+			val grayImage = Mat()
+			Imgproc.cvtColor(cvImage, grayImage, Imgproc.COLOR_RGB2GRAY)
+			Imgcodecs.imwrite("$matchFilePath/item_image.png", grayImage)
+		}
+
+		val resultFlag: Boolean = match(tesseractSourceBitmap, scaledBitmap, customConfidence = 0.70, useSingleScale = true)
 		return if (resultFlag) matchLocation
 		else null
 	}
