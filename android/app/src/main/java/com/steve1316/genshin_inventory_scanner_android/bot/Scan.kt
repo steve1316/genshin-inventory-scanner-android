@@ -566,7 +566,7 @@ class Scan(private val game: Game) {
 		var tries = 3
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val materialName = game.imageUtils.findTextTesseract((game.backpackLocation.x + 1480).toInt(), (game.backpackLocation.y + 97).toInt(), 550, 55, customThreshold = 180.0 - thresholdDiff)
+			val materialName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 180.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the material name: $materialName", tag)
 
 			val formattedName = toPascalCase(materialName)
