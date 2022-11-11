@@ -28,6 +28,8 @@ export interface Settings {
         testSearchArtifact: boolean
         testSearchMaterial: boolean
         testSearchCharacter: boolean
+        testScrollRows: boolean
+        testScrollCharacterRows: boolean
     }
 }
 
@@ -60,6 +62,8 @@ export const defaultSettings: Settings = {
         testSearchArtifact: false,
         testSearchMaterial: false,
         testSearchCharacter: false,
+        testScrollRows: false,
+        testScrollCharacterRows: false,
     },
 }
 

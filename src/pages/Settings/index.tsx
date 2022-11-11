@@ -30,7 +30,7 @@ const Settings = () => {
 
     useEffect(() => {
         if (bsc.settings.weapons.enableScanWeapons) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false, testScrollCharacterRows: false } })
         }
     }, [bsc.settings.weapons.enableScanWeapons])
 
@@ -42,7 +42,7 @@ const Settings = () => {
 
     useEffect(() => {
         if (bsc.settings.artifacts.enableScanArtifacts) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false, testScrollCharacterRows: false } })
         }
     }, [bsc.settings.artifacts.enableScanArtifacts])
 
@@ -54,19 +54,19 @@ const Settings = () => {
 
     useEffect(() => {
         if (bsc.settings.materials.enableScanMaterials) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false, testScrollCharacterRows: false } })
         }
     }, [bsc.settings.materials.enableScanMaterials])
 
     useEffect(() => {
         if (bsc.settings.materials.enableScanCharacterDevelopmentItems) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false, testScrollCharacterRows: false } })
         }
     }, [bsc.settings.materials.enableScanCharacterDevelopmentItems])
 
     useEffect(() => {
         if (bsc.settings.characters.enableScanCharacters) {
-            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false } })
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false, testScrollCharacterRows: false } })
         }
     }, [bsc.settings.characters.enableScanCharacters])
 
@@ -78,6 +78,7 @@ const Settings = () => {
                 artifacts: { ...bsc.settings.artifacts, enableScanArtifacts: false },
                 materials: { ...bsc.settings.materials, enableScanMaterials: false, enableScanCharacterDevelopmentItems: false },
                 characters: { ...bsc.settings.characters, enableScanCharacters: false },
+                misc: { ...bsc.settings.misc, testScrollRows: false, testScrollCharacterRows: false },
             })
         }
     }, [bsc.settings.misc.enableTestSingleSearch])
@@ -105,6 +106,18 @@ const Settings = () => {
             bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testSearchWeapon: false, testSearchArtifact: false, testSearchMaterial: false } })
         }
     }, [bsc.settings.misc.testSearchCharacter])
+
+    useEffect(() => {
+        if (bsc.settings.misc.testScrollRows) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollCharacterRows: false } })
+        }
+    }, [bsc.settings.misc.testScrollRows])
+
+    useEffect(() => {
+        if (bsc.settings.misc.testScrollCharacterRows) {
+            bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, enableTestSingleSearch: false, testScrollRows: false } })
+        }
+    }, [bsc.settings.misc.testScrollCharacterRows])
 
     //////////////////////////////////////////////////
     //////////////////////////////////////////////////
@@ -277,6 +290,20 @@ const Settings = () => {
                         />
                     </View>
                 ) : null}
+
+                <CustomCheckbox
+                    isChecked={bsc.settings.misc.testScrollRows}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testScrollRows: !bsc.settings.misc.testScrollRows } })}
+                    text="Enable Test Scrolling Rows"
+                    subtitle="Check this to enable test scrolling rows except for Character rows."
+                />
+
+                <CustomCheckbox
+                    isChecked={bsc.settings.misc.testScrollCharacterRows}
+                    onPress={() => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, testScrollCharacterRows: !bsc.settings.misc.testScrollCharacterRows } })}
+                    text="Enable Test Scrolling Character Rows"
+                    subtitle="Check this to enable test scrolling Character rows specifically."
+                />
             </View>
         )
     }
