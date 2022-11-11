@@ -311,6 +311,39 @@ class Game(private val myContext: Context) {
 		val scanMaterials = ScanMaterials(this)
 		val scanCharacters = ScanCharacters(this)
 
+		if (configData.testScrollRows) {
+			scanUtils.scrollFirstRow()
+			wait(0.5)
+			var tries = 1
+			while (tries <= 300) {
+				scanUtils.scrollSubsequentRow()
+				wait(0.5)
+				val region = intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 3), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 3)
+				val locations = imageUtils.findAll("artifact_level_5", region = region, customConfidence = 0.95)
+				printToLog("Locations found: $locations", tag, isWarning = true)
+				scanUtils.scrollRecovery(locations[0].y)
+				tries += 1
+			}
+
+			return
+		}else if (configData.testScrollCharacterRows) {
+			scanUtils.scrollFirstCharacterRow()
+			wait(0.5)
+			var tries = 1
+			while (tries <= 300) {
+				scanUtils.scrollSubsequentCharacterRow()
+				wait(0.5)
+				val region = intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService.displayWidth, MediaProjectionService
+					.displayHeight / 4)
+				val locations = imageUtils.findAll("character_level", region = region, customConfidence = 0.95)
+				printToLog("Locations found: $locations", tag, isWarning = true)
+				scanUtils.scrollCharacterRecovery(locations[0].y)
+				tries += 1
+			}
+
+			return
+		}
+
 		if ((configData.enableScanWeapons && !configData.enableTestSingleSearch) || (configData.enableTestSingleSearch && configData.testSearchWeapon)) {
 			weapons = scanWeapons.start()
 		}

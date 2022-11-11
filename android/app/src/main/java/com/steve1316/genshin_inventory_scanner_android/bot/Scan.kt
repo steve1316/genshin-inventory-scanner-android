@@ -115,8 +115,8 @@ class Scan(private val game: Game) {
 
 		if (y.toFloat() <= 860f - maximumAllowed) {
 			val recoveryAmount = 800f + (860f - (y - maximumAllowed).toFloat())
-			if (debugMode) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
-			game.gestureUtils.swipe(900f, 800f, 900f, recoveryAmount)
+			if (debugMode || game.configData.testScrollRows) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
+			game.gestureUtils.swipe(900f, 860f, 900f, recoveryAmount)
 			game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 		}
 	}
@@ -126,8 +126,9 @@ class Scan(private val game: Game) {
 
 		if (y.toFloat() <= 920f - maximumAllowed) {
 			val recoveryAmount = 900f + (860f - (y - maximumAllowed).toFloat())
-			if (debugMode) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
-			game.gestureUtils.swipe(200f, 900f, 200f, recoveryAmount)
+			if (debugMode || game.configData.testScrollCharacterRows) game.printToLog("[DEBUG] Resetting character scroll level by $recoveryAmount", tag, isWarning = true)
+			game.gestureUtils.swipe(200f, 920f, 200f, recoveryAmount)
+			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 		}
 	}
