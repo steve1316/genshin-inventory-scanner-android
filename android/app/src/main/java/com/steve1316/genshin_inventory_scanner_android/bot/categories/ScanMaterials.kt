@@ -117,6 +117,7 @@ class ScanMaterials(private val game: Game) {
 						try {
 							materialName = game.scanUtils.getMaterialName()
 							if (materialList.containsKey(materialName)) {
+								game.printToLog("[SCAN_$categoryTag] $materialName already exists. Ending the scan...\n", tag, isWarning = true)
 								searchComplete = true
 							} else {
 								amount = if (!firstSearchComplete) game.scanUtils.getMaterialAmountFirstTime(
@@ -133,7 +134,7 @@ class ScanMaterials(private val game: Game) {
 							)
 						}
 					} else {
-						game.printToLog("[SCAN_$categoryTag] Done\n", tag, isWarning = true)
+						game.printToLog("[SCAN_$categoryTag] Excluding the cooking ingredient items, the scan has processed all relevant materials. Ending the scan...\n", tag, isWarning = true)
 						searchComplete = true
 					}
 				}
