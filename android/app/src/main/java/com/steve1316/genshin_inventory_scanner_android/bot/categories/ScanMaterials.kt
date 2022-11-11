@@ -85,11 +85,11 @@ class ScanMaterials(private val game: Game) {
 		} else {
 			game.printToLog("**************************************", tag)
 			game.printToLog("[SCAN_SINGLE] TESTING SINGLE SEARCH...", tag)
-			game.printToLog("[SCAN_SINGLE] Note: Material amount is not tested here.", tag)
 			game.printToLog("**************************************", tag)
 
 			val materialName = game.scanUtils.getMaterialName()
-			game.printToLog("[SCAN_SINGLE] Scanned: $materialName\n", tag)
+			val materialAmount = game.scanUtils.getMaterialAmountSubsequent()
+			game.printToLog("[SCAN_SINGLE] Scanned: x$materialAmount $materialName\n", tag)
 
 			return materialList
 		}
