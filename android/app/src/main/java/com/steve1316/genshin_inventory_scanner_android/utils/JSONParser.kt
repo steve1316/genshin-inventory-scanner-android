@@ -82,6 +82,8 @@ class JSONParser {
 				putBoolean("testSearchArtifact", miscObj.getBoolean("testSearchArtifact"))
 				putBoolean("testSearchMaterial", miscObj.getBoolean("testSearchMaterial"))
 				putBoolean("testSearchCharacter", miscObj.getBoolean("testSearchCharacter"))
+				putBoolean("testScrollRows", miscObj.getBoolean("testScrollRows"))
+				putBoolean("testScrollCharacterRows", miscObj.getBoolean("testScrollCharacterRows"))
 				commit()
 			}
 		} catch (e: Exception) {

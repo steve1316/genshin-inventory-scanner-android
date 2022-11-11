@@ -44,6 +44,8 @@ class ConfigData(myContext: Context) {
 	val testSearchArtifact: Boolean
 	val testSearchMaterial: Boolean
 	val testSearchCharacter: Boolean
+	val testScrollRows: Boolean
+	val testScrollCharacterRows: Boolean
 
 	init {
 		Log.d(tag, "Loading settings from SharedPreferences to memory...")
@@ -85,6 +87,8 @@ class ConfigData(myContext: Context) {
 		testSearchArtifact = sharedPreferences.getBoolean("testSearchArtifact", false)
 		testSearchMaterial = sharedPreferences.getBoolean("testSearchMaterial", false)
 		testSearchCharacter = sharedPreferences.getBoolean("testSearchCharacter", false)
+		testScrollRows = sharedPreferences.getBoolean("testScrollRows", false)
+		testScrollCharacterRows = sharedPreferences.getBoolean("testScrollCharacterRows", false)
 
 		Log.d(tag, "Successfully loaded settings from SharedPreferences to memory.")
 	}
