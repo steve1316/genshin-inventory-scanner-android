@@ -30,7 +30,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 /**
  * Main driver for bot activity and navigation.
@@ -237,6 +236,26 @@ class Game(private val myContext: Context) {
 	}
 
 	/**
+	 * Clean up the folder of the saved GOOD files if the amount of files inside is greater than the specified amount.
+	 *
+	 */
+	private fun cleanFolder() {
+		// Generate a path to the folder in the Internal Storage.
+		val directory = File(myContext.getExternalFilesDir(null)?.absolutePath + "/good/")
+		if (!directory.exists()) {
+			directory.mkdirs()
+		}
+
+		// Delete all logs if the amount inside is greater than 50.
+		val files = directory.listFiles()
+		if (files != null && files.size > 50) {
+			files.forEach { file ->
+				file.delete()
+			}
+		}
+	}
+
+	/**
 	 * Collect all of the scanned information into a JSON file in GOOD format.
 	 *
 	 * @param weapons List of scanned weapons.
@@ -245,10 +264,15 @@ class Game(private val myContext: Context) {
 	 * @param characters List of scanned characters.
 	 */
 	private fun compileIntoGOOD(weapons: ArrayList<Weapon>, artifacts: ArrayList<Artifact>, materials: MutableMap<String, Int>, characters: ArrayList<CharacterData>) {
+		cleanFolder()
+
 		printToLog("\n[INFO] Saving data into a JSON file in GOOD format now...")
 
-		// Generate a path to the root of the application folder in the Internal Storage.
-		val path = File(myContext.getExternalFilesDir(null)?.absolutePath ?: throw Exception("Could not generate a path to the folder to save the file in GOOD format."))
+		// Generate a path to the folder in the Internal Storage.
+		val path = File(myContext.getExternalFilesDir(null)?.absolutePath + "/good/")
+		if (!path.exists()) {
+			path.mkdirs()
+		}
 
 		// Generate the file name.
 		val fileName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -284,7 +308,7 @@ class Game(private val myContext: Context) {
 				out.write(prettyJSONString)
 			}
 
-			printToLog("\n[INFO] Data saved into $fileName.json")
+			printToLog("\n[INFO] Data saved into $path/$fileName.json")
 		}
 	}
 
@@ -318,7 +342,8 @@ class Game(private val myContext: Context) {
 			while (tries <= 300) {
 				scanUtils.scrollSubsequentRow()
 				wait(0.5)
-				val region = intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 3), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 3)
+				val region =
+					intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 3), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 3)
 				val locations = imageUtils.findAll("artifact_level_5", region = region, customConfidence = 0.95)
 				printToLog("Locations found: $locations", tag, isWarning = true)
 				scanUtils.scrollRecovery(locations[0].y)
@@ -326,15 +351,16 @@ class Game(private val myContext: Context) {
 			}
 
 			return
-		}else if (configData.testScrollCharacterRows) {
+		} else if (configData.testScrollCharacterRows) {
 			scanUtils.scrollFirstCharacterRow()
 			wait(0.5)
 			var tries = 1
 			while (tries <= 300) {
 				scanUtils.scrollSubsequentCharacterRow()
 				wait(0.5)
-				val region = intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService.displayWidth, MediaProjectionService
-					.displayHeight / 4)
+				val region = intArrayOf(
+					0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 4
+				)
 				val locations = imageUtils.findAll("character_level", region = region, customConfidence = 0.95)
 				printToLog("Locations found: $locations", tag, isWarning = true)
 				scanUtils.scrollCharacterRecovery(locations[0].y)
