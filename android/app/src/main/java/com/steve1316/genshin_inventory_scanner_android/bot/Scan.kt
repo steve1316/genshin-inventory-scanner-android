@@ -97,7 +97,7 @@ class Scan(private val game: Game) {
 	fun scrollSubsequentRow() {
 		game.printToLog("[SCROLL] Scrolling subsequent row down...", tag)
 
-		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 240f - scrollDiff)
+		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 250f - scrollDiff)
 		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 
 		if (scrollAttempts % 6 == 0) {
