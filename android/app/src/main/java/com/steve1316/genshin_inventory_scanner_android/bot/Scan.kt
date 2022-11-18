@@ -638,7 +638,7 @@ class Scan(private val game: Game) {
 		var tries = 5
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 195.0 - thresholdDiff)
+			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 180.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the character name: $name", tag)
 
 			val formattedCharacterName = toPascalCase(name)
@@ -648,13 +648,14 @@ class Scan(private val game: Game) {
 			} else {
 				Data.characters.forEach {
 					val score = decimalFormat.format(stringSimilarityService.score(it, formattedCharacterName)).toDouble()
-					if (score >= textSimilarityConfidence) {
+
+					if (score >= 0.95) {
 						return it
 					}
 				}
 			}
 
-			thresholdDiff += 5.0
+			thresholdDiff += 10.0
 			tries -= 1
 		}
 
