@@ -114,6 +114,11 @@ class Scan(private val game: Game) {
 		scrollAttempts += 1
 	}
 
+	/**
+	 * Attempt to counteract scroll acceleration by preemptively covering the difference between the current position and the maximum allowed.
+	 *
+	 * @param y The current position's y-coordinate.
+	 */
 	fun scrollRecovery(y: Double) {
 		val maximumAllowed = 30f
 
@@ -125,6 +130,10 @@ class Scan(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Scrolls one row down for the Character grid. Preempting this with a special first time scroll logic is not needed and will mess up the scroll acceleration later.
+	 *
+	 */
 	fun scrollSubsequentCharacterRow() {
 		game.printToLog("\n[SCROLL] Scrolling subsequent row down...", tag)
 
@@ -367,6 +376,11 @@ class Scan(private val game: Game) {
 		return game.imageUtils.findImage("lock", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null
 	}
 
+	/**
+	 * Detects the name of the artifact, either matching it from the data or manually brute forcing it through.
+	 *
+	 * @return Name of the artifact.
+	 */
 	fun getArtifactName(): String {
 		var tries = 3
 		var thresholdDiff = 0.0
@@ -395,6 +409,12 @@ class Scan(private val game: Game) {
 		return toPascalCase(artifactName)
 	}
 
+	/**
+	 * Fetches the artifact's set name and type depending on the passed in artifact name.
+	 *
+	 * @param artifactName Name of the artifact itself.
+	 * @return Either a Pair object containing the set name and the type of the artifact or empty strings if the fetch failed.
+	 */
 	fun getArtifactSetNameAndType(artifactName: String): Pair<String, String> {
 		Data.artifactSets.forEach { artifactSet ->
 			artifactSet.value.forEach { artifactType ->
@@ -408,6 +428,11 @@ class Scan(private val game: Game) {
 		return Pair("", "")
 	}
 
+	/**
+	 * Detects the level of the artifact.
+	 *
+	 * @return Level of the artifact as a String.
+	 */
 	fun getArtifactLevel(): String {
 		return game.imageUtils.findTextTesseract(
 			(backpackLocation!!.x + 1490).toInt(),
@@ -420,6 +445,13 @@ class Scan(private val game: Game) {
 		)
 	}
 
+	/**
+	 * Fetches the main stat of the artifact based on its type and level.
+	 *
+	 * @param artifactType The artifact's type: flower, plume, etc.
+	 * @param artifactLevel The artifact's level.
+	 * @return Either a Pair object containing what the main stat is along with its value or empty strings if the fetch failed.
+	 */
 	fun getArtifactMainStat(artifactType: String, artifactLevel: Int): Pair<String, String> {
 		return when (artifactType) {
 			"flower" -> {
@@ -501,6 +533,11 @@ class Scan(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Detects the substat(s) of the artifact.
+	 *
+	 * @return List of what each substat is and its detected value represented as a Substat object.
+	 */
 	fun getArtifactSubStats(): ArrayList<Artifact.Companion.Substat> {
 		val substats: ArrayList<Artifact.Companion.Substat> = arrayListOf()
 
@@ -544,6 +581,11 @@ class Scan(private val game: Game) {
 		return substats
 	}
 
+	/**
+	 * Detects the name of the material / character development item depending on what is on the screen.
+	 *
+	 * @return The detected name of the material / character development item or whatever the brute force method produced.
+	 */
 	fun getMaterialName(): String {
 		var tries = 3
 		var thresholdDiff = 0.0
@@ -577,11 +619,18 @@ class Scan(private val game: Game) {
 		return toPascalCase(itemName)
 	}
 
+	/**
+	 * Detects the amount of the material / character development item using a location that is already offset beforehand. This is only usable on the first round of scans.
+	 *
+	 * @param location This is the location of the backpack image asset offset by the coordinates of the item location.
+	 * @return The material / character development item amount as a Int or 1 if the detection / conversion to Int failed.
+	 */
 	fun getMaterialAmountFirstTime(location: Point): Int {
 		val offset = Point(-75.0, 70.0)
 		val regionWidth = 140
 		val regionHeight = 35
 
+		// Offset the given location for a second time in order to create a cropped region in order to read only the item amount.
 		val result = game.imageUtils.findTextTesseract(
 			(location.x + offset.x).toInt(),
 			(location.y + offset.y).toInt(),
@@ -599,6 +648,11 @@ class Scan(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Detects the amount of the material / character development item. This is used for every subsequent round of scans after getMaterialAmountFirstTime().
+	 *
+	 * @return The material / character development item amount as a Int or 1 if the detection / conversion to Int failed.
+	 */
 	fun getMaterialAmountSubsequent(): Int {
 		val location = game.imageUtils.findMaterialLocation()
 
@@ -616,6 +670,12 @@ class Scan(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Detects the name of the Character.
+	 *
+	 * @param exitLocation The location of the exit image asset to be used for offset.
+	 * @return The detected name of the Character based off of the data or an empty string if it failed to match in the data.
+	 */
 	fun getCharacterName(exitLocation: Point): String {
 		var tries = 5
 		var thresholdDiff = 0.0
@@ -656,6 +716,12 @@ class Scan(private val game: Game) {
 		return ""
 	}
 
+	/**
+	 * Detects the level of the Character.
+	 *
+	 * @param exitLocation The location of the exit image asset to be used for offset.
+	 * @return The level of the Character as a Int or 1 if the detection / conversion to Int failed.
+	 */
 	fun getCharacterLevel(exitLocation: Point): Int {
 		var level = game.imageUtils.findTextTesseract((exitLocation.x - 375).toInt(), (exitLocation.y + 200).toInt(), 65, 40, customThreshold = 170.0, detectDigitsOnly = true)
 		level = level.filter { if (it != '.') it.isDigit() else true }
@@ -667,10 +733,20 @@ class Scan(private val game: Game) {
 		}
 	}
 
+	/**
+	 * Detects the Character's ascension level.
+	 *
+	 * @return Ascension level of the Character as a Int.
+	 */
 	fun getCharacterAscensionLevel(): Int {
 		return game.imageUtils.findAll("character_ascension_star", region = regionRightSideOneThird, customConfidence = 0.8).size
 	}
 
+	/**
+	 * Detects the Character's constellation level.
+	 *
+	 * @return Constellation level of the Character as a Int.
+	 */
 	fun getCharacterConstellationLevel(): Int {
 		if (!game.findAndPress("character_constellation", tries = 2) && game.imageUtils.findImage("character_constellation_selected", tries = 2) == null) {
 			game.printToLog("[ERROR] Failed to go to the Constellations page. Returning 0 for now...", tag, isError = true)
@@ -682,6 +758,13 @@ class Scan(private val game: Game) {
 		return 6 - game.imageUtils.findAll("character_constellation_locked", region = regionRightSideOneThird).size
 	}
 
+	/**
+	 * Detects the Character's talent levels taking the given name and constellation level into consideration.
+	 *
+	 * @param characterName The Character's name that will be used for checking against edge cases to be handled separately.
+	 * @param characterConstellationLevel The Character's constellation level to be considered in determining the correct talent skill.
+	 * @return List of all 3 talent levels for the Character.
+	 */
 	fun getCharacterTalentLevels(characterName: String, characterConstellationLevel: Int = 0): ArrayList<Int> {
 		if (!game.findAndPress("character_talents", tries = 2) && game.imageUtils.findImage("character_talents_selected", tries = 2) == null) {
 			game.printToLog("[ERROR] Failed to go to the Talents page. Returning 1's for now...", tag, isError = true)
@@ -701,6 +784,7 @@ class Scan(private val game: Game) {
 
 		var levelLocations = game.imageUtils.findAll("character_talents_level", region = regionRightSideOneThird, customConfidence = 0.7)
 
+		// This makes sure that at least 3 talent levels will be processed: auto, skill and burst.
 		if (levelLocations.size < 3) {
 			var levelTries = 5
 			var confidenceDiff = 0.5
@@ -717,6 +801,7 @@ class Scan(private val game: Game) {
 		}
 
 		levelLocations.forEach { location ->
+			// Process only the auto, skill and burst based on the current index and whether or not the Character matches one of the edge cases.
 			if (index == 1 || index == 2 || (index == 3 && !characterExceptions.contains(characterName)) || (index == 4 && characterExceptions.contains(characterName))) {
 				var resultLevel = 0
 				var tries = 3
@@ -732,6 +817,7 @@ class Scan(private val game: Game) {
 						level = "10"
 					}
 
+					// Handle exceptional cases where the talent level would be invalid or not based on the constellation level.
 					resultLevel = try {
 						if (level.toInt() > 13) {
 							game.printToLog("[WARNING] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
@@ -752,6 +838,7 @@ class Scan(private val game: Game) {
 						}
 					}
 
+					// Either a talent level not 0 or a talent level forcibly set to 1 if the process failed to process a valid level will be returned.
 					if (resultLevel != 0) {
 						break
 					} else if (tries <= 0) {

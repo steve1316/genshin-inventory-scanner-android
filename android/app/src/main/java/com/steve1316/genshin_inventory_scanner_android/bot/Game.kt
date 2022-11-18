@@ -144,6 +144,12 @@ class Game(private val myContext: Context) {
 		}
 	}
 
+	/**
+	 * Construct the weapon Json object array.
+	 *
+	 * @param weapons List of Weapon objects
+	 * @return Array of Json objects.
+	 */
 	private fun constructWeaponArray(weapons: ArrayList<Weapon>): JsonArray {
 		val result = JsonArray()
 
@@ -164,6 +170,12 @@ class Game(private val myContext: Context) {
 		return result
 	}
 
+	/**
+	 * Construct the artifact Json object array.
+	 *
+	 * @param artifacts List of Artifact objects
+	 * @return Array of Json objects.
+	 */
 	private fun constructArtifactArray(artifacts: ArrayList<Artifact>): JsonArray {
 		val result = JsonArray()
 
@@ -186,6 +198,12 @@ class Game(private val myContext: Context) {
 		return result
 	}
 
+	/**
+	 * Construct the artifact substat Json object array.
+	 *
+	 * @param substats List of Substat objects
+	 * @return Array of Json objects.
+	 */
 	private fun constructArtifactSubstatsArray(substats: ArrayList<Artifact.Companion.Substat>): JsonArray {
 		val result = JsonArray()
 
@@ -202,6 +220,12 @@ class Game(private val myContext: Context) {
 		return result
 	}
 
+	/**
+	 * Construct the material Json object
+	 *
+	 * @param materials Map of each material along with their amounts.
+	 * @return Json object with each material paired with their amounts.
+	 */
 	private fun constructMaterialObject(materials: MutableMap<String, Int>): JsonObject {
 		val result = JsonObject()
 
@@ -212,6 +236,12 @@ class Game(private val myContext: Context) {
 		return result
 	}
 
+	/**
+	 * Construct the character Json object array.
+	 *
+	 * @param characters List of Character objects.
+	 * @return Array of Json objects.
+	 */
 	private fun constructCharacterArray(characters: ArrayList<CharacterData>): JsonArray {
 		val result = JsonArray()
 
