@@ -447,15 +447,15 @@ class Scan(private val game: Game) {
 				Pair("atk", Artifact.atkStats[artifactLevel].toString())
 			}
 			"sands" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("enerRech_", Artifact.enerRech_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Sands artifact.", tag, isError = true)
@@ -463,29 +463,29 @@ class Scan(private val game: Game) {
 				}
 			}
 			"goblet" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_anemo_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_anemo_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("anemo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_geo_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_geo_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("geo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_electro_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_electro_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("electro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_hydro_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_hydro_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("hydro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_pyro_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_pyro_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("pyro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_cryo_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_cryo_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("cryo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_dendro_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_dendro_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("dendro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("physical_dmg_", Artifact.physical_dmg_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Goblet artifact.", tag, isError = true)
@@ -493,19 +493,19 @@ class Scan(private val game: Game) {
 				}
 			}
 			"circlet" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_critRate_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_critRate_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("critRate_", Artifact.critRate_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_critDMG_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_critDMG_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("critDMG_", Artifact.critDMG_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = regionRightSide) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 					Pair("heal_", Artifact.heal_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Circlet artifact.", tag, isError = true)
