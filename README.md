@@ -11,6 +11,7 @@ This mobile application serves as a native way to scan your inventory in [GOOD (
     -   [x] Artifacts including Level, Main Stat, and Sub Stats.
     -   [x] Materials including Character Development Items.
     -   [x] Characters including their Level, Ascension, Constellations, and Talents.
+-   [x] Output all scanned data into a JSON file in [GOOD](https://frzyc.github.io/genshin-optimizer/#/doc) format to be used in other third-party websites for parsing and optimization purposes.
 
 # Requirements
 
