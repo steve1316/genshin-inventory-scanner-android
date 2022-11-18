@@ -649,8 +649,18 @@ class Scan(private val game: Game) {
 				Data.characters.forEach {
 					val score = decimalFormat.format(stringSimilarityService.score(it, formattedCharacterName)).toDouble()
 
+					// Handle edge cases here like those involving the characters "q" and "g".
+					val scoreXingqiu = decimalFormat.format(stringSimilarityService.score("Xinggiu", formattedCharacterName)).toDouble()
+					val scoreKeqing = decimalFormat.format(stringSimilarityService.score("Keging", formattedCharacterName)).toDouble()
+
 					if (score >= 0.95) {
 						return it
+					} else if (scoreXingqiu >= 0.95) {
+						game.printToLog("[SCAN] Encountered edge case for the character 'Xingqiu' so manually returning this character.", tag)
+						return "Xingqiu"
+					} else if (scoreKeqing >= 0.95) {
+						game.printToLog("[SCAN] Encountered edge case for the character 'Keqing' so manually returning this character.", tag)
+						return "Keqing"
 					}
 				}
 			}
