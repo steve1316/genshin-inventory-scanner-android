@@ -2,7 +2,7 @@
 
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/steve1316/genshin-inventory-scanner-android?logo=GitHub) ![GitHub last commit](https://img.shields.io/github/last-commit/steve1316/genshin-inventory-scanner-android?logo=GitHub) ![GitHub issues](https://img.shields.io/github/issues/steve1316/genshin-inventory-scanner-android?logo=GitHub) ![GitHub pull requests](https://img.shields.io/github/issues-pr/steve1316/genshin-inventory-scanner-android?logo=GitHub) ![GitHub](https://img.shields.io/github/license/steve1316/genshin-inventory-scanner-android?logo=GitHub)
 
-This mobile application serves as a native way to scan your inventory in [GOOD (Genshin Open Object Description)](https://frzyc.github.io/genshin-optimizer/#/doc) format for websites like [Genshin Optimizer](https://frzyc.github.io/genshin-optimizer/) to parse data from for the mobile video game, Genshin Impact.
+This mobile application serves as a native way to scan your inventory in [GOOD (Genshin Open Object Description)](https://frzyc.github.io/genshin-optimizer/#/doc) format for websites like [Genshin Optimizer](https://frzyc.github.io/genshin-optimizer/) to parse data from for the mobile video game, Genshin Impact. It utilizes a combination of OpenCV and Tesseract OCR methodologies to accomplish this task. A similar implementation for PC platforms only is [Inventory Kamera](https://github.com/Andrewthe13th/Inventory_Kamera).
 
 # Features
 
