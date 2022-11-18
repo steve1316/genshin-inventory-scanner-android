@@ -352,18 +352,10 @@ class Game(private val myContext: Context) {
 
 			return
 		} else if (configData.testScrollCharacterRows) {
-			scanUtils.scrollFirstCharacterRow()
-			wait(0.5)
 			var tries = 1
 			while (tries <= 300) {
 				scanUtils.scrollSubsequentCharacterRow()
 				wait(0.5)
-				val region = intArrayOf(
-					0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 4), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 4
-				)
-				val locations = imageUtils.findAll("character_level", region = region, customConfidence = 0.95)
-				printToLog("Locations found: $locations", tag, isWarning = true)
-				scanUtils.scrollCharacterRecovery(locations[0].y)
 				tries += 1
 			}
 

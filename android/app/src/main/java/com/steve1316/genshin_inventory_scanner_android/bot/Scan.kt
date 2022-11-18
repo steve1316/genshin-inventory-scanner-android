@@ -125,24 +125,6 @@ class Scan(private val game: Game) {
 		}
 	}
 
-	fun scrollCharacterRecovery(y: Double) {
-		val maximumAllowed = 60f
-
-		if (y.toFloat() <= 920f - maximumAllowed) {
-			val recoveryAmount = 900f + (920f - (y - maximumAllowed).toFloat())
-			game.printToLog("[SCROLL_RECOVERY] Resetting character scroll level by ${recoveryAmount}px - 920px = ${recoveryAmount - 920f}px", tag)
-			game.gestureUtils.swipe(200f, 920f, 200f, recoveryAmount)
-			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
-		}
-	}
-
-	fun scrollFirstCharacterRow() {
-		game.printToLog("\n[SCROLL] Scrolling the character row down...", tag)
-		reset()
-		game.gestureUtils.swipe(200f, 900f, 200f, 900f - 30f, duration = 1000L)
-		game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
-	}
-
 	fun scrollSubsequentCharacterRow() {
 		game.printToLog("\n[SCROLL] Scrolling subsequent row down...", tag)
 
