@@ -17,9 +17,11 @@ This mobile application serves as a native way to scan your inventory in [GOOD (
 1. [Android Device or Emulator (Nougat 7.0+)](https://developer.android.com/about/versions)
     1. Tested emulator was Bluestacks 5 with the following settings:
         - P64 (Beta)
-        - 1080x1920 (Portrait Mode as emulators do not have a way to tell the bot that it rotated.)
+        - 1920x1080 (Landscape Mode as emulators do not have a way to tell the bot that it rotated.)
         - 240 DPI
         - 4+ GB of Memory
+    2. If using a physical Android device:
+        - Device used to test this application was at 2400x1080 in Landscape Mode. Width should be the key factor but I am currently unsure if the height is a factor or not.
 
 # Instructions
 
