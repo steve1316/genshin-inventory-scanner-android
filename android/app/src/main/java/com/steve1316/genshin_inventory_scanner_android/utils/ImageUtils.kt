@@ -3,8 +3,6 @@ package com.steve1316.genshin_inventory_scanner_android.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
 import com.steve1316.genshin_inventory_scanner_android.MainActivity
 import com.steve1316.genshin_inventory_scanner_android.bot.Game
@@ -27,7 +25,7 @@ class ImageUtils(context: Context, private val game: Game) {
 	private val matchMethod: Int = Imgproc.TM_CCOEFF_NORMED
 	private val decimalFormat = DecimalFormat("#.###")
 
-	private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+	// private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 	private val tessBaseAPI: TessBaseAPI
 	private val tessDigitsBaseAPI: TessBaseAPI
 
@@ -43,10 +41,10 @@ class ImageUtils(context: Context, private val game: Game) {
 	////////////////////////////////////////////////////////////////////
 	// Device configuration
 	private val is1080p: Boolean = (MediaProjectionService.displayWidth == 1080) || (MediaProjectionService.displayHeight == 1080) // 1080p Portrait or Landscape Mode.
-	val is720p: Boolean = (MediaProjectionService.displayWidth == 720) || (MediaProjectionService.displayHeight == 720) // 720p
-	val isTabletPortrait: Boolean =
+	private val is720p: Boolean = (MediaProjectionService.displayWidth == 720) || (MediaProjectionService.displayHeight == 720) // 720p
+	private val isTabletPortrait: Boolean =
 		(MediaProjectionService.displayWidth == 1600 && MediaProjectionService.displayHeight == 2560) || (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Portrait Mode
-	val isTabletLandscape: Boolean = (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Landscape Mode
+	private val isTabletLandscape: Boolean = (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Landscape Mode
 
 	// Scales
 	private val lowerEndScales: MutableList<Double> = mutableListOf(0.60, 0.61, 0.62, 0.63, 0.64, 0.65, 0.67, 0.68, 0.69, 0.70)
@@ -471,10 +469,10 @@ class ImageUtils(context: Context, private val game: Game) {
 			Pair(sourceBitmap, templateBitmap)
 		} else {
 			if (debugMode) {
-				game.printToLog("[ERROR] One or more of the Bitmaps are null.", tag = tag, isError = true)
+				game.printToLog("[ERROR] Template bitmap is null.", tag = tag, isError = true)
 			}
 
-			Pair(sourceBitmap, templateBitmap)
+			Pair(sourceBitmap, null)
 		}
 	}
 
@@ -597,34 +595,6 @@ class ImageUtils(context: Context, private val game: Game) {
 		matchLocations.clear()
 
 		return locations
-	}
-
-	/**
-	 * Waits for the specified image to vanish from the screen.
-	 *
-	 * @param templateName File name of the template image.
-	 * @param timeout Amount of time to wait before timing out. Default is 5 seconds.
-	 * @param region Specify the region consisting of (x, y, width, height) of the source screenshot to template match. Defaults to (0, 0, 0, 0) which is equivalent to searching the full image.
-	 * @param suppressError Whether or not to suppress saving error messages to the log.
-	 * @return True if the specified image vanished from the screen. False otherwise.
-	 */
-	fun waitVanish(templateName: String, timeout: Int = 5, region: IntArray = intArrayOf(0, 0, 0, 0), suppressError: Boolean = false): Boolean {
-		game.printToLog("[INFO] Now waiting for $templateName to vanish from the screen...", tag = tag)
-
-		var remaining = timeout
-		if (findImage(templateName, tries = 1, region = region, suppressError = suppressError) == null) {
-			return true
-		} else {
-			while (findImage(templateName, tries = 1, region = region, suppressError = suppressError) != null) {
-				game.wait(1.0)
-				remaining -= 1
-				if (remaining <= 0) {
-					return false
-				}
-			}
-
-			return true
-		}
 	}
 
 	/**
