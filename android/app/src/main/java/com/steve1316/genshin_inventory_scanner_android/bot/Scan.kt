@@ -28,6 +28,9 @@ class Scan(private val game: Game) {
 	private val decimalFormat = DecimalFormat("#.###")
 	private val textSimilarityConfidence = 0.85
 
+	private val regionRightSide = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)
+	private val regionRightSideOneThird = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight)
+
 	fun setBackpackLocation() {
 		if (backpackLocation == null) {
 			backpackLocation = game.imageUtils.findImage("backpack", tries = 1)!!
@@ -228,7 +231,7 @@ class Scan(private val game: Game) {
 		var i = maxAscensionLevel
 		var failedOnce = false
 		while (i >= 0) {
-			if (game.imageUtils.findImage("weapon_ascension_$i", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+			if (game.imageUtils.findImage("weapon_ascension_$i", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 				weaponAscensionLevel = i.toString()
 				weaponLevel = when (i) {
 					6 -> {
@@ -352,13 +355,7 @@ class Scan(private val game: Game) {
 	 */
 	fun getRefinementLevel(): String {
 		return game.imageUtils.findTextTesseract(
-			(backpackLocation!!.x + 1490).toInt(),
-			(backpackLocation!!.y + 530).toInt(),
-			35,
-			35,
-			customThreshold = 170.0,
-			reuseSourceBitmap = true,
-			detectDigitsOnly = true
+			(backpackLocation!!.x + 1490).toInt(), (backpackLocation!!.y + 530).toInt(), 35, 35, customThreshold = 180.0, reuseSourceBitmap = true, detectDigitsOnly = true
 		)
 	}
 
@@ -368,7 +365,7 @@ class Scan(private val game: Game) {
 	 * @return The Character's name that the item is equipped to or an empty string if none.
 	 */
 	fun getEquippedBy(): String {
-		return if (game.imageUtils.findImage("equipped", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+		return if (game.imageUtils.findImage("equipped", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
 			val result = game.imageUtils.findTextTesseract(
 				(backpackLocation!!.x + 1705).toInt(), (backpackLocation!!.y + 815).toInt(), 360, 40, customThreshold = 170.0,
 				reuseSourceBitmap = true
@@ -385,7 +382,7 @@ class Scan(private val game: Game) {
 	 * @return True if the item is locked.
 	 */
 	fun getLocked(): Boolean {
-		return game.imageUtils.findImage("lock", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null
+		return game.imageUtils.findImage("lock", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null
 	}
 
 	fun getArtifactName(): String {
@@ -450,15 +447,15 @@ class Scan(private val game: Game) {
 				Pair("atk", Artifact.atkStats[artifactLevel].toString())
 			}
 			"sands" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = regionRightSide) != null) {
 					Pair("enerRech_", Artifact.enerRech_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Sands artifact.", tag, isError = true)
@@ -466,29 +463,29 @@ class Scan(private val game: Game) {
 				}
 			}
 			"goblet" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_anemo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_anemo_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("anemo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_geo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_geo_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("geo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_electro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_electro_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("electro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_hydro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_hydro_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("hydro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_pyro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_pyro_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("pyro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_cryo_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_cryo_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("cryo_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_dendro_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_dendro_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("dendro_dmg_", Artifact.elemental_dmg_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = regionRightSide) != null) {
 					Pair("physical_dmg_", Artifact.physical_dmg_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Goblet artifact.", tag, isError = true)
@@ -496,19 +493,19 @@ class Scan(private val game: Game) {
 				}
 			}
 			"circlet" -> {
-				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				if (game.imageUtils.findImage("artifact_stat_hp_", tries = 1, region = regionRightSide) != null) {
 					Pair("hp_", Artifact.hp_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_atk_", tries = 1, region = regionRightSide) != null) {
 					Pair("atk_", Artifact.atk_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_def_", tries = 1, region = regionRightSide) != null) {
 					Pair("def_", Artifact.def_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_eleMas", tries = 1, region = regionRightSide) != null) {
 					Pair("eleMas", Artifact.eleMasStats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_critRate_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_critRate_", tries = 1, region = regionRightSide) != null) {
 					Pair("critRate_", Artifact.critRate_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_critDMG_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_critDMG_", tries = 1, region = regionRightSide) != null) {
 					Pair("critDMG_", Artifact.critDMG_Stats[artifactLevel].toString())
-				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
+				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = regionRightSide) != null) {
 					Pair("heal_", Artifact.heal_Stats[artifactLevel].toString())
 				} else {
 					game.printToLog("[ERROR] Failed to detect the main stat for this Circlet artifact.", tag, isError = true)
@@ -525,7 +522,7 @@ class Scan(private val game: Game) {
 	fun getArtifactSubStats(): ArrayList<Artifact.Companion.Substat> {
 		val substats: ArrayList<Artifact.Companion.Substat> = arrayListOf()
 
-		val substatLocations = game.imageUtils.findAll("artifact_substat", region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight))
+		val substatLocations = game.imageUtils.findAll("artifact_substat", region = regionRightSide)
 		substatLocations.forEach { location ->
 			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
 
@@ -686,8 +683,7 @@ class Scan(private val game: Game) {
 	}
 
 	fun getCharacterAscensionLevel(): Int {
-		return game.imageUtils.findAll("character_ascension_star", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight), customConfidence = 0.8)
-			.size
+		return game.imageUtils.findAll("character_ascension_star", region = regionRightSideOneThird, customConfidence = 0.8).size
 	}
 
 	fun getCharacterConstellationLevel(): Int {
@@ -698,7 +694,7 @@ class Scan(private val game: Game) {
 
 		game.wait(1.0)
 
-		return 6 - game.imageUtils.findAll("character_constellation_locked", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight)).size
+		return 6 - game.imageUtils.findAll("character_constellation_locked", region = regionRightSideOneThird).size
 	}
 
 	fun getCharacterTalentLevels(characterName: String, characterConstellationLevel: Int = 0): ArrayList<Int> {
@@ -718,19 +714,13 @@ class Scan(private val game: Game) {
 		val result = arrayListOf<Int>()
 		var index = 1
 
-		var levelLocations = game.imageUtils.findAll(
-			"character_talents_level", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight),
-			customConfidence = 0.7
-		)
+		var levelLocations = game.imageUtils.findAll("character_talents_level", region = regionRightSideOneThird, customConfidence = 0.7)
 
 		if (levelLocations.size < 3) {
 			var levelTries = 5
 			var confidenceDiff = 0.5
 			while (levelTries > 0) {
-				levelLocations = game.imageUtils.findAll(
-					"character_talents_level", region = intArrayOf(MPS.displayWidth - (MPS.displayWidth / 3), 0, MPS.displayWidth / 3, MPS.displayHeight),
-					customConfidence = 0.7 - confidenceDiff
-				)
+				levelLocations = game.imageUtils.findAll("character_talents_level", region = regionRightSideOneThird, customConfidence = 0.7 - confidenceDiff)
 
 				if (levelLocations.size >= 3) {
 					break
