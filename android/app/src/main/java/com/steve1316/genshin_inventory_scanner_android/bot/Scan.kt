@@ -507,35 +507,36 @@ class Scan(private val game: Game) {
 		val substatLocations = game.imageUtils.findAll("artifact_substat", region = regionRightSide)
 		substatLocations.forEach { location ->
 			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
+			if (substat != "" || substat.contains('+')) {
+				val formattedSubstat = substat.split("+") as ArrayList<String>
+				formattedSubstat[0] = formattedSubstat[0].uppercase(Locale.ROOT)
 
-			val formattedSubstat = substat.split("+") as ArrayList<String>
-			formattedSubstat[0] = formattedSubstat[0].uppercase(Locale.ROOT)
+				if (formattedSubstat[0] == "ATK" || formattedSubstat[0] == "HP" || formattedSubstat[0] == "DEF") {
+					if (formattedSubstat[1].contains("%")) formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT) + "_"
+					else formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
+				} else if (formattedSubstat[0] == "ELEMENTAL MASTERY") {
+					formattedSubstat[0] = "eleMas"
+				} else if (formattedSubstat[0] == "ENERGY RECHARGE") {
+					formattedSubstat[0] = "enerRech" + "_"
+				} else if (formattedSubstat[0] == "CRIT RATE") {
+					formattedSubstat[0] = "critRate" + "_"
+				} else if (formattedSubstat[0] == "CRIT DMG") {
+					formattedSubstat[0] = "critDMG" + "_"
+				} else {
+					formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
+				}
 
-			if (formattedSubstat[0] == "ATK" || formattedSubstat[0] == "HP" || formattedSubstat[0] == "DEF") {
-				if (formattedSubstat[1].contains("%")) formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT) + "_"
-				else formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
-			} else if (formattedSubstat[0] == "ELEMENTAL MASTERY") {
-				formattedSubstat[0] = "eleMas"
-			} else if (formattedSubstat[0] == "ENERGY RECHARGE") {
-				formattedSubstat[0] = "enerRech" + "_"
-			} else if (formattedSubstat[0] == "CRIT RATE") {
-				formattedSubstat[0] = "critRate" + "_"
-			} else if (formattedSubstat[0] == "CRIT DMG") {
-				formattedSubstat[0] = "critDMG" + "_"
-			} else {
-				formattedSubstat[0] = formattedSubstat[0].lowercase(Locale.ROOT)
+				// Cover edge cases here.
+				if (formattedSubstat[1] == "1") {
+					game.printToLog("[WARNING] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
+					formattedSubstat[1] = "11"
+				}
+
+				// Remove all letters that got mixed into the substat value.
+				formattedSubstat[1] = formattedSubstat[1].filter { if (it != '.') it.isDigit() else true }
+
+				substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
 			}
-
-			// Cover edge cases here.
-			if (formattedSubstat[1] == "1") {
-				game.printToLog("[WARNING] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
-				formattedSubstat[1] = "11"
-			}
-
-			// Remove all letters that got mixed into the substat value.
-			formattedSubstat[1] = formattedSubstat[1].filter { if (it != '.') it.isDigit() else true }
-
-			substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
 		}
 
 		return substats
