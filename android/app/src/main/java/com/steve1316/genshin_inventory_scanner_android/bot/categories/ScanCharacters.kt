@@ -180,28 +180,28 @@ class ScanCharacters(private val game: Game) {
 							characterAscensionLevel = game.scanUtils.getCharacterAscensionLevel()
 							characterConstellationLevel = game.scanUtils.getCharacterConstellationLevel()
 							characterTalentLevels = game.scanUtils.getCharacterTalentLevels(characterName, characterConstellationLevel)
-						}
 
-						val newCharacter = CharacterData().apply {
-							key = characterName
-							level = characterLevel
-							constellation = characterConstellationLevel
-							ascension = characterAscensionLevel
-							talent = Talent().apply {
-								auto = characterTalentLevels[0]
-								skill = characterTalentLevels[1]
-								burst = characterTalentLevels[2]
+							val newCharacter = CharacterData().apply {
+								key = characterName
+								level = characterLevel
+								constellation = characterConstellationLevel
+								ascension = characterAscensionLevel
+								talent = Talent().apply {
+									auto = characterTalentLevels[0]
+									skill = characterTalentLevels[1]
+									burst = characterTalentLevels[2]
+								}
 							}
+
+							characterList.add(newCharacter)
+							listOfCharacterNames.add(newCharacter.key)
+
+							game.printToLog("[SCAN_CHARACTERS] Character scanned: $newCharacter\n", tag)
 						}
-
-						characterList.add(newCharacter)
-						listOfCharacterNames.add(newCharacter.key)
-
-						game.printToLog("[SCAN_CHARACTERS] Character scanned: $newCharacter\n", tag)
 					} catch (e: Exception) {
 						game.printToLog(
-							"[ERROR] Failed to scan: (Name: $characterName, Ascension Level: $characterAscensionLevel, Constellations Level: $characterConstellationLevel, " +
-									"Talent Levels: $characterTalentLevels) with the following error: ${e.message}\n", tag, isError = true
+							"[ERROR] Failed to scan: (Name: $characterName, Level: $characterLevel, Ascension Level: $characterAscensionLevel, " +
+									"Constellations Level: $characterConstellationLevel, Talent Levels: $characterTalentLevels) with the following error: ${e.message}\n", tag, isError = true
 						)
 					}
 
