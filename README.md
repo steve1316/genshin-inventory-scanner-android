@@ -10,7 +10,7 @@ This mobile application serves as a native way to scan your inventory in [GOOD (
     -   [x] Weapons including Level, Refinement, and Ascension.
     -   [x] Artifacts including Level, Main Stat, and Sub Stats.
     -   [x] Materials including Character Development Items.
-    -   [ ] Characters including their Level, Ascension, Constellations, and Talents.
+    -   [x] Characters including their Level, Ascension, Constellations, and Talents.
 
 # Requirements
 
@@ -24,7 +24,12 @@ This mobile application serves as a native way to scan your inventory in [GOOD (
 # Instructions
 
 1. Download the latest .apk from the Releases section on the right side of this page right under the About section and then install the application.
-2. TODO
+2. Head to the Settings page of the application. Fill out your Traveler character name if you want the bot to detect and scan the Traveler.
+3. Enable any of the scan(s) and then head back to the Home page and press the `Start` button in order to start giving permissions for the MediaProjectionService and the AccessibilityService.
+4. After permissions are set, head back to the Home page and then press the `Start` button again to display the floating overlay button.
+5. Now head to the inventory page in the game by pressing on the "backpack" / "bag" icon near the top right of the screen.
+    - It is very highly recommended to put the floating overlay button to the bottom right corner of the screen.
+6. Finally, you can press on the floating overlay button to start. Log messages can be viewed afterwards back on the Home page after the process finishes including where the actual log file was saved to.
 
 # Technologies used
 
