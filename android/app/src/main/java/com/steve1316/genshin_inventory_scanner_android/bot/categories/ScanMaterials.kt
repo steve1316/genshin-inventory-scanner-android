@@ -53,10 +53,12 @@ class ScanMaterials(private val game: Game) {
 	 * @return List of materials along with their amounts scanned.
 	 */
 	fun start(searchCharacterDevelopmentItems: Boolean = false): MutableMap<String, Int> {
-		if (game.configData.enableScanMaterials && !searchCharacterDevelopmentItems && game.imageUtils.findImage("category_selected_materials", tries = 2) == null &&
-			!game.findAndPress("category_unselected_materials", tries = 2) ||
+		if (game.configData.enableScanMaterials && !searchCharacterDevelopmentItems && game.imageUtils.findImage(
+				"category_selected_materials", tries = 2,
+				suppressError = !game.configData.debugMode
+			) == null && !game.findAndPress("category_unselected_materials", tries = 2) ||
 			(game.configData.enableScanCharacterDevelopmentItems && searchCharacterDevelopmentItems &&
-					game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2) == null &&
+					game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2, suppressError = !game.configData.debugMode) == null &&
 					!game.findAndPress("category_unselected_characterdevelopmentitems", tries = 2))
 		) {
 			val category = if (searchCharacterDevelopmentItems) "Character Development Item" else "Material"
@@ -68,7 +70,7 @@ class ScanMaterials(private val game: Game) {
 
 		val materialList: MutableMap<String, Int> = mutableMapOf()
 
-		val categoryTag = if (searchCharacterDevelopmentItems) "CHARACTER_DEVELOPMENT_ITEMS" else "MATERIALS"
+		val categoryTag = if (searchCharacterDevelopmentItems) "CHARA_DEV_ITEMS" else "MATERIALS"
 
 		searchComplete = false
 		firstSearchComplete = false
@@ -78,7 +80,7 @@ class ScanMaterials(private val game: Game) {
 			game.printToLog("**************************************", tag)
 			game.printToLog("[SCAN_$categoryTag] $categoryTag SCAN STARTING...", tag)
 			if (!searchCharacterDevelopmentItems) game.printToLog("[SCAN_MATERIALS] Materials", tag)
-			else game.printToLog("[SCAN_CHARACTER_DEVELOPMENT_ITEMS] Character Development Items", tag)
+			else game.printToLog("[SCAN_CHARA_DEV_ITEMS] Character Development Items", tag)
 			game.printToLog("**************************************", tag)
 
 			game.scanUtils.resetScrollScreen(pressReorder = false)
@@ -117,7 +119,7 @@ class ScanMaterials(private val game: Game) {
 						try {
 							materialName = game.scanUtils.getMaterialName()
 							if (materialList.containsKey(materialName)) {
-								game.printToLog("[SCAN_$categoryTag] $materialName already exists. Ending the scan...\n", tag, isWarning = true)
+								game.printToLog("[SCAN_$categoryTag] $materialName already exists. Ending the scan...", tag, isWarning = true)
 								searchComplete = true
 							} else {
 								amount = if (!firstSearchComplete) game.scanUtils.getMaterialAmountFirstTime(
@@ -134,7 +136,7 @@ class ScanMaterials(private val game: Game) {
 							)
 						}
 					} else {
-						game.printToLog("[SCAN_$categoryTag] Excluding the cooking ingredient items, the scan has processed all relevant materials. Ending the scan...\n", tag, isWarning = true)
+						game.printToLog("[SCAN_$categoryTag] Excluding the cooking ingredient items, the scan has processed all relevant materials. Ending the scan...", tag)
 						searchComplete = true
 					}
 				}
@@ -148,7 +150,9 @@ class ScanMaterials(private val game: Game) {
 			}
 		}
 
+		game.printToLog("\n**************************************", tag)
 		game.printToLog("[SCAN_$categoryTag] Scan completed with ${materialList.size} scanned.", tag)
+		game.printToLog("**************************************", tag)
 
 		return materialList
 	}

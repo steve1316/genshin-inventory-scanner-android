@@ -41,7 +41,9 @@ class ScanCharacters(private val game: Game) {
 	private fun initialSetup(): Boolean {
 		game.wait(0.5)
 
-		if (game.imageUtils.findImage("character_attributes_selected", tries = 1) != null || game.findAndPress("character_attributes", tries = 1)) {
+		if (game.imageUtils.findImage("character_attributes_selected", tries = 1, suppressError = !game.configData.debugMode) != null ||
+			game.findAndPress("character_attributes", tries = 1, suppressError = !game.configData.debugMode)
+		) {
 			return if (testSingleSearch) {
 				true
 			} else {

@@ -11,7 +11,7 @@ import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
 class Scan(private val game: Game) {
-	private val tag: String = "${loggerTag}Game"
+	private val tag: String = "${loggerTag}Scan"
 	private val debugMode = game.configData.debugMode
 
 	var backpackLocation: Point? = null
@@ -41,13 +41,13 @@ class Scan(private val game: Game) {
 	 */
 	fun resetScrollScreen(pressReorder: Boolean = true) {
 		if (pressReorder) {
-			game.printToLog("\n[SCAN] Now resetting the scroll level for this category by pressing the Reorder button...", tag)
+			game.printToLog("\n[SCROLL] Now resetting the scroll level for this category by pressing the Reorder button...", tag)
 			game.findAndPress("reorder")
 			game.findAndPress("reorder")
 			game.wait(1.0)
-			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+			game.printToLog("[SCAN] Finished resetting scroll level via reordering.\n", tag)
 		} else {
-			game.printToLog("\n[SCAN] Now resetting the scroll level for this category...", tag)
+			game.printToLog("\n[SCROLL] Now resetting the scroll level for this category...", tag)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
@@ -57,7 +57,7 @@ class Scan(private val game: Game) {
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
 			game.wait(0.5)
 			game.gestureUtils.swipe(900f, 200f, 900f, 900f, duration = 200L)
-			game.printToLog("[SCAN] Finished resetting scroll level.", tag)
+			game.printToLog("[SCAN] Finished resetting scroll level via manual scrolling.\n", tag)
 		}
 	}
 
@@ -66,7 +66,7 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun reset() {
-		game.printToLog("\n[SCAN] Resetting scroll and various flags back to default...", tag)
+		game.printToLog("[SCAN] Resetting scroll and various flags back to default...\n", tag)
 		failAttempts = 5
 		maxAscensionLevel = 6
 
@@ -81,7 +81,7 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun scrollFirstRow() {
-		game.printToLog("\n[SCAN] Scrolling the first row down...", tag)
+		game.printToLog("[SCROLL] Scrolling the first row down...", tag)
 		reset()
 		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 90f, duration = 1000L)
 		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
@@ -92,7 +92,7 @@ class Scan(private val game: Game) {
 	 *
 	 */
 	fun scrollSubsequentRow() {
-		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
+		game.printToLog("[SCROLL] Scrolling subsequent row down...", tag)
 
 		game.gestureUtils.swipe(900f, 800f, 900f, 800f - 240f - scrollDiff)
 		game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
@@ -116,7 +116,7 @@ class Scan(private val game: Game) {
 
 		if (y.toFloat() <= 860f - maximumAllowed) {
 			val recoveryAmount = 800f + (860f - (y - maximumAllowed).toFloat())
-			if (debugMode || game.configData.testScrollRows) game.printToLog("[DEBUG] Resetting scroll level by $recoveryAmount", tag, isWarning = true)
+			game.printToLog("[SCROLL_RECOVERY] Resetting scroll level by 860px - $recoveryAmount = ${920f - recoveryAmount}", tag)
 			game.gestureUtils.swipe(900f, 860f, 900f, recoveryAmount)
 			game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 		}
@@ -127,22 +127,21 @@ class Scan(private val game: Game) {
 
 		if (y.toFloat() <= 920f - maximumAllowed) {
 			val recoveryAmount = 900f + (860f - (y - maximumAllowed).toFloat())
-			if (debugMode || game.configData.testScrollCharacterRows) game.printToLog("[DEBUG] Resetting character scroll level by $recoveryAmount", tag, isWarning = true)
+			game.printToLog("[SCROLL_RECOVERY] Resetting character scroll level by 920px - $recoveryAmount = ${920f - recoveryAmount}", tag)
 			game.gestureUtils.swipe(200f, 920f, 200f, recoveryAmount)
-			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 			game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 		}
 	}
 
 	fun scrollFirstCharacterRow() {
-		game.printToLog("\n[SCAN] Scrolling the character row down...", tag)
+		game.printToLog("\n[SCROLL] Scrolling the character row down...", tag)
 		reset()
 		game.gestureUtils.swipe(200f, 900f, 200f, 900f - 30f, duration = 1000L)
 		game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
 	}
 
 	fun scrollSubsequentCharacterRow() {
-		game.printToLog("\n[SCAN] Scrolling subsequent row down...", tag)
+		game.printToLog("\n[SCROLL] Scrolling subsequent row down...", tag)
 
 		game.gestureUtils.swipe(200f, 900f, 200f, 900f - 240f - scrollDiff)
 		game.gestureUtils.tap(200.0, 900.0, "artifact_level_5")
@@ -332,7 +331,7 @@ class Scan(private val game: Game) {
 			i -= 1
 		}
 
-		game.printToLog("[SCAN] Could not determine weapon level. Returning default value...", tag, isWarning = true)
+		game.printToLog("[ERROR] Could not determine weapon level. Returning default value...", tag, isError = true)
 		failAttempts = 5
 		return Pair("1", "0")
 	}
@@ -412,7 +411,7 @@ class Scan(private val game: Game) {
 			tries -= 1
 		}
 
-		game.printToLog("[SCAN] Failed to match artifact name to any in the database. Forcing the result through now...", tag, isError = true)
+		game.printToLog("[WARNING] Failed to match artifact name to any in the database. Forcing the result through now...", tag, isWarning = true)
 		val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 150.0)
 		return toPascalCase(artifactName)
 	}
@@ -426,7 +425,7 @@ class Scan(private val game: Game) {
 			}
 		}
 
-		game.printToLog("[SCAN] Failed to find the corresponding set to the artifact: $artifactName", tag, isError = true)
+		game.printToLog("[ERROR] Failed to find the corresponding set to the artifact: $artifactName", tag, isError = true)
 		return Pair("", "")
 	}
 
@@ -462,7 +461,7 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_enerRech_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("enerRech_", Artifact.enerRech_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Sands artifact.", tag, isError = true)
+					game.printToLog("[ERROR] Failed to detect the main stat for this Sands artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
@@ -492,7 +491,7 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_physical_dmg_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("physical_dmg_", Artifact.physical_dmg_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Goblet artifact.", tag, isError = true)
+					game.printToLog("[ERROR] Failed to detect the main stat for this Goblet artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
@@ -512,12 +511,12 @@ class Scan(private val game: Game) {
 				} else if (game.imageUtils.findImage("artifact_stat_heal_", tries = 1, region = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)) != null) {
 					Pair("heal_", Artifact.heal_Stats[artifactLevel].toString())
 				} else {
-					game.printToLog("[SCAN] Failed to detect the main stat for this Circlet artifact.", tag, isError = true)
+					game.printToLog("[ERROR] Failed to detect the main stat for this Circlet artifact.", tag, isError = true)
 					Pair("", "")
 				}
 			}
 			else -> {
-				game.printToLog("[SCAN] Invalid artifact type was passed in. Skipping main stat detection...", tag, isError = true)
+				game.printToLog("[ERROR] Invalid artifact type was passed in. Skipping main stat detection...", tag, isError = true)
 				Pair("", "")
 			}
 		}
@@ -550,7 +549,7 @@ class Scan(private val game: Game) {
 
 			// Cover edge cases here.
 			if (formattedSubstat[1] == "1") {
-				game.printToLog("[SCAN] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
+				game.printToLog("[WARNING] Detected value of \"1\". Changing it to \"11\".", tag, isWarning = true)
 				formattedSubstat[1] = "11"
 			}
 
@@ -591,7 +590,7 @@ class Scan(private val game: Game) {
 			tries -= 1
 		}
 
-		game.printToLog("[SCAN] Failed to match material name to any in the database. Forcing the result through now...", tag, isError = true)
+		game.printToLog("[WARNING] Failed to match material name to any in the database. Forcing the result through now...", tag, isWarning = true)
 		val itemName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 97).toInt(), 550, 55, customThreshold = 150.0)
 		return toPascalCase(itemName)
 	}
@@ -613,7 +612,7 @@ class Scan(private val game: Game) {
 		return try {
 			result.toInt()
 		} catch (e: Exception) {
-			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isError = true)
+			game.printToLog("[ERROR] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isError = true)
 			1
 		}
 	}
@@ -622,7 +621,7 @@ class Scan(private val game: Game) {
 		val location = game.imageUtils.findMaterialLocation()
 
 		if (location == null) {
-			game.printToLog("Failed to find cropped and resized image of material. Returning 1 for now...", tag, isError = true)
+			game.printToLog("[ERROR] Failed to find cropped and resized image of material. Returning 1 for now...", tag, isError = true)
 			return 1
 		}
 
@@ -630,7 +629,7 @@ class Scan(private val game: Game) {
 		return try {
 			result.toInt()
 		} catch (e: Exception) {
-			game.printToLog("[SCAN] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isWarning = true)
+			game.printToLog("[ERROR] Failed to convert the material amount of $result to an integer. Returning 1 for now...", tag, isError = true)
 			1
 		}
 	}
@@ -659,7 +658,7 @@ class Scan(private val game: Game) {
 			tries -= 1
 		}
 
-		game.printToLog("[SCAN] Failed to match Character name with the ones in the database.", tag, isError = true)
+		game.printToLog("[ERROR] Failed to match Character name with the ones in the database. Returning an empty string...", tag, isError = true)
 
 		return ""
 	}
@@ -670,7 +669,7 @@ class Scan(private val game: Game) {
 		return try {
 			level.toInt()
 		} catch (e: Exception) {
-			game.printToLog("[SCAN] Failed to convert the Character level of $level to an integer. Returning 1 for now...", tag, isWarning = true)
+			game.printToLog("[ERROR] Failed to convert the Character level of $level to an integer. Returning 1 for now...", tag, isError = true)
 			1
 		}
 	}
@@ -682,7 +681,7 @@ class Scan(private val game: Game) {
 
 	fun getCharacterConstellationLevel(): Int {
 		if (!game.findAndPress("character_constellation", tries = 2) && game.imageUtils.findImage("character_constellation_selected", tries = 2) == null) {
-			game.printToLog("[SCAN] Failed to go to the Constellations page. Returning 0 for now...", tag, isError = true)
+			game.printToLog("[ERROR] Failed to go to the Constellations page. Returning 0 for now...", tag, isError = true)
 			return 0
 		}
 
@@ -693,7 +692,7 @@ class Scan(private val game: Game) {
 
 	fun getCharacterTalentLevels(characterName: String, characterConstellationLevel: Int = 0): ArrayList<Int> {
 		if (!game.findAndPress("character_talents", tries = 2) && game.imageUtils.findImage("character_talents_selected", tries = 2) == null) {
-			game.printToLog("[SCAN] Failed to go to the Talents page. Returning 1's for now...", tag, isError = true)
+			game.printToLog("[ERROR] Failed to go to the Talents page. Returning 1's for now...", tag, isError = true)
 			return arrayListOf(1, 1, 1)
 		}
 
@@ -743,22 +742,25 @@ class Scan(private val game: Game) {
 
 					// Cover edge cases after scanning here.
 					if (level == "0") {
-						game.printToLog("[SCAN] Detected value of \"0\". Changing it to \"10\".", tag, isWarning = true)
+						game.printToLog("[WARNING] Detected value of \"0\". Changing it to \"10\".", tag, isWarning = true)
 						level = "10"
 					}
 
 					resultLevel = try {
 						if (level.toInt() > 13) {
-							game.printToLog("[SCAN] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
+							game.printToLog("[WARNING] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
 							10
 						} else level.toInt()
 					} catch (e: Exception) {
 						// For talents boosted by constellation, the number 11 would be assumed if scan fails.
 						if (tries == 1 && (hasConstellation3 || hasConstellation5)) {
-							game.printToLog("[SCAN] Failed to scan for Talent $index. However, talent has been boosted by constellation so changing it to \"11\" by default...", tag, isWarning = true)
+							game.printToLog(
+								"[WARNING] Failed to scan for Talent $index. However, talent has been boosted by constellation so changing it to \"11\" by default...", tag, isWarning =
+								true
+							)
 							11
 						} else {
-							game.printToLog("[SCAN] Failed to convert Talent $index level of $level to an integer. Trying again for $tries more tries...", tag, isWarning = true)
+							game.printToLog("[WARNING] Failed to convert Talent $index level of $level to an integer. Trying again for $tries more tries...", tag, isWarning = true)
 							tries -= 1
 							0
 						}

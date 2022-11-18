@@ -308,7 +308,7 @@ class Game(private val myContext: Context) {
 				out.write(prettyJSONString)
 			}
 
-			printToLog("\n[INFO] Data saved into $path/$fileName.json")
+			printToLog("[INFO] Data saved into $path/$fileName.json\n")
 		}
 	}
 
@@ -395,6 +395,6 @@ class Game(private val myContext: Context) {
 
 		val endTime: Long = System.currentTimeMillis()
 		val runTime: Long = endTime - startTime
-		printToLog("Total Runtime: ${runTime}ms")
+		printToLog("Total Runtime: ${runTime}ms\n")
 	}
 }

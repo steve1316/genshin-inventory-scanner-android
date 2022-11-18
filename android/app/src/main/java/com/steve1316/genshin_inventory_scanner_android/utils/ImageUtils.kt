@@ -482,7 +482,7 @@ class ImageUtils(context: Context, private val game: Game) {
 			if (bitmap != null) {
 				return bitmap
 			} else {
-				game.printToLog("[WARNING] Source bitmap is null. Waiting a second before trying again.", tag = tag, isWarning = true)
+				if (debugMode) game.printToLog("[DEBUG] Source bitmap is null. Waiting a second before trying again.", tag = tag, isWarning = true)
 				game.wait(1.0)
 			}
 		}
