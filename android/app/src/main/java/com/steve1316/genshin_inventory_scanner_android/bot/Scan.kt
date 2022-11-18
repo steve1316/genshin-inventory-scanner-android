@@ -505,7 +505,9 @@ class Scan(private val game: Game) {
 		val substats: ArrayList<Artifact.Companion.Substat> = arrayListOf()
 
 		val substatLocations = game.imageUtils.findAll("artifact_substat", region = regionRightSide)
-		substatLocations.forEach { location ->
+		val filteredSubstatLocations: ArrayList<Point> = substatLocations.filter { it.x in (substatLocations[0].x - 2)..(substatLocations[0].x + 2) } as ArrayList<Point>
+		game.printToLog("[SCAN] Found ${substatLocations.size} substat locations: $substatLocations.", tag, isWarning = true)
+		filteredSubstatLocations.forEach { location ->
 			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
 			if (substat != "" || substat.contains('+')) {
 				val formattedSubstat = substat.split("+") as ArrayList<String>
