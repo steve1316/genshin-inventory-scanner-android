@@ -210,15 +210,8 @@ class ScanCharacters(private val game: Game) {
 				}
 			}
 
-			// Recover the scroll level if needed.
-			game.scanUtils.scrollCharacterRecovery(locations[0].y)
-
-			if (!firstSearchComplete && !searchComplete) {
-				game.scanUtils.scrollFirstCharacterRow()
-				firstSearchComplete = true
-			} else if (!searchComplete) {
-				game.scanUtils.scrollSubsequentCharacterRow()
-			}
+			firstSearchComplete = true
+			game.scanUtils.scrollSubsequentCharacterRow()
 		}
 
 		game.printToLog("[SCAN_CHARACTERS] Scan completed with ${characterList.size} scanned.", tag)
