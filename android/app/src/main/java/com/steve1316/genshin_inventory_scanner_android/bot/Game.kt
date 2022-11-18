@@ -395,6 +395,6 @@ class Game(private val myContext: Context) {
 
 		val endTime: Long = System.currentTimeMillis()
 		val runTime: Long = endTime - startTime
-		printToLog("Total Runtime: ${runTime}ms\n")
+		printToLog("Total Runtime: ${runTime}ms")
 	}
 }

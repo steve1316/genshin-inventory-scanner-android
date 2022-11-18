@@ -119,7 +119,7 @@ class Scan(private val game: Game) {
 
 		if (y.toFloat() <= 860f - maximumAllowed) {
 			val recoveryAmount = 800f + (860f - (y - maximumAllowed).toFloat())
-			game.printToLog("[SCROLL_RECOVERY] Resetting scroll level by ${recoveryAmount}px - 860px = ${recoveryAmount - 860f}px", tag)
+			game.printToLog("[SCROLL_RECOVERY] Resetting scroll level by ${recoveryAmount}px - 860.0px = ${recoveryAmount - 860f}px", tag)
 			game.gestureUtils.swipe(900f, 860f, 900f, recoveryAmount)
 			game.gestureUtils.tap(900.0, 800.0, "artifact_level_5")
 		}

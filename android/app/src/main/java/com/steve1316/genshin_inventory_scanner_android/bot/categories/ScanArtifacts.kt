@@ -273,7 +273,9 @@ class ScanArtifacts(private val game: Game) {
 	 * @return List of scanned artifacts.
 	 */
 	fun start(): ArrayList<Artifact> {
-		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2) == null && !game.findAndPress("category_unselected_artifacts", tries = 2)) {
+		if (game.imageUtils.findImage("category_selected_artifacts", tries = 2, suppressError = game.configData.debugMode) == null &&
+			!game.findAndPress("category_unselected_artifacts", tries = 2, suppressError = game.configData.debugMode)
+		) {
 			game.printToLog("[ERROR] Could not make the category active and thus could not start the Artifact scan...", tag, isError = true)
 			return arrayListOf()
 		}
@@ -338,7 +340,7 @@ class ScanArtifacts(private val game: Game) {
 
 			val locations: ArrayList<Point> = search()
 
-			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} locations: $locations.", tag, isWarning = true)
+			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} locations: $locations.\n", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
 				// For every subsequent search, only search for the very last row as every other row above has been processed already.
@@ -415,18 +417,18 @@ class ScanArtifacts(private val game: Game) {
 			if (debugMode) {
 				game.printToLog(
 					"[SCAN_ARTIFACTS][DEBUG] enableFullRegionSearch: $enableFullRegionSearch | enableSingleRowSearch: $enableSingleRowSearch | firstSearchComplete: $firstSearchComplete",
-					tag,
-					isWarning = true
+					tag, isWarning = true
 				)
 				game.printToLog(
 					"[SCAN_ARTIFACTS][DEBUG] search5StarComplete: $search5StarComplete | search4StarComplete: $search4StarComplete | search3StarComplete: $search3StarComplete",
-					tag,
-					isWarning = true
+					tag, isWarning = true
 				)
 			}
 		}
 
+		game.printToLog("\n**************************************", tag)
 		game.printToLog("[SCAN_ARTIFACTS] Artifact scan completed with ${artifactList.size} scanned.", tag)
+		game.printToLog("**************************************", tag)
 
 		return artifactList
 	}

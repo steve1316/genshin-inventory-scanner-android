@@ -214,7 +214,9 @@ class ScanCharacters(private val game: Game) {
 			game.scanUtils.scrollSubsequentCharacterRow()
 		}
 
+		game.printToLog("\n**************************************", tag)
 		game.printToLog("[SCAN_CHARACTERS] Scan completed with ${characterList.size} scanned.", tag)
+		game.printToLog("**************************************", tag)
 
 		return characterList
 	}

@@ -316,7 +316,7 @@ class ScanWeapons(private val game: Game) {
 
 			val locations: ArrayList<Point> = search()
 
-			game.printToLog("[SCAN_WEAPONS] Found ${locations.size} locations: $locations.", tag, isWarning = true)
+			game.printToLog("[SCAN_WEAPONS] Found ${locations.size} locations: $locations.\n", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
 				// For every subsequent search, only search for the very last row as every other row above has been processed already.
@@ -384,18 +384,18 @@ class ScanWeapons(private val game: Game) {
 			if (debugMode) {
 				game.printToLog(
 					"[SCAN_WEAPONS][DEBUG] enableFullRegionSearch: $enableFullRegionSearch | enableSingleRowSearch: $enableSingleRowSearch | firstSearchComplete: $firstSearchComplete",
-					tag,
-					isWarning = true
+					tag, isWarning = true
 				)
 				game.printToLog(
 					"[SCAN_WEAPONS][DEBUG] search5StarComplete: $search5StarComplete | search4StarComplete: $search4StarComplete | search3StarComplete: $search3StarComplete",
-					tag,
-					isWarning = true
+					tag, isWarning = true
 				)
 			}
 		}
 
+		game.printToLog("\n**************************************", tag)
 		game.printToLog("[SCAN_WEAPONS] Weapon scan completed with ${weaponList.size} scanned.", tag)
+		game.printToLog("**************************************", tag)
 
 		return weaponList
 	}
