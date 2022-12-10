@@ -72,6 +72,14 @@
         "circlet": "GuardiansBand"
     },
     {
+        "name": "DesertPavilionChronicle",
+        "flower": "TheFirstDaysOfTheCityOfKings",
+        "plume": "EndOfTheGoldenRealm",
+        "sands": "TimepieceOfTheLostPath",
+        "goblet": "DefenderOfTheEnchantingDream",
+        "circlet": "LegacyOfTheDesertHighBorn"
+    },
+    {
         "name": "EchoesOfAnOffering",
         "flower": "SoulscentBloom",
         "plume": "JadeLeaf",
@@ -86,6 +94,14 @@
         "sands": "StormCage",
         "goblet": "ScarletVessel",
         "circlet": "OrnateKabuto"
+    },
+    {
+        "name": "FlowerOfParadiseLost",
+        "flower": "AyKhanoumsMyriad",
+        "plume": "WiltingFeast",
+        "sands": "AMomentCongealed",
+        "goblet": "SecretKeepersMagicBottle",
+        "circlet": "AmethystCrown"
     },
     {
         "name": "Gambler",
