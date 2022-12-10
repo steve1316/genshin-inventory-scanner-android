@@ -1,11 +1,13 @@
 <AppUpdater>
   <update>
-    <latestVersion>1.0.0</latestVersion>
+    <latestVersion>1.1.0</latestVersion>
     <url>https://github.com/steve1316/genshin-inventory-scanner-android/releases</url>
     <releaseNotes>
-v1.0.0 - Changelog
+v1.1.0 - Changelog
 
-This is the first release of the Genshin Inventory Scanner for Android. It is pretty much feature complete in that it is able to scan for Weapons, Artifacts, Materials and Characters either separately or together and compile the acquired data into the GOOD format to be used in third-party optimization websites such as [Genshin Optimizer](https://frzyc.github.io/genshin-optimizer/#/) which popularized the GOOD format.
+New
+---
+- Update data up to patch 3.3 for characters (like Wanderer), weapons, artifacts and materials.
 
     </releaseNotes>
   </update>
