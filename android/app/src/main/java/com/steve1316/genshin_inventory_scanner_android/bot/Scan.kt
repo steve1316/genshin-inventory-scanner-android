@@ -34,6 +34,7 @@ class Scan(private val game: Game) {
 	fun setBackpackLocation() {
 		if (backpackLocation == null) {
 			backpackLocation = game.imageUtils.findImage("backpack", tries = 1)!!
+			backpackLocation!!.x -= (2400 - MPS.displayWidth)
 		}
 	}
 
@@ -215,7 +216,7 @@ class Scan(private val game: Game) {
 	 *
 	 * @return Weapon Level and Ascension.
 	 */
-	fun getWeaponLevelAndAscension(): Pair<String, String> {
+	fun getWeaponLevelAndAscension(): Pair<Int, Int> {
 		// First determine ascension level. Weapons are usually sorted from highest level to lowest.
 		val weaponLevel: String
 		val weaponAscensionLevel: String
@@ -317,7 +318,12 @@ class Scan(private val game: Game) {
 					failAttempts = 5
 				}
 
-				return Pair(weaponLevel, weaponAscensionLevel)
+				return try {
+					Pair(weaponLevel.toInt(), weaponAscensionLevel.toInt())
+				} catch (e: Exception) {
+					game.printToLog("[ERROR] Failed to convert weapon level of $weaponLevel to integer. Returning level 1 as default.", tag, isError = true)
+					Pair(1, weaponAscensionLevel.toInt())
+				}
 			} else {
 				failedOnce = true
 			}
@@ -325,9 +331,9 @@ class Scan(private val game: Game) {
 			i -= 1
 		}
 
-		game.printToLog("[ERROR] Could not determine weapon level. Returning default value...", tag, isError = true)
+		game.printToLog("[ERROR] Could not determine weapon level through iteration of ascension levels. Returning level 1 as default.", tag, isError = true)
 		failAttempts = 5
-		return Pair("1", "0")
+		return Pair(1, 0)
 	}
 
 	/**
@@ -344,10 +350,19 @@ class Scan(private val game: Game) {
 	 *
 	 * @return Weapon Refinement Level
 	 */
-	fun getRefinementLevel(): String {
-		return game.imageUtils.findTextTesseract(
+	fun getRefinementLevel(): Int {
+		val result = game.imageUtils.findTextTesseract(
 			(backpackLocation!!.x + 1490).toInt(), (backpackLocation!!.y + 530).toInt(), 35, 35, customThreshold = 180.0, reuseSourceBitmap = true, detectDigitsOnly = true
 		)
+
+		game.printToLog("[SCAN] Detected ascension level of $result.", tag)
+
+		return try {
+			result.toInt()
+		} catch (e: Exception) {
+			game.printToLog("[ERROR] Could not convert $result to integer. Returning ascension level of 0 as default.", tag, isError = true)
+			0
+		}
 	}
 
 	/**
@@ -433,10 +448,10 @@ class Scan(private val game: Game) {
 	/**
 	 * Detects the level of the artifact.
 	 *
-	 * @return Level of the artifact as a String.
+	 * @return Level of the artifact.
 	 */
-	fun getArtifactLevel(): String {
-		return game.imageUtils.findTextTesseract(
+	fun getArtifactLevel(): Int {
+		val result = game.imageUtils.findTextTesseract(
 			(backpackLocation!!.x + 1490).toInt(),
 			(backpackLocation!!.y + 475).toInt(),
 			66,
@@ -445,6 +460,15 @@ class Scan(private val game: Game) {
 			reuseSourceBitmap = true,
 			detectDigitsOnly = true
 		)
+
+		game.printToLog("[SCAN] Detected level of artifact is: $result.", tag)
+
+		return try {
+			result.toInt()
+		} catch (e: Exception) {
+			game.printToLog("[ERROR] Could not convert $result to integer. Returning level of 0 as default.", tag, isError = true)
+			0
+		}
 	}
 
 	/**

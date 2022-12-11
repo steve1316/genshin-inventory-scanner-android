@@ -291,9 +291,9 @@ class ScanWeapons(private val game: Game) {
 			try {
 				val weaponObject = Weapon().apply {
 					key = weaponName
-					level = weaponLevel.toInt()
-					ascension = weaponAscensionLevel.toInt()
-					refinement = weaponRefinementLevel.toInt()
+					level = weaponLevel
+					ascension = weaponAscensionLevel
+					refinement = weaponRefinementLevel
 					location = weaponEquippedBy
 					lock = weaponLocked
 				}
@@ -352,9 +352,9 @@ class ScanWeapons(private val game: Game) {
 						try {
 							val weaponObject = Weapon().apply {
 								key = weaponName
-								level = weaponLevel.toInt()
-								ascension = weaponAscensionLevel.toInt()
-								refinement = weaponRefinementLevel.toInt()
+								level = weaponLevel
+								ascension = weaponAscensionLevel
+								refinement = weaponRefinementLevel
 								location = weaponEquippedBy
 								lock = weaponLocked
 							}
