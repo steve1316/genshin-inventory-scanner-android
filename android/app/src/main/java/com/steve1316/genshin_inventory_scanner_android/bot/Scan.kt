@@ -464,7 +464,14 @@ class Scan(private val game: Game) {
 		game.printToLog("[SCAN] Detected level of artifact is: $result.", tag)
 
 		return try {
-			result.toInt()
+			val newResult = result.toInt()
+
+			if (newResult > 20) {
+				// Remove the first character in the case that the OCR reads the plus sign as a digit, like 4.
+				result.substring(1).toInt()
+			} else {
+				newResult
+			}
 		} catch (e: Exception) {
 			game.printToLog("[ERROR] Could not convert $result to integer. Returning level of 0 as default.", tag, isError = true)
 			0
