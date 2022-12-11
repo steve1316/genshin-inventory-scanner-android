@@ -362,6 +362,8 @@ class Scan(private val game: Game) {
 				reuseSourceBitmap = true
 			)
 			toPascalCase(result.replace("|", "").trim())
+
+			if (Data.characters.contains(result)) result else ""
 		} else {
 			""
 		}
