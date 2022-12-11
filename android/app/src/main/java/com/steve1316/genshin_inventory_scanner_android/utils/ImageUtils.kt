@@ -14,6 +14,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.DecimalFormat
+import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
 /**
  * Utility functions for image processing via CV like OpenCV.
@@ -40,11 +41,10 @@ class ImageUtils(context: Context, private val game: Game) {
 	////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////
 	// Device configuration
-	private val is1080p: Boolean = (MediaProjectionService.displayWidth == 1080) || (MediaProjectionService.displayHeight == 1080) // 1080p Portrait or Landscape Mode.
-	private val is720p: Boolean = (MediaProjectionService.displayWidth == 720) || (MediaProjectionService.displayHeight == 720) // 720p
-	private val isTabletPortrait: Boolean =
-		(MediaProjectionService.displayWidth == 1600 && MediaProjectionService.displayHeight == 2560) || (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Portrait Mode
-	private val isTabletLandscape: Boolean = (MediaProjectionService.displayWidth == 2560 && MediaProjectionService.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Landscape Mode
+	private val is1080p: Boolean = (MPS.displayWidth == 1080) || (MPS.displayHeight == 1080) // 1080p Portrait or Landscape Mode.
+	private val is720p: Boolean = (MPS.displayWidth == 720) || (MPS.displayHeight == 720) // 720p
+	private val isTabletPortrait: Boolean = (MPS.displayWidth == 1600 && MPS.displayHeight == 2560) || (MPS.displayWidth == 2560 && MPS.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Portrait Mode
+	private val isTabletLandscape: Boolean = (MPS.displayWidth == 2560 && MPS.displayHeight == 1600) // Galaxy Tab S7 1600x2560 Landscape Mode
 
 	// Scales
 	private val lowerEndScales: MutableList<Double> = mutableListOf(0.60, 0.61, 0.62, 0.63, 0.64, 0.65, 0.67, 0.68, 0.69, 0.70)
@@ -449,7 +449,7 @@ class ImageUtils(context: Context, private val game: Game) {
 
 		// Keep swiping a little bit up and down to trigger a new image for ImageReader to grab.
 		while (sourceBitmap == null) {
-			sourceBitmap = MediaProjectionService.takeScreenshotNow()
+			sourceBitmap = MPS.takeScreenshotNow()
 
 			if (sourceBitmap == null) {
 				game.gestureUtils.swipe(1900f, 300f, 1900f, 400f, 100L)
@@ -478,7 +478,7 @@ class ImageUtils(context: Context, private val game: Game) {
 
 	private fun getSourceScreenshot(): Bitmap {
 		while (true) {
-			val bitmap = MediaProjectionService.takeScreenshotNow(saveImage = debugMode)
+			val bitmap = MPS.takeScreenshotNow(saveImage = debugMode)
 			if (bitmap != null) {
 				return bitmap
 			} else {
