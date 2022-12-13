@@ -410,6 +410,14 @@ class Scan(private val game: Game) {
 
 			Data.artifactSets.forEach { artifactSet ->
 				artifactSet.value.forEach { artifactType ->
+					// Cover for specific edge cases where artifact name spans overflows and wraps to two lines.
+					if (artifactType.value == "InRemembranceOfViridescentFields") {
+						val edgeScore = decimalFormat.format(stringSimilarityService.score("InRemembranceOfViridescentFields", formattedName)).toDouble()
+						if (edgeScore >= 0.9) {
+							return "InRemembranceOfViridescentFields"
+						}
+					}
+
 					val score = decimalFormat.format(stringSimilarityService.score(artifactType.value, formattedName)).toDouble()
 					if (score >= textSimilarityConfidence) {
 						return formattedName
@@ -457,7 +465,7 @@ class Scan(private val game: Game) {
 			(backpackLocation!!.y + 475).toInt(),
 			66,
 			33,
-			customThreshold = 170.0,
+			customThreshold = 180.0,
 			reuseSourceBitmap = true,
 			detectDigitsOnly = true
 		)
