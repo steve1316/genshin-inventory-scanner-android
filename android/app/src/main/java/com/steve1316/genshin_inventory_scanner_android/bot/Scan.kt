@@ -402,7 +402,8 @@ class Scan(private val game: Game) {
 		var tries = 3
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 65, customThreshold = 180.0 - thresholdDiff)
+			val artifactName = game.imageUtils.findTextTesseract((backpackLocation!!.x + 1480).toInt(), (backpackLocation!!.y + 90).toInt(), 560, 70, customThreshold = 180.0 - thresholdDiff)
+				.replace("\n", "")
 			if (debugMode) game.printToLog("[DEBUG] Scanned the artifact name: $artifactName", tag)
 
 			val formattedName = toPascalCase(artifactName)
