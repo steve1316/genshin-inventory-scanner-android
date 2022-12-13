@@ -77,6 +77,51 @@ class ScanCharacters(private val game: Game) {
 	}
 
 	/**
+	 * Validates the Character level by the provided ascension level and adjusts the Character level if needed.
+	 *
+	 * @param characterLevel The level of the Character.
+	 * @param characterAscensionLevel The ascension level of the Character.
+	 * @return Either the original level of the Character or a modified version, scaled up or down based on the ascension level.
+	 */
+	private fun checkValidCharacterLevel(characterLevel: Int, characterAscensionLevel: Int): Int {
+		return when (characterAscensionLevel) {
+			6 -> {
+				if (characterLevel < 80) 80
+				else if (characterLevel > 90) 90
+				else characterLevel
+			}
+			5 -> {
+				if (characterLevel < 70) 70
+				else if (characterLevel > 80) 80
+				else characterLevel
+			}
+			4 -> {
+				if (characterLevel < 60) 60
+				else if (characterLevel > 70) 70
+				else characterLevel
+			}
+			3 -> {
+				if (characterLevel < 50) 50
+				else if (characterLevel > 60) 60
+				else characterLevel
+			}
+			2 -> {
+				if (characterLevel < 40) 40
+				else if (characterLevel > 50) 50
+				else characterLevel
+			}
+			1 -> {
+				if (characterLevel < 20) 20
+				else if (characterLevel > 40) 40
+				else characterLevel
+			}
+			else -> {
+				characterLevel
+			}
+		}
+	}
+
+	/**
 	 * Starts the search process and process through all search queries.
 	 *
 	 * @return List of Characters scanned.
@@ -120,6 +165,8 @@ class ScanCharacters(private val game: Game) {
 					characterConstellationLevel = game.scanUtils.getCharacterConstellationLevel()
 					characterTalentLevels = game.scanUtils.getCharacterTalentLevels(characterName, characterConstellationLevel)
 				}
+
+				characterLevel = checkValidCharacterLevel(characterLevel, characterAscensionLevel)
 
 				val newCharacter = CharacterData().apply {
 					key = characterName
@@ -180,6 +227,8 @@ class ScanCharacters(private val game: Game) {
 							characterAscensionLevel = game.scanUtils.getCharacterAscensionLevel()
 							characterConstellationLevel = game.scanUtils.getCharacterConstellationLevel()
 							characterTalentLevels = game.scanUtils.getCharacterTalentLevels(characterName, characterConstellationLevel)
+
+							characterLevel = checkValidCharacterLevel(characterLevel, characterAscensionLevel)
 
 							val newCharacter = CharacterData().apply {
 								key = characterName
