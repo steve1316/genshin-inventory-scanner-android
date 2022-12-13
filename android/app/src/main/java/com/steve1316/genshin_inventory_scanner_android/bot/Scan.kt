@@ -788,7 +788,8 @@ class Scan(private val game: Game) {
 	 * @return Ascension level of the Character as a Int.
 	 */
 	fun getCharacterAscensionLevel(): Int {
-		return game.imageUtils.findAll("character_ascension_star", region = regionRightSideOneThird, customConfidence = 0.8).size
+		val result = game.imageUtils.findAll("character_ascension_star", region = regionRightSideOneThird, customConfidence = 0.8).size
+		return if (result > 6) 6 else result
 	}
 
 	/**
