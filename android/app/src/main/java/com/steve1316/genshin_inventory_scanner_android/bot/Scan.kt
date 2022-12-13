@@ -355,7 +355,7 @@ class Scan(private val game: Game) {
 			(backpackLocation!!.x + 1490).toInt(), (backpackLocation!!.y + 530).toInt(), 35, 35, customThreshold = 180.0, reuseSourceBitmap = true, detectDigitsOnly = true
 		)
 
-		game.printToLog("[SCAN] Detected ascension level of $result.", tag)
+		if (debugMode) game.printToLog("[DEBUG] Detected refinement level of $result.", tag)
 
 		return try {
 			result.toInt()
@@ -470,7 +470,7 @@ class Scan(private val game: Game) {
 			detectDigitsOnly = true
 		)
 
-		game.printToLog("[SCAN] Detected level of artifact is: $result.", tag)
+		if (debugMode) game.printToLog("[DEBUG] Detected level of artifact is: $result.", tag)
 
 		return try {
 			val newResult = result.toInt()
