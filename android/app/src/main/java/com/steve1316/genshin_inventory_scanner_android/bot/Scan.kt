@@ -358,7 +358,14 @@ class Scan(private val game: Game) {
 		if (debugMode) game.printToLog("[DEBUG] Detected refinement level of $result.", tag)
 
 		return try {
-			result.toInt()
+			val newResult = result.toInt()
+			if (newResult < 0) {
+				0
+			} else if (newResult > 5) {
+				5
+			} else {
+				newResult
+			}
 		} catch (e: Exception) {
 			game.printToLog("[ERROR] Could not convert $result to integer. Returning ascension level of 0 as default.", tag, isError = true)
 			0
