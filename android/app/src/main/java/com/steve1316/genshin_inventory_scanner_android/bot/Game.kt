@@ -351,7 +351,7 @@ class Game(private val myContext: Context) {
 
 		landscapeCheck()
 
-		wait(2.0)
+		wait(2.5)
 
 		var weapons: ArrayList<Weapon> = arrayListOf()
 		var artifacts: ArrayList<Artifact> = arrayListOf()
