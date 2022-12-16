@@ -729,7 +729,7 @@ class Scan(private val game: Game) {
 		var tries = 5
 		var thresholdDiff = 0.0
 		while (tries > 0) {
-			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 180.0 - thresholdDiff)
+			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 150.0 - thresholdDiff)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the character name: $name", tag)
 
 			val formattedCharacterName = toPascalCase(name)
@@ -758,6 +758,7 @@ class Scan(private val game: Game) {
 
 			thresholdDiff += 10.0
 			tries -= 1
+			game.wait(0.5)
 		}
 
 		game.printToLog("[ERROR] Failed to match Character name with the ones in the database. Returning an empty string...", tag, isError = true)
