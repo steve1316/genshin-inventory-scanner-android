@@ -735,7 +735,7 @@ class Scan(private val game: Game) {
 			val formattedCharacterName = toPascalCase(name)
 
 			if (toPascalCase(game.configData.travelerName) == formattedCharacterName) {
-				return formattedCharacterName
+				return "Traveler"
 			} else {
 				Data.characters.forEach {
 					val score = decimalFormat.format(stringSimilarityService.score(it, formattedCharacterName)).toDouble()
