@@ -772,7 +772,7 @@ class Scan(private val game: Game) {
 	 * @return The level of the Character as a Int or 1 if the detection / conversion to Int failed.
 	 */
 	fun getCharacterLevel(exitLocation: Point): Int {
-		var level = game.imageUtils.findTextTesseract((exitLocation.x - 375).toInt(), (exitLocation.y + 200).toInt(), 65, 40, customThreshold = 170.0, detectDigitsOnly = true)
+		var level = game.imageUtils.findTextTesseract((exitLocation.x - 375).toInt(), (exitLocation.y + 200).toInt(), 65, 40, customThreshold = 160.0, detectDigitsOnly = true)
 		level = level.filter { if (it != '.') it.isDigit() else true }
 		if (debugMode) game.printToLog("[DEBUG] Scanned the following text for the Character's level: $level", tag)
 		return try {
