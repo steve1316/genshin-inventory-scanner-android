@@ -483,8 +483,8 @@ class Scan(private val game: Game) {
 			val newResult = result.toInt()
 
 			if (newResult > 20) {
-				// Remove the first character in the case that the OCR reads the plus sign as a digit, like 4.
-				result.substring(1).toInt()
+				// Remove the first character in the case that the OCR reads the plus sign as a digit, like 4. Then constrain it to at most 20.
+				result.substring(1).toInt().coerceAtMost(20)
 			} else {
 				newResult
 			}
