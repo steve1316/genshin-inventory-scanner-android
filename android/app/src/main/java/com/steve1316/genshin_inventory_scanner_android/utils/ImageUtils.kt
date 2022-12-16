@@ -427,7 +427,12 @@ class ImageUtils(context: Context, private val game: Game) {
 				Imgproc.rectangle(sourceMat, tempMatchLocation, Point(tempMatchLocation.x + templateMat.cols(), tempMatchLocation.y + templateMat.rows()), Scalar(0.0, 0.0, 0.0), 20)
 
 				if (debugMode) {
-					game.printToLog("[DEBUG] Match found with $maxVal >= $setConfidence at Point $tempMatchLocation with scale: $newScale.", tag = tag)
+					if ((matchMethod == Imgproc.TM_SQDIFF || matchMethod == Imgproc.TM_SQDIFF_NORMED) && mmr.minVal > (1.0 - setConfidence)) {
+						game.printToLog("[DEBUG] Match not found with ${mmr.minVal} > ${(1.0 - setConfidence)} at Point $tempMatchLocation with scale: $newScale.", tag = tag)
+					} else if ((matchMethod != Imgproc.TM_SQDIFF && matchMethod != Imgproc.TM_SQDIFF_NORMED) && mmr.maxVal < setConfidence) {
+						game.printToLog("[DEBUG] Match not found with ${mmr.maxVal} < $setConfidence at Point $tempMatchLocation with scale: $newScale.", tag = tag)
+					}
+
 					Imgcodecs.imwrite("$matchFilePath/matchAll.png", sourceMat)
 				}
 
