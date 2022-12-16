@@ -383,9 +383,9 @@ class Scan(private val game: Game) {
 				(backpackLocation!!.x + 1705).toInt(), (backpackLocation!!.y + 815).toInt(), 360, 40, customThreshold = 170.0,
 				reuseSourceBitmap = true
 			)
-			toPascalCase(result.replace("|", "").trim())
 
-			if (Data.characters.contains(result)) result else ""
+			toPascalCase(result.replace("|", "").trim())
+			compareCharacterNames(result)
 		} else {
 			""
 		}
@@ -737,23 +737,8 @@ class Scan(private val game: Game) {
 			if (toPascalCase(game.configData.travelerName) == formattedCharacterName) {
 				return "Traveler"
 			} else {
-				Data.characters.forEach {
-					val score = decimalFormat.format(stringSimilarityService.score(it, formattedCharacterName)).toDouble()
-
-					// Handle edge cases here like those involving the characters "q" and "g".
-					val scoreXingqiu = decimalFormat.format(stringSimilarityService.score("Xinggiu", formattedCharacterName)).toDouble()
-					val scoreKeqing = decimalFormat.format(stringSimilarityService.score("Keging", formattedCharacterName)).toDouble()
-
-					if (score >= 0.95) {
-						return it
-					} else if (scoreXingqiu >= 0.95) {
-						game.printToLog("[SCAN] Encountered edge case for the character 'Xingqiu' so manually returning this character.", tag)
-						return "Xingqiu"
-					} else if (scoreKeqing >= 0.95) {
-						game.printToLog("[SCAN] Encountered edge case for the character 'Keqing' so manually returning this character.", tag)
-						return "Keqing"
-					}
-				}
+				val result = compareCharacterNames(formattedCharacterName)
+				if (result != "") return result
 			}
 
 			thresholdDiff += 10.0
@@ -762,6 +747,34 @@ class Scan(private val game: Game) {
 		}
 
 		game.printToLog("[ERROR] Failed to match Character name with the ones in the database. Returning an empty string...", tag, isError = true)
+
+		return ""
+	}
+
+	/**
+	 * Compares the scanned text with the compared Character Name to see if they match and handle edge cases as well.
+	 *
+	 * @param scannedText The scanned text containing the Character name.
+	 * @return Either the Character name or an empty string if comparisons failed.
+	 */
+	private fun compareCharacterNames(scannedText: String): String {
+		Data.characters.forEach {
+			val score = decimalFormat.format(stringSimilarityService.score(it, scannedText)).toDouble()
+
+			// Handle edge cases here like those involving the characters "q" and "g".
+			val scoreXingqiu = decimalFormat.format(stringSimilarityService.score("Xinggiu", scannedText)).toDouble()
+			val scoreKeqing = decimalFormat.format(stringSimilarityService.score("Keging", scannedText)).toDouble()
+
+			if (score >= 0.95) {
+				return it
+			} else if (scoreXingqiu >= 0.95) {
+				game.printToLog("[SCAN] Encountered edge case for the character 'Xingqiu' so manually returning this character.", tag)
+				return "Xingqiu"
+			} else if (scoreKeqing >= 0.95) {
+				game.printToLog("[SCAN] Encountered edge case for the character 'Keqing' so manually returning this character.", tag)
+				return "Keqing"
+			}
+		}
 
 		return ""
 	}
