@@ -86,34 +86,94 @@ class ScanCharacters(private val game: Game) {
 	private fun checkValidCharacterLevel(characterLevel: Int, characterAscensionLevel: Int): Int {
 		return when (characterAscensionLevel) {
 			6 -> {
-				if (characterLevel < 80) 80
-				else if (characterLevel > 90) 90
-				else characterLevel
+				if (characterLevel < 80) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 80 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 80.", tag, isWarning = true
+					)
+					80
+				} else if (characterLevel > 90) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 90 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 90.", tag, isWarning = true
+					)
+					90
+				} else characterLevel
 			}
 			5 -> {
-				if (characterLevel < 70) 70
-				else if (characterLevel > 80) 80
-				else characterLevel
+				if (characterLevel < 70) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 70 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 70.", tag, isWarning = true
+					)
+					70
+				} else if (characterLevel > 80) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 80 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 80.", tag, isWarning = true
+					)
+					80
+				} else characterLevel
 			}
 			4 -> {
-				if (characterLevel < 60) 60
-				else if (characterLevel > 70) 70
-				else characterLevel
+				if (characterLevel < 60) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 60 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 60.", tag, isWarning = true
+					)
+					60
+				} else if (characterLevel > 70) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 70 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 70.", tag, isWarning = true
+					)
+					70
+				} else characterLevel
 			}
 			3 -> {
-				if (characterLevel < 50) 50
-				else if (characterLevel > 60) 60
-				else characterLevel
+				if (characterLevel < 50) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 50 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 50.", tag, isWarning = true
+					)
+					50
+				} else if (characterLevel > 60) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 60 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 60.", tag, isWarning = true
+					)
+					60
+				} else characterLevel
 			}
 			2 -> {
-				if (characterLevel < 40) 40
-				else if (characterLevel > 50) 50
-				else characterLevel
+				if (characterLevel < 40) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 40 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 40.", tag, isWarning = true
+					)
+					40
+				} else if (characterLevel > 50) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 50 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 50.", tag, isWarning = true
+					)
+					50
+				} else characterLevel
 			}
 			1 -> {
-				if (characterLevel < 20) 20
-				else if (characterLevel > 40) 40
-				else characterLevel
+				if (characterLevel < 20) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel < 20 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 20.", tag, isWarning = true
+					)
+					20
+				} else if (characterLevel > 40) {
+					game.printToLog(
+						"[DEBUG] Character level validation failed with Character Level $characterLevel > 40 for ascension level: $characterAscensionLevel. " +
+								"Resetting Character Level to 40.", tag, isWarning = true
+					)
+					40
+				} else characterLevel
 			}
 			else -> {
 				characterLevel

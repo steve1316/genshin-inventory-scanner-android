@@ -774,6 +774,7 @@ class Scan(private val game: Game) {
 	fun getCharacterLevel(exitLocation: Point): Int {
 		var level = game.imageUtils.findTextTesseract((exitLocation.x - 375).toInt(), (exitLocation.y + 200).toInt(), 65, 40, customThreshold = 170.0, detectDigitsOnly = true)
 		level = level.filter { if (it != '.') it.isDigit() else true }
+		if (debugMode) game.printToLog("[DEBUG] Scanned the following text for the Character's level: $level", tag)
 		return try {
 			level.toInt()
 		} catch (e: Exception) {
@@ -863,14 +864,14 @@ class Scan(private val game: Game) {
 
 					// Cover edge cases after scanning here.
 					if (level == "0") {
-						game.printToLog("[WARNING] Detected value of \"0\". Changing it to \"10\".", tag, isWarning = true)
+						game.printToLog("[WARNING] Detected talent level of \"0\". Changing it to \"10\".", tag, isWarning = true)
 						level = "10"
 					}
 
 					// Handle exceptional cases where the talent level would be invalid or not based on the constellation level.
 					resultLevel = try {
 						if (level.toInt() > 13) {
-							game.printToLog("[WARNING] Detected value greater than 13. Changing it to 10...", tag, isWarning = true)
+							game.printToLog("[WARNING] Detected talent level of $level is greater than 13. Changing it to 10...", tag, isWarning = true)
 							10
 						} else level.toInt()
 					} catch (e: Exception) {
