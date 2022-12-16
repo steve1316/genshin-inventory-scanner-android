@@ -789,8 +789,33 @@ class Scan(private val game: Game) {
 	 * @return Ascension level of the Character as a Int.
 	 */
 	fun getCharacterAscensionLevel(): Int {
-		val result = game.imageUtils.findAll("character_ascension_star", region = regionRightSideOneThird, customConfidence = 0.8).size
-		return if (result > 6) 6 else result
+		val ascensionProgressButton = game.imageUtils.findImage("character_ascension_progress", tries = 10)
+		val result = if (ascensionProgressButton != null) {
+			game.gestureUtils.tap(ascensionProgressButton.x, ascensionProgressButton.y, "character_ascension_progress")
+			val scannedText = game.imageUtils.findTextTesseract((ascensionProgressButton.x - 810.0).toInt(), (ascensionProgressButton.y + 40.0).toInt(), 50, 35, customThreshold = 200.0,
+				detectDigitsOnly = false)
+			if (debugMode) game.printToLog("[DEBUG] Scanned the following text for the Character's ascension level: $scannedText", tag)
+			try {
+				when (scannedText.toInt()) {
+					20 -> 0
+					40 -> 1
+					50 -> 2
+					60 -> 3
+					70 -> 4
+					80 -> 5
+					else -> 6
+				}
+			} catch (e: Exception) {
+				game.printToLog("[SCAN] Could not parse ascension level from scanned text on the Ascension Progression screen so Character is most likely max ascended.", tag)
+				6
+			}
+		} else {
+			game.printToLog("[WARNING] Could not view the ascension progress for this Character. Returning 6 as the default ascension level.", tag, isWarning = true)
+			6
+		}
+
+		game.findAndPress("exit_inventory")
+		return result
 	}
 
 	/**
