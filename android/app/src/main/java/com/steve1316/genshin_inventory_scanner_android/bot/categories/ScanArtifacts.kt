@@ -307,14 +307,14 @@ class ScanArtifacts(private val game: Game) {
 			val equipped = game.scanUtils.getEquippedBy()
 			val locked = game.scanUtils.getLocked()
 
-			val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel.toInt()).first
+			val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel).first
 			val artifactSubStats: ArrayList<Artifact.Companion.Substat> = game.scanUtils.getArtifactSubStats()
 
 			try {
 				val artifactObject = Artifact().apply {
 					setKey = artifactSetName
 					slotKey = artifactType
-					level = artifactLevel.toInt()
+					level = artifactLevel
 					rarity = artifactRarity.toInt()
 					mainStatKey = artifactMainStat
 					location = equipped

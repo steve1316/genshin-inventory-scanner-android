@@ -55,10 +55,10 @@ class ScanMaterials(private val game: Game) {
 	fun start(searchCharacterDevelopmentItems: Boolean = false): MutableMap<String, Int> {
 		if (game.configData.enableScanMaterials && !searchCharacterDevelopmentItems && game.imageUtils.findImage(
 				"category_selected_materials", tries = 2,
-				suppressError = !game.configData.debugMode
+				suppressError = !debugMode
 			) == null && !game.findAndPress("category_unselected_materials", tries = 2) ||
 			(game.configData.enableScanCharacterDevelopmentItems && searchCharacterDevelopmentItems &&
-					game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2, suppressError = !game.configData.debugMode) == null &&
+					game.imageUtils.findImage("category_selected_characterdevelopmentitems", tries = 2, suppressError = !debugMode) == null &&
 					!game.findAndPress("category_unselected_characterdevelopmentitems", tries = 2))
 		) {
 			val category = if (searchCharacterDevelopmentItems) "Character Development Item" else "Material"
