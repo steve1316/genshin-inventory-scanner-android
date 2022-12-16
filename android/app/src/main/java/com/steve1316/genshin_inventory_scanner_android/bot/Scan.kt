@@ -806,8 +806,10 @@ class Scan(private val game: Game) {
 		val ascensionProgressButton = game.imageUtils.findImage("character_ascension_progress", tries = 10)
 		val result = if (ascensionProgressButton != null) {
 			game.gestureUtils.tap(ascensionProgressButton.x, ascensionProgressButton.y, "character_ascension_progress")
-			val scannedText = game.imageUtils.findTextTesseract((ascensionProgressButton.x - 810.0).toInt(), (ascensionProgressButton.y + 40.0).toInt(), 50, 35, customThreshold = 200.0,
-				detectDigitsOnly = false)
+			val scannedText = game.imageUtils.findTextTesseract(
+				(ascensionProgressButton.x - 810.0).toInt(), (ascensionProgressButton.y + 40.0).toInt(), 50, 35, customThreshold = 200.0,
+				detectDigitsOnly = false
+			)
 			if (debugMode) game.printToLog("[DEBUG] Scanned the following text for the Character's ascension level: $scannedText", tag)
 			try {
 				when (scannedText.toInt()) {
