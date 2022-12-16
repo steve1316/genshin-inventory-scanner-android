@@ -157,14 +157,10 @@ class ScanCharacters(private val game: Game) {
 				val exitLocation = game.imageUtils.findImage("exit_inventory") ?: throw Exception("Could not find the Exit button for location offset.")
 
 				characterName = game.scanUtils.getCharacterName(exitLocation)
-				if (listOfCharacterNames.contains(characterName)) {
-					searchComplete = true
-				} else {
-					characterLevel = game.scanUtils.getCharacterLevel(exitLocation)
-					characterAscensionLevel = game.scanUtils.getCharacterAscensionLevel()
-					characterConstellationLevel = game.scanUtils.getCharacterConstellationLevel()
-					characterTalentLevels = game.scanUtils.getCharacterTalentLevels(characterName, characterConstellationLevel)
-				}
+				characterLevel = game.scanUtils.getCharacterLevel(exitLocation)
+				characterAscensionLevel = game.scanUtils.getCharacterAscensionLevel()
+				characterConstellationLevel = game.scanUtils.getCharacterConstellationLevel()
+				characterTalentLevels = game.scanUtils.getCharacterTalentLevels(characterName, characterConstellationLevel)
 
 				characterLevel = checkValidCharacterLevel(characterLevel, characterAscensionLevel)
 
