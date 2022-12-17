@@ -351,6 +351,15 @@ class Game(private val myContext: Context) {
 
 		landscapeCheck()
 
+		printToLog("[INFO] Device: ${MPS.displayHeight}x${MPS.displayWidth}")
+		if (!configData.enableTestSingleSearch && !configData.testScrollRows && !configData.testScrollCharacterRows) {
+			printToLog("[INFO] The following scans will be conducted:")
+			printToLog(
+				"[INFO] Weapons: ${configData.enableScanWeapons}, Artifacts: ${configData.enableScanArtifacts}, Materials: ${configData.enableScanMaterials}, " +
+						"Character Development Items: ${configData.enableScanCharacterDevelopmentItems}, Characters: ${configData.enableScanCharacters}"
+			)
+		}
+
 		wait(2.5)
 
 		var weapons: ArrayList<Weapon> = arrayListOf()
