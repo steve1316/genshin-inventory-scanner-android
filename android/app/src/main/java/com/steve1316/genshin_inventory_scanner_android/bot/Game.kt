@@ -18,7 +18,6 @@ import com.steve1316.genshin_inventory_scanner_android.data.CharacterData
 import com.steve1316.genshin_inventory_scanner_android.data.ConfigData
 import com.steve1316.genshin_inventory_scanner_android.data.Weapon
 import com.steve1316.genshin_inventory_scanner_android.utils.ImageUtils
-import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService
 import com.steve1316.genshin_inventory_scanner_android.utils.MessageLog
 import com.steve1316.genshin_inventory_scanner_android.utils.MyAccessibilityService
 import kotlinx.coroutines.delay
@@ -30,6 +29,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
 /**
  * Main driver for bot activity and navigation.
@@ -108,9 +108,9 @@ class Game(private val myContext: Context) {
 	 *
 	 */
 	private fun landscapeCheck() {
-		if (MediaProjectionService.displayHeight > MediaProjectionService.displayWidth) {
+		if (MPS.displayHeight > MPS.displayWidth) {
 			Log.d(tag, "Virtual display is not correct. Recreating it now...")
-			MediaProjectionService.forceGenerateVirtualDisplay(myContext)
+			MPS.forceGenerateVirtualDisplay(myContext)
 		} else {
 			Log.d(tag, "Skipping recreation of Virtual Display as it is correct.")
 		}
@@ -372,8 +372,7 @@ class Game(private val myContext: Context) {
 			while (tries <= 300) {
 				scanUtils.scrollSubsequentRow()
 				wait(0.5)
-				val region =
-					intArrayOf(0, MediaProjectionService.displayHeight - (MediaProjectionService.displayHeight / 3), MediaProjectionService.displayWidth, MediaProjectionService.displayHeight / 3)
+				val region = intArrayOf(0, MPS.displayHeight - (MPS.displayHeight / 3), MPS.displayWidth, MPS.displayHeight / 3)
 				val locations = imageUtils.findAll("artifact_level_5", region = region, customConfidence = 0.95)
 				printToLog("Locations found: $locations", tag, isWarning = true)
 				scanUtils.scrollRecovery(locations[0].y)
