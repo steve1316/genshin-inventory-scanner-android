@@ -163,7 +163,7 @@ class Scan(private val game: Game) {
 	 */
 	private fun toPascalCase(str: String): String {
 		val cleanedString = str.replace("'", "").replace("’", "").replace("-", " ").replace("(", "")
-			.replace(")", "").replace(":", "").replace("\n", " ")
+			.replace(")", "").replace(":", "").replace("\n", " ").replace("”", "\"")
 		val split = cleanedString.split(" ")
 		val result = arrayListOf<String>()
 		split.forEach { word ->
@@ -379,12 +379,12 @@ class Scan(private val game: Game) {
 	 */
 	fun getEquippedBy(): String {
 		return if (game.imageUtils.findImage("equipped", tries = 1, suppressError = !game.configData.debugMode, region = regionRightSide) != null) {
-			val result = game.imageUtils.findTextTesseract(
+			var result = game.imageUtils.findTextTesseract(
 				(backpackLocation!!.x + 1705).toInt(), (backpackLocation!!.y + 815).toInt(), 360, 40, customThreshold = 170.0,
 				reuseSourceBitmap = true
 			)
 
-			toPascalCase(result.replace("|", "").trim())
+			result = toPascalCase(result.replace("|", "").trim())
 			compareCharacterNames(result)
 		} else {
 			""
@@ -758,12 +758,14 @@ class Scan(private val game: Game) {
 	 * @return Either the Character name or an empty string if comparisons failed.
 	 */
 	private fun compareCharacterNames(scannedText: String): String {
+		if (debugMode) game.printToLog("[DEBUG] Comparing Character names with: $scannedText", tag)
 		Data.characters.forEach {
 			val score = decimalFormat.format(stringSimilarityService.score(it, scannedText)).toDouble()
 
 			// Handle edge cases here like those involving the characters "q" and "g".
 			val scoreXingqiu = decimalFormat.format(stringSimilarityService.score("Xinggiu", scannedText)).toDouble()
 			val scoreKeqing = decimalFormat.format(stringSimilarityService.score("Keging", scannedText)).toDouble()
+			val scoreQiQi = decimalFormat.format(stringSimilarityService.score("Qigi", scannedText)).toDouble()
 
 			if (score >= 0.95) {
 				return it
@@ -773,6 +775,9 @@ class Scan(private val game: Game) {
 			} else if (scoreKeqing >= 0.95) {
 				game.printToLog("[SCAN] Encountered edge case for the character 'Keqing' so manually returning this character.", tag)
 				return "Keqing"
+			} else if (scoreQiQi >= 0.95) {
+				game.printToLog("[SCAN] Encountered edge case for the character 'Qiqi' so manually returning this character.", tag)
+				return "Qiqi"
 			}
 		}
 
