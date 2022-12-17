@@ -18,6 +18,21 @@ class Artifact {
 		return "Set: $setKey, Type: $slotKey, Level: $level, Rarity: $rarity, Main Stat: $mainStatKey, Substats: $substats, Equipped By: $location, Locked: $lock"
 	}
 
+	override fun equals(other: Any?): Boolean {
+		val artifact: Artifact = other as Artifact
+		return setKey == artifact.setKey && slotKey == artifact.slotKey && level == artifact.level && rarity == artifact.rarity && mainStatKey == artifact.mainStatKey &&
+				location == artifact.location && lock == artifact.lock && substats == artifact.substats
+	}
+
+	override fun hashCode(): Int {
+		var result = setKey.hashCode()
+		result = 31 * result + slotKey.hashCode()
+		result = 31 * result + mainStatKey.hashCode()
+		result = 31 * result + location.hashCode()
+		result = 31 * result + substats.hashCode()
+		return result
+	}
+
 	companion object {
 		// Stats from https://genshin-impact.fandom.com/wiki/Artifact/Scaling
 

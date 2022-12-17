@@ -15,4 +15,15 @@ class Weapon {
 	override fun toString(): String {
 		return "Name: $key, Level: $level, Ascension: $ascension, Refinement: $refinement, Equipped By: $location, Locked: $lock"
 	}
+
+	override fun equals(other: Any?): Boolean {
+		val weapon: Weapon = other as Weapon
+		return key == weapon.key && level == weapon.level && ascension == weapon.ascension && refinement == weapon.refinement && location == weapon.location && lock == weapon.lock
+	}
+
+	override fun hashCode(): Int {
+		var result = key.hashCode()
+		result = 31 * result + location.hashCode()
+		return result
+	}
 }
