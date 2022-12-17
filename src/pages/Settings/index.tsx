@@ -178,6 +178,11 @@ const Settings = () => {
                                 isChecked={bsc.settings.weapons.scan3StarWeapons}
                                 onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scan3StarWeapons: !bsc.settings.weapons.scan3StarWeapons } })}
                             />
+                            <CustomCheckbox
+                                text="Only scan locked weapons"
+                                isChecked={bsc.settings.weapons.scanOnlyLockedWeapons}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, weapons: { ...bsc.settings.weapons, scanOnlyLockedWeapons: !bsc.settings.weapons.scanOnlyLockedWeapons } })}
+                            />
                         </View>
 
                         <Divider style={{ marginBottom: 10, marginTop: 10 }} />
@@ -210,6 +215,11 @@ const Settings = () => {
                                 text="Scan 3* Artifacts"
                                 isChecked={bsc.settings.artifacts.scan3StarArtifacts}
                                 onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scan3StarArtifacts: !bsc.settings.artifacts.scan3StarArtifacts } })}
+                            />
+                            <CustomCheckbox
+                                text="Only scan locked artifacts"
+                                isChecked={bsc.settings.artifacts.scanOnlyLockedArtifacts}
+                                onPress={() => bsc.setSettings({ ...bsc.settings, artifacts: { ...bsc.settings.artifacts, scanOnlyLockedArtifacts: !bsc.settings.artifacts.scanOnlyLockedArtifacts } })}
                             />
                         </View>
 

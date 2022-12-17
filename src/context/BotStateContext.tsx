@@ -6,12 +6,14 @@ export interface Settings {
         scan5StarWeapons: boolean
         scan4StarWeapons: boolean
         scan3StarWeapons: boolean
+        scanOnlyLockedWeapons: boolean
     }
     artifacts: {
         enableScanArtifacts: boolean
         scan5StarArtifacts: boolean
         scan4StarArtifacts: boolean
         scan3StarArtifacts: boolean
+        scanOnlyLockedArtifacts: boolean
     }
     materials: {
         enableScanMaterials: boolean
@@ -40,12 +42,14 @@ export const defaultSettings: Settings = {
         scan5StarWeapons: true,
         scan4StarWeapons: false,
         scan3StarWeapons: false,
+        scanOnlyLockedWeapons: false,
     },
     artifacts: {
         enableScanArtifacts: false,
         scan5StarArtifacts: true,
         scan4StarArtifacts: false,
         scan3StarArtifacts: false,
+        scanOnlyLockedArtifacts: false,
     },
     materials: {
         enableScanMaterials: false,
