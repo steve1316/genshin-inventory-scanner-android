@@ -70,6 +70,8 @@ class JSONParser {
 			sharedPreferences.edit {
 				putBoolean("enableScanCharacters", charactersObj.getBoolean("enableScanCharacters"))
 				putString("travelerName", charactersObj.getString("travelerName"))
+				putBoolean("enableWanderer", charactersObj.getBoolean("enableWanderer"))
+				putString("wandererName", charactersObj.getString("wandererName"))
 				commit()
 			}
 		} catch (e: Exception) {

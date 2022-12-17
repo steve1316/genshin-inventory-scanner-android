@@ -734,8 +734,11 @@ class Scan(private val game: Game) {
 
 			val formattedCharacterName = toPascalCase(name)
 
+			// Apply edge cases and if unable to, then proceed with the normal comparison operation.
 			if (toPascalCase(game.configData.travelerName) == formattedCharacterName) {
 				return "Traveler"
+			} else if (toPascalCase(game.configData.wandererName) == formattedCharacterName) {
+				return game.configData.wandererName
 			} else {
 				val result = compareCharacterNames(formattedCharacterName)
 				if (result != "") return result

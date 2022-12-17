@@ -39,6 +39,8 @@ class ConfigData(myContext: Context) {
 	// Character Scan
 	val enableScanCharacters: Boolean
 	val travelerName: String
+	val enableWanderer: Boolean
+	val wandererName: String
 
 	// Misc
 	val enableTestSingleSearch: Boolean
@@ -77,6 +79,8 @@ class ConfigData(myContext: Context) {
 		// Character Scan settings.
 		enableScanCharacters = sharedPreferences.getBoolean("enableScanCharacters", false)
 		travelerName = sharedPreferences.getString("travelerName", "").toString()
+		enableWanderer = sharedPreferences.getBoolean("enableWanderer", false)
+		wandererName = sharedPreferences.getString("wandererName", "Wanderer").toString()
 
 		// Android-specific settings.
 		enableDelayTap = sharedPreferences.getBoolean("enableDelayTap", false)
