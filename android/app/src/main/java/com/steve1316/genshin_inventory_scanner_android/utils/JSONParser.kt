@@ -36,6 +36,7 @@ class JSONParser {
 				putBoolean("scan5StarWeapons", weaponsObj.getBoolean("scan5StarWeapons"))
 				putBoolean("scan4StarWeapons", weaponsObj.getBoolean("scan4StarWeapons"))
 				putBoolean("scan3StarWeapons", weaponsObj.getBoolean("scan3StarWeapons"))
+				putBoolean("scanOnlyLockedWeapons", weaponsObj.getBoolean("scanOnlyLockedWeapons"))
 				commit()
 			}
 		} catch (e: Exception) {
@@ -48,6 +49,7 @@ class JSONParser {
 				putBoolean("scan5StarArtifacts", artifactsObj.getBoolean("scan5StarArtifacts"))
 				putBoolean("scan4StarArtifacts", artifactsObj.getBoolean("scan4StarArtifacts"))
 				putBoolean("scan3StarArtifacts", artifactsObj.getBoolean("scan3StarArtifacts"))
+				putBoolean("scanOnlyLockedArtifacts", artifactsObj.getBoolean("scanOnlyLockedArtifacts"))
 				commit()
 			}
 		} catch (e: Exception) {

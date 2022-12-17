@@ -93,7 +93,7 @@ class ScanArtifacts(private val game: Game) {
 	}
 
 	/**
-	 * Checks if the current search has been completed and mark it as such.
+	 * Marks the current search for the current rarity as completed
 	 *
 	 */
 	private fun currentSearchCompleted() {
@@ -365,41 +365,43 @@ class ScanArtifacts(private val game: Game) {
 
 					// Select the artifact.
 					game.gestureUtils.tap(it.x, it.y, "item_level")
-					game.wait(0.10)
 
-					val artifactName = game.scanUtils.getArtifactName()
-					val artifactRarity = currentRarity
-					if (validateRarity(artifactRarity)) {
-						val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
+					// Apply the conditional if the user wanted to scan only the locked ones.
+					val artifactLocked = game.scanUtils.getLocked()
+					if (!game.configData.scanOnlyLockedArtifacts || (game.configData.scanOnlyLockedArtifacts && artifactLocked)) {
+						val artifactName = game.scanUtils.getArtifactName()
+						val artifactRarity = currentRarity
+						if (validateRarity(artifactRarity)) {
+							val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
 
-						val artifactLevel = game.scanUtils.getArtifactLevel()
+							val artifactLevel = game.scanUtils.getArtifactLevel()
 
-						val equipped = game.scanUtils.getEquippedBy()
-						val locked = game.scanUtils.getLocked()
+							val equipped = game.scanUtils.getEquippedBy()
 
-						val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel).first
-						val artifactSubStats: ArrayList<Artifact.Companion.Substat> = game.scanUtils.getArtifactSubStats()
+							val artifactMainStat = game.scanUtils.getArtifactMainStat(artifactType, artifactLevel).first
+							val artifactSubStats: ArrayList<Artifact.Companion.Substat> = game.scanUtils.getArtifactSubStats()
 
-						try {
-							val artifactObject = Artifact().apply {
-								setKey = artifactSetName
-								slotKey = artifactType
-								level = artifactLevel
-								rarity = artifactRarity.toInt()
-								mainStatKey = artifactMainStat
-								location = equipped
-								lock = locked
-								substats = artifactSubStats
+							try {
+								val artifactObject = Artifact().apply {
+									setKey = artifactSetName
+									slotKey = artifactType
+									level = artifactLevel
+									rarity = artifactRarity.toInt()
+									mainStatKey = artifactMainStat
+									location = equipped
+									lock = artifactLocked
+									substats = artifactSubStats
+								}
+
+								artifactList.add(artifactObject)
+
+								game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
+							} catch (e: Exception) {
+								game.printToLog(
+									"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +
+											"Main Stat: $artifactMainStat, Substats: $artifactSubStats, Equipped By: $equipped, Locked: $artifactLocked)\n", tag, isError = true
+								)
 							}
-
-							artifactList.add(artifactObject)
-
-							game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
-						} catch (e: Exception) {
-							game.printToLog(
-								"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +
-										"Main Stat: $artifactMainStat, Substats: $artifactSubStats, Equipped By: $equipped, Locked: $locked)\n", tag, isError = true
-							)
 						}
 					}
 				}

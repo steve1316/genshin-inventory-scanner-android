@@ -23,12 +23,14 @@ class ConfigData(myContext: Context) {
 	val scan5StarWeapons: Boolean
 	val scan4StarWeapons: Boolean
 	val scan3StarWeapons: Boolean
+	val scanOnlyLockedWeapons: Boolean
 
 	// Artifact Scan
 	val enableScanArtifacts: Boolean
 	val scan5StarArtifacts: Boolean
 	val scan4StarArtifacts: Boolean
 	val scan3StarArtifacts: Boolean
+	val scanOnlyLockedArtifacts: Boolean
 
 	// Material Scan
 	val enableScanMaterials: Boolean
@@ -59,12 +61,14 @@ class ConfigData(myContext: Context) {
 		scan5StarWeapons = sharedPreferences.getBoolean("scan5StarWeapons", false)
 		scan4StarWeapons = sharedPreferences.getBoolean("scan4StarWeapons", false)
 		scan3StarWeapons = sharedPreferences.getBoolean("scan3StarWeapons", false)
+		scanOnlyLockedWeapons = sharedPreferences.getBoolean("scanOnlyLockedWeapons", false)
 
 		// Artifact Scan settings.
 		enableScanArtifacts = sharedPreferences.getBoolean("enableScanArtifacts", false)
 		scan5StarArtifacts = sharedPreferences.getBoolean("scan5StarArtifacts", false)
 		scan4StarArtifacts = sharedPreferences.getBoolean("scan4StarArtifacts", false)
 		scan3StarArtifacts = sharedPreferences.getBoolean("scan3StarArtifacts", false)
+		scanOnlyLockedArtifacts = sharedPreferences.getBoolean("scanOnlyLockedArtifacts", false)
 
 		// Material Scan settings.
 		enableScanMaterials = sharedPreferences.getBoolean("enableScanMaterials", false)
