@@ -23,6 +23,8 @@ class ScanArtifacts(private val game: Game) {
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
 	private var subsequentSearchScrollOnce = false
+	private var previousRow: ArrayList<Artifact> = arrayListOf()
+	private var currentRow: ArrayList<Artifact> = arrayListOf()
 
 	private var currentRarity = "5"
 
@@ -260,7 +262,14 @@ class ScanArtifacts(private val game: Game) {
 		// Cover the case where the number of matches in the single row search was the entire row.
 		else if (locationSize != 0 && locationSize == subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
 			game.printToLog("[SCAN_ARTIFACTS] Subsequent search is the max in the row scan.", tag, isWarning = true)
-			game.scanUtils.scrollSubsequentRow()
+
+			// Check if the previous row was scanned again.
+			if (previousRow == currentRow) {
+				previousRow.clear()
+				checkIfSearchCompleted()
+			} else {
+				game.scanUtils.scrollSubsequentRow()
+			}
 		}
 
 		// Cover the case where matches found in single row search was not the maximum. End this rarity search and prep for the next rarity search.
@@ -408,6 +417,7 @@ class ScanArtifacts(private val game: Game) {
 								}
 
 								artifactList.add(artifactObject)
+								if (firstSearchComplete) currentRow.add(artifactObject)
 
 								game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
 							} catch (e: Exception) {
@@ -430,6 +440,7 @@ class ScanArtifacts(private val game: Game) {
 				searchCleanupFirstTime(locations.size)
 			} else {
 				searchCleanupSubsequent(locations.size)
+				currentRow.clear()
 			}
 
 			if (debugMode) {
