@@ -22,6 +22,7 @@ class ScanArtifacts(private val game: Game) {
 	private var firstSearchLessThanMax = false
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
+	private var subsequentSearchScrollOnce = false
 
 	private var currentRarity = "5"
 
@@ -129,21 +130,21 @@ class ScanArtifacts(private val game: Game) {
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_ARTIFACTS] Search for 5* Artifacts has been completed.", tag, isWarning = true)
-			search5StarComplete = true
+			currentSearchCompleted()
 			true
 		} else if (game.configData.scan4StarArtifacts && !search4StarComplete && (game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_ARTIFACTS] Search for 4* Artifacts has been completed.", tag, isWarning = true)
-			search4StarComplete = true
+			currentSearchCompleted()
 			currentRarity = "4"
 			true
 		} else if (game.configData.scan3StarArtifacts && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_ARTIFACTS] Search for 3* Artifacts has been completed.", tag, isWarning = true)
-			search3StarComplete = true
+			currentSearchCompleted()
 			currentRarity = "3"
 			true
 		} else {
@@ -255,7 +256,12 @@ class ScanArtifacts(private val game: Game) {
 		// Cover the case where matches found in single row search was not the maximum. End this rarity search and prep for the next rarity search.
 		else if (locationSize != 0 && locationSize < subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
 			game.printToLog("[SCAN_ARTIFACTS] Subsequent search less than the max in the row scan.", tag, isWarning = true)
-			currentSearchCompleted()
+			subsequentSearchScrollOnce = if (!subsequentSearchScrollOnce && checkIfSearchCompleted()) {
+				true
+			} else {
+				game.scanUtils.scrollSubsequentRow()
+				false
+			}
 		}
 
 		// Cover the case where no matches found in either full region or single row search.
@@ -403,6 +409,8 @@ class ScanArtifacts(private val game: Game) {
 								)
 							}
 						}
+					} else {
+						game.printToLog("[SCAN_ARTIFACTS] Skipping artifact as it is not marked as locked.\n", tag)
 					}
 				}
 

@@ -22,6 +22,7 @@ class ScanWeapons(private val game: Game) {
 	private var firstSearchLessThanMax = false
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
+	private var subsequentSearchScrollOnce = false
 
 	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchWeapon
 
@@ -115,7 +116,7 @@ class ScanWeapons(private val game: Game) {
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 5* Weapons has been completed.", tag, isWarning = true)
-			search5StarComplete = true
+			currentSearchCompleted()
 			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else if (game.configData.scan4StarWeapons && !search4StarComplete && (game.imageUtils.findAll("artifact_level_3", region = region, customConfidence = 0.95).size != 0 ||
@@ -123,14 +124,14 @@ class ScanWeapons(private val game: Game) {
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 4* Weapons has been completed.", tag, isWarning = true)
-			search4StarComplete = true
+			currentSearchCompleted()
 			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else if (game.configData.scan3StarWeapons && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_WEAPONS] Search for 3* Weapons has been completed.", tag, isWarning = true)
-			search3StarComplete = true
+			currentSearchCompleted()
 			game.scanUtils.resetWeaponAscensionLevel()
 			true
 		} else {
@@ -242,7 +243,12 @@ class ScanWeapons(private val game: Game) {
 		// Cover the case where matches found in single row search was not the maximum. End this rarity search and prep for the next rarity search.
 		else if (locationSize != 0 && locationSize < subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
 			game.printToLog("[SCAN_WEAPONS] Subsequent search less than the max in the row scan.", tag, isWarning = true)
-			currentSearchCompleted()
+			subsequentSearchScrollOnce = if (!subsequentSearchScrollOnce && checkIfSearchCompleted()) {
+				true
+			} else {
+				game.scanUtils.scrollSubsequentRow()
+				false
+			}
 		}
 
 		// Cover the case where no matches found in either full region or single row search.
@@ -371,6 +377,8 @@ class ScanWeapons(private val game: Game) {
 								)
 							}
 						}
+					} else {
+						game.printToLog("[SCAN_WEAPONS] Skipping weapon as it is not marked as locked.\n", tag)
 					}
 				}
 
