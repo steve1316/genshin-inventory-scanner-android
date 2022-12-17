@@ -18,6 +18,7 @@ class Scan(private val game: Game) {
 
 	private var failAttempts = 5
 	private var maxAscensionLevel = 6
+	private var retryingWeaponLevelScan = false
 
 	private var scrollAttempts = 1
 	private var scrollDiff = 0f
@@ -331,9 +332,24 @@ class Scan(private val game: Game) {
 			i -= 1
 		}
 
-		game.printToLog("[ERROR] Could not determine weapon level through iteration of ascension levels. Returning level 1 as default.", tag, isError = true)
-		failAttempts = 5
-		return Pair(1, 0)
+		if (!retryingWeaponLevelScan) {
+			// Attempt to try again once more by calling itself. The conditional flag will prevent it from infinitely increasing in depth. As such, this rebound attempt is only once per weapon.
+			game.printToLog("[ERROR] Could not determine weapon level through iteration of ascension levels. Trying one more time...", tag, isError = true)
+			failAttempts = 5
+			maxAscensionLevel = 6
+			retryingWeaponLevelScan = true
+			val reboundResult = getWeaponLevelAndAscension()
+			return if (reboundResult != Pair(1, 0)) {
+				retryingWeaponLevelScan = false
+				reboundResult
+			} else {
+				game.printToLog("[ERROR] Attempt to determine weapon level failed again. Returning level 1 as default.", tag, isError = true)
+				retryingWeaponLevelScan = false
+				Pair(1, 0)
+			}
+		} else {
+			return Pair(1, 0)
+		}
 	}
 
 	/**
