@@ -85,12 +85,24 @@ class ScanArtifacts(private val game: Game) {
 	/**
 	 * Validates the rarity of the artifact.
 	 *
-	 * @param rarity The scanned rarity from the OCR.
-	 * @return True if the rarity from the OCR is valid.
+	 * @return True if the detected rarity is valid for the current search.
 	 */
-	private fun validateRarity(rarity: String): Boolean {
-		return (game.configData.scan5StarArtifacts && !search5StarComplete && (rarity == "5")) || (game.configData.scan4StarArtifacts && !search4StarComplete && (rarity == "4")) ||
-				(game.configData.scan3StarArtifacts && !search3StarComplete && (rarity == "3"))
+	private fun validateRarity(): Boolean {
+		return when (game.scanUtils.getArtifactRarity()) {
+			5 -> {
+				currentRarity = "5"
+				!search5StarComplete
+			}
+			4 -> {
+				currentRarity = "4"
+				!search4StarComplete
+			}
+			3 -> {
+				currentRarity = "3"
+				!search3StarComplete
+			}
+			else -> false
+		}
 	}
 
 	/**
@@ -138,14 +150,12 @@ class ScanArtifacts(private val game: Game) {
 		) {
 			game.printToLog("[SCAN_ARTIFACTS] Search for 4* Artifacts has been completed.", tag, isWarning = true)
 			currentSearchCompleted()
-			currentRarity = "4"
 			true
 		} else if (game.configData.scan3StarArtifacts && !search3StarComplete && (game.imageUtils.findAll("artifact_level_2", region = region, customConfidence = 0.95).size != 0 ||
 					game.imageUtils.findAll("artifact_level_1", region = region, customConfidence = 0.95).size != 0)
 		) {
 			game.printToLog("[SCAN_ARTIFACTS] Search for 3* Artifacts has been completed.", tag, isWarning = true)
 			currentSearchCompleted()
-			currentRarity = "3"
 			true
 		} else {
 			false
@@ -301,11 +311,10 @@ class ScanArtifacts(private val game: Game) {
 		} else {
 			game.printToLog("**************************************", tag)
 			game.printToLog("[SCAN_SINGLE] TESTING SINGLE SEARCH...", tag)
-			game.printToLog("[SCAN_SINGLE] Note: Rarity is not tested here as it is automatically handled during normal operation.", tag)
 			game.printToLog("**************************************", tag)
 
 			val artifactName = game.scanUtils.getArtifactName()
-			val artifactRarity = "0"
+			val artifactRarity = game.scanUtils.getArtifactRarity()
 			val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
 
 			val artifactLevel = game.scanUtils.getArtifactLevel()
@@ -321,7 +330,7 @@ class ScanArtifacts(private val game: Game) {
 					setKey = artifactSetName
 					slotKey = artifactType
 					level = artifactLevel
-					rarity = artifactRarity.toInt()
+					rarity = artifactRarity
 					mainStatKey = artifactMainStat
 					location = equipped
 					lock = locked
@@ -376,8 +385,7 @@ class ScanArtifacts(private val game: Game) {
 					val artifactLocked = game.scanUtils.getLocked()
 					if (!game.configData.scanOnlyLockedArtifacts || (game.configData.scanOnlyLockedArtifacts && artifactLocked)) {
 						val artifactName = game.scanUtils.getArtifactName()
-						val artifactRarity = currentRarity
-						if (validateRarity(artifactRarity)) {
+						if (validateRarity()) {
 							val (artifactSetName, artifactType) = game.scanUtils.getArtifactSetNameAndType(artifactName)
 
 							val artifactLevel = game.scanUtils.getArtifactLevel()
@@ -392,7 +400,7 @@ class ScanArtifacts(private val game: Game) {
 									setKey = artifactSetName
 									slotKey = artifactType
 									level = artifactLevel
-									rarity = artifactRarity.toInt()
+									rarity = currentRarity.toInt()
 									mainStatKey = artifactMainStat
 									location = equipped
 									lock = artifactLocked
@@ -404,7 +412,7 @@ class ScanArtifacts(private val game: Game) {
 								game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
 							} catch (e: Exception) {
 								game.printToLog(
-									"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $artifactRarity, " +
+									"[ERROR] Artifact failed to scan: (Set Name: $artifactSetName, Name: $artifactName, Level: $artifactLevel, Rarity: $currentRarity, " +
 											"Main Stat: $artifactMainStat, Substats: $artifactSubStats, Equipped By: $equipped, Locked: $artifactLocked)\n", tag, isError = true
 								)
 							}

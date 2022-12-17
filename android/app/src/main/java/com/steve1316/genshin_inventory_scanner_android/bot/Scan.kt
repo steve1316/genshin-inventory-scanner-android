@@ -478,6 +478,17 @@ class Scan(private val game: Game) {
 	}
 
 	/**
+	 * Detects the rarity of the artifact.
+	 *
+	 * @return The rarity of the artifact as a integer.
+	 */
+	fun getArtifactRarity(): Int {
+		return if (game.imageUtils.findImage("artifact_rarity_5", tries = 1, customConfidence = 0.95, region = regionRightSideOneThird, suppressError = true) != null) 5
+		else if (game.imageUtils.findImage("artifact_rarity_4", tries = 1, customConfidence = 0.95, region = regionRightSideOneThird, suppressError = true) != null) 4
+		else 3
+	}
+
+	/**
 	 * Detects the level of the artifact.
 	 *
 	 * @return Level of the artifact.
