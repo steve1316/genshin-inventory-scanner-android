@@ -498,12 +498,14 @@ class ImageUtils(context: Context, private val game: Game) {
 	 *
 	 * @param templateName File name of the template image.
 	 * @param tries Number of tries before failing. Defaults to 5.
+	 * @param customConfidence Accuracy threshold for matching. Defaults to 0.8.
 	 * @param region Specify the region consisting of (x, y, width, height) of the source screenshot to template match. Defaults to (0, 0, 0, 0) which is equivalent to searching the full image.
 	 * @param suppressError Whether or not to suppress saving error messages to the log. Defaults to false.
 	 * @param testMode Flag to test and get a valid scale for device compatibility.
 	 * @return Point object containing the location of the match or null if not found.
 	 */
-	fun findImage(templateName: String, tries: Int = 5, region: IntArray = intArrayOf(0, 0, 0, 0), suppressError: Boolean = false, testMode: Boolean = false): Point? {
+	fun findImage(templateName: String, tries: Int = 5, customConfidence: Double = 0.8, region: IntArray = intArrayOf(0, 0, 0, 0), suppressError: Boolean = false, testMode: Boolean = false):
+			Point? {
 		var numberOfTries = tries
 
 		if (debugMode) {
@@ -520,7 +522,7 @@ class ImageUtils(context: Context, private val game: Game) {
 			val (sourceBitmap, templateBitmap) = getBitmaps(templateName)
 
 			if (sourceBitmap != null && templateBitmap != null) {
-				val resultFlag: Boolean = match(sourceBitmap, templateBitmap, region, useSingleScale = true)
+				val resultFlag: Boolean = match(sourceBitmap, templateBitmap, region, useSingleScale = true, customConfidence = customConfidence)
 				if (!resultFlag) {
 					if (testMode) {
 						// Increment scale by 0.01 until a match is found if Test Mode is enabled.
