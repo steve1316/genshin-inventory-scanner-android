@@ -22,6 +22,8 @@ export interface Settings {
     characters: {
         enableScanCharacters: boolean
         travelerName: string
+        enableWanderer: boolean
+        wandererName: string
     }
     misc: {
         debugMode: boolean
@@ -58,6 +60,8 @@ export const defaultSettings: Settings = {
     characters: {
         enableScanCharacters: false,
         travelerName: "",
+        enableWanderer: false,
+        wandererName: "Wanderer",
     },
     misc: {
         debugMode: false,

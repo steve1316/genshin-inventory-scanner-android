@@ -246,6 +246,31 @@ const Settings = () => {
                     isChecked={bsc.settings.characters.enableScanCharacters}
                     onPress={() => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, enableScanCharacters: !bsc.settings.characters.enableScanCharacters } })}
                 />
+
+                {bsc.settings.characters.enableScanCharacters ? (
+                    <View>
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+
+                        <CustomCheckbox
+                            text="Enable Wanderer Name Change"
+                            isChecked={bsc.settings.characters.enableWanderer}
+                            onPress={() => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, enableWanderer: !bsc.settings.characters.enableWanderer } })}
+                        />
+
+                        {bsc.settings.characters.enableScanCharacters && bsc.settings.characters.enableWanderer ? (
+                            <TextInput
+                                label="Wanderer Name"
+                                right={<TextInput.Icon name="close" onPress={() => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, wandererName: "Wanderer" } })} />}
+                                mode="outlined"
+                                value={bsc.settings.characters.wandererName}
+                                onChangeText={(value: string) => bsc.setSettings({ ...bsc.settings, characters: { ...bsc.settings.characters, wandererName: value } })}
+                                autoComplete={false}
+                            />
+                        ) : null}
+
+                        <Divider style={{ marginBottom: 10, marginTop: 10 }} />
+                    </View>
+                ) : null}
             </View>
         )
     }
