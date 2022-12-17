@@ -726,7 +726,7 @@ class Scan(private val game: Game) {
 	 * @return The detected name of the Character based off of the data or an empty string if it failed to match in the data.
 	 */
 	fun getCharacterName(exitLocation: Point): String {
-		var tries = 5
+		var tries = 10
 		var thresholdDiff = 0.0
 		while (tries > 0) {
 			val name = game.imageUtils.findTextTesseract((exitLocation.x - 475).toInt(), (exitLocation.y + 100).toInt(), 420, 55, customThreshold = 150.0 - thresholdDiff)
@@ -744,8 +744,11 @@ class Scan(private val game: Game) {
 				if (result != "") return result
 			}
 
-			thresholdDiff += 10.0
 			tries -= 1
+			if (tries % 2 == 0) {
+				thresholdDiff += 10.0
+			}
+
 			game.wait(0.5)
 		}
 
