@@ -170,7 +170,7 @@ class Scan(private val game: Game) {
 	 */
 	private fun toPascalCase(str: String): String {
 		val cleanedString = str.replace("'", "").replace("’", "").replace("-", " ").replace("(", "")
-			.replace(")", "").replace(":", "").replace("\n", " ").replace("”", "\"")
+			.replace(")", "").replace(":", "").replace("\n", " ").replace("”", "").replace("\"", "")
 		val split = cleanedString.split(" ")
 		val result = arrayListOf<String>()
 		split.forEach { word ->
