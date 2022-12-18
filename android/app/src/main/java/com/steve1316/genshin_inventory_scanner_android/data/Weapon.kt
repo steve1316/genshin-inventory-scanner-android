@@ -4,7 +4,7 @@ import kotlin.properties.Delegates
 
 // Details from https://frzyc.github.io/genshin-optimizer/#/doc
 
-class Weapon {
+class Weapon : Cloneable {
 	lateinit var key: String
 	var level by Delegates.notNull<Int>()
 	var ascension by Delegates.notNull<Int>()
@@ -25,5 +25,18 @@ class Weapon {
 		var result = key.hashCode()
 		result = 31 * result + location.hashCode()
 		return result
+	}
+
+	public override fun clone(): Any {
+		val newWeapon: Weapon = super.clone() as Weapon
+
+		newWeapon.key = key
+		newWeapon.level = level
+		newWeapon.ascension = ascension
+		newWeapon.refinement = refinement
+		newWeapon.location = location
+		newWeapon.lock = lock
+
+		return newWeapon
 	}
 }

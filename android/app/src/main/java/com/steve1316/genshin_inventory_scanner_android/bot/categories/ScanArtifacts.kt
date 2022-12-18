@@ -264,12 +264,25 @@ class ScanArtifacts(private val game: Game) {
 			game.printToLog("[SCAN_ARTIFACTS] Subsequent search is the max in the row scan.", tag, isWarning = true)
 
 			// Check if the previous row was scanned again.
-			if (previousRow == currentRow) {
-				previousRow.clear()
-				checkIfSearchCompleted()
-			} else {
-				game.scanUtils.scrollSubsequentRow()
+			if (previousRow.size == 7 && currentRow.size == 7) {
+				val validChecklist: ArrayList<Boolean> = arrayListOf()
+				var index = 0
+				while (index <= 6) {
+					if (previousRow[index] == currentRow[index]) validChecklist.add(true)
+					index++
+				}
+
+				// If the current row was already found in the previous, mark this search as complete.
+				if (validChecklist.size == 7) {
+					previousRow.clear()
+					currentSearchCompleted()
+					return
+				}
 			}
+
+			previousRow = currentRow.map { it.clone() } as ArrayList<Artifact>
+			currentRow.clear()
+			game.scanUtils.scrollSubsequentRow()
 		}
 
 		// Cover the case where matches found in single row search was not the maximum. End this rarity search and prep for the next rarity search.
@@ -364,7 +377,7 @@ class ScanArtifacts(private val game: Game) {
 
 			val locations: ArrayList<Point> = search()
 
-			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} locations: $locations.\n", tag, isWarning = true)
+			game.printToLog("[SCAN_ARTIFACTS] Found ${locations.size} artifact locations: $locations.\n", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
 				// For every subsequent search, only search for the very last row as every other row above has been processed already.
@@ -417,7 +430,7 @@ class ScanArtifacts(private val game: Game) {
 								}
 
 								artifactList.add(artifactObject)
-								if (firstSearchComplete) currentRow.add(artifactObject)
+								if (enableSingleRowSearch) currentRow.add(artifactObject)
 
 								game.printToLog("[SCAN_ARTIFACTS] Artifact scanned: $artifactObject\n", tag)
 							} catch (e: Exception) {

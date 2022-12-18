@@ -23,6 +23,8 @@ class ScanWeapons(private val game: Game) {
 	private var firstSearchMaxSearches = 21
 	private var subsequentSearchMaxSearches = 7
 	private var subsequentSearchScrollOnce = false
+	private var previousRow: ArrayList<Weapon> = arrayListOf()
+	private var currentRow: ArrayList<Weapon> = arrayListOf()
 
 	private val testSingleSearch = game.configData.enableTestSingleSearch && game.configData.testSearchWeapon
 
@@ -237,6 +239,26 @@ class ScanWeapons(private val game: Game) {
 		// Cover the case where the number of matches in the single row search was the entire row.
 		else if (locationSize != 0 && locationSize == subsequentSearchMaxSearches && !enableFullRegionSearch && enableSingleRowSearch) {
 			game.printToLog("[SCAN_WEAPONS] Subsequent search is the max in the row scan.", tag, isWarning = true)
+
+			// Check if the previous row was scanned again.
+			if (previousRow.size == 7 && currentRow.size == 7) {
+				val validChecklist: ArrayList<Boolean> = arrayListOf()
+				var index = 0
+				while (index <= 6) {
+					if (previousRow[index] == currentRow[index]) validChecklist.add(true)
+					index++
+				}
+
+				// If the current row was already found in the previous, mark this search as complete.
+				if (validChecklist.size == 7) {
+					previousRow.clear()
+					currentSearchCompleted()
+					return
+				}
+			}
+
+			previousRow = currentRow.map { it.clone() } as ArrayList<Weapon>
+			currentRow.clear()
 			game.scanUtils.scrollSubsequentRow()
 		}
 
@@ -322,7 +344,7 @@ class ScanWeapons(private val game: Game) {
 
 			val locations: ArrayList<Point> = search()
 
-			game.printToLog("[SCAN_WEAPONS] Found ${locations.size} locations: $locations.\n", tag, isWarning = true)
+			game.printToLog("[SCAN_WEAPONS] Found ${locations.size} weapon locations: $locations.\n", tag, isWarning = true)
 
 			if (locations.isNotEmpty()) {
 				// For every subsequent search, only search for the very last row as every other row above has been processed already.
@@ -368,6 +390,7 @@ class ScanWeapons(private val game: Game) {
 								}
 
 								weaponList.add(weaponObject)
+								if (enableSingleRowSearch) currentRow.add(weaponObject)
 
 								game.printToLog("[SCAN_WEAPONS] Weapon scanned: $weaponObject\n", tag)
 							} catch (e: Exception) {

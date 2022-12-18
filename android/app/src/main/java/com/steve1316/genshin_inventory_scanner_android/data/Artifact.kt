@@ -4,7 +4,7 @@ import kotlin.properties.Delegates
 
 // Details from https://frzyc.github.io/genshin-optimizer/#/doc
 
-class Artifact {
+class Artifact : Cloneable {
 	lateinit var setKey: String
 	lateinit var slotKey: String
 	var level by Delegates.notNull<Int>()
@@ -33,10 +33,51 @@ class Artifact {
 		return result
 	}
 
+	public override fun clone(): Any {
+		val newArtifact: Artifact = super.clone() as Artifact
+
+		newArtifact.setKey = setKey
+		newArtifact.slotKey = slotKey
+		newArtifact.level = level
+		newArtifact.rarity = rarity
+		newArtifact.location = location
+		newArtifact.lock = lock
+		newArtifact.substats = substats.map { it.clone() } as ArrayList<Substat>
+
+		return newArtifact
+	}
+
 	companion object {
 		// Stats from https://genshin-impact.fandom.com/wiki/Artifact/Scaling
 
-		data class Substat(val key: String, val value: String)
+		class Substat : Cloneable {
+			lateinit var key: String
+			lateinit var value: String
+
+			override fun toString(): String {
+				return "Substat(key=$key, value=$value)"
+			}
+
+			override fun equals(other: Any?): Boolean {
+				val subStat: Substat = other as Substat
+				return key == subStat.key && value == subStat.value
+			}
+
+			override fun hashCode(): Int {
+				var result = key.hashCode()
+				result = 31 * result + value.hashCode()
+				return result
+			}
+
+			public override fun clone(): Any {
+				val newSubStat: Substat = super.clone() as Substat
+
+				newSubStat.key = key
+				newSubStat.value = value
+
+				return newSubStat
+			}
+		}
 
 		val hpStats: MutableMap<Int, Int> = mutableMapOf(
 			0 to 717,
