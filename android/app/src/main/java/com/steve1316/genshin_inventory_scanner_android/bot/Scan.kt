@@ -36,6 +36,12 @@ class Scan(private val game: Game) {
 		if (backpackLocation == null) {
 			backpackLocation = game.imageUtils.findImage("backpack", tries = 1)!!
 			backpackLocation!!.x -= (2400 - MPS.displayWidth)
+
+			// Swipe the sub-window up to make sure the name section is clearly visible.
+			game.printToLog("[SCAN] Resetting the sub-window to make sure the name section is clearly visible.", tag)
+			game.gestureUtils.swipe(MPS.displayWidth - 400f, MPS.displayHeight / 2f, MPS.displayWidth - 400f, MPS.displayHeight / 2f + 800f, duration = 250L)
+			game.gestureUtils.swipe(MPS.displayWidth - 400f, MPS.displayHeight / 2f, MPS.displayWidth - 400f, MPS.displayHeight / 2f + 800f, duration = 250L)
+			game.gestureUtils.swipe(MPS.displayWidth - 400f, MPS.displayHeight / 2f, MPS.displayWidth - 400f, MPS.displayHeight / 2f + 800f, duration = 250L)
 		}
 	}
 
@@ -619,7 +625,7 @@ class Scan(private val game: Game) {
 
 		val substatLocations = game.imageUtils.findAll("artifact_substat", region = regionRightSide)
 		val filteredSubstatLocations: ArrayList<Point> = substatLocations.filter { it.x in (substatLocations[0].x - 2)..(substatLocations[0].x + 2) } as ArrayList<Point>
-		game.printToLog("[SCAN] Found ${substatLocations.size} substat locations: $substatLocations.", tag, isWarning = true)
+		if (debugMode) game.printToLog("[DEBUG] Found ${substatLocations.size} substat locations: $substatLocations.", tag)
 		filteredSubstatLocations.forEach { location ->
 			val substat = game.imageUtils.findTextTesseract((location.x + 25).toInt(), (location.y - 20).toInt(), 390, 45, customThreshold = 190.0, reuseSourceBitmap = true)
 			if (substat != "" || substat.contains('+')) {
@@ -650,7 +656,11 @@ class Scan(private val game: Game) {
 				// Remove all letters that got mixed into the substat value.
 				formattedSubstat[1] = formattedSubstat[1].filter { if (it != '.') it.isDigit() else true }
 
-				substats.add(Artifact.Companion.Substat(key = formattedSubstat[0], value = formattedSubstat[1]))
+				val newSubStat = Artifact.Companion.Substat().apply {
+					key = formattedSubstat[0]
+					value = formattedSubstat[1]
+				}
+				substats.add(newSubStat)
 			}
 		}
 
