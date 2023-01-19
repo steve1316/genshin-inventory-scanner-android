@@ -1,38 +1,18 @@
 <AppUpdater>
   <update>
-    <latestVersion>1.2.0</latestVersion>
+    <latestVersion>1.3.0</latestVersion>
     <url>https://github.com/steve1316/genshin-inventory-scanner-android/releases</url>
     <releaseNotes>
-v1.2.0 - Changelog
-
-New
----
-- Add support for Wanderer name change.
-- Add options to scanning only locked weapons / artifacts.
-- Add validation for Character level against their ascension level.
-- Add fallback method to retry one time when weapon level scan fails.
-- Add message at the start of operations to print out the device environment.
-- Add logic to properly scan artifact rarities.
+v1.3.0 - Changelog
 
 Changed
 ---
-- Remove newline characters from scanned texts.
-- Adjust confidence level for Character level detection.
-- Reworked Character ascension level detection to be more reliable and accurate.
-- Improved accuracy of scanning Character names.
-- Increased initial delay by 0.5s at the start of operations.
-- Adjust naming of log and json files when saving by replacing ":" with "_".
-- Starting operations will make sure that the name section is clearly visible.
-- Cover edge case when subsequent searches found the max results in the row.
+- Update data up to patch 3.4
+- Replace all double quotes with empty strings. Most notably to convert "The Catch" to TheCatch.
 
 Fixed
 ---
-- Fix bug where Character names were not read correctly for the Equipped logic.
-- Fix bug where OCR read the plus sign as a digit.
-- Fix bug where Artifact name is too long and wraps around to two lines which would confuse the OCR.
-- Fix bug where weapon refinement level / weapon ascension level / artifact level was too low or too high from OCR.
-- Fix bug where the naem "The Catch" was not scanned properly.
-- Fix bug where the subsequent row search would end prematurely.
+- Fix locale to EN for DecimalFormat. This should solve the cases where users whose locales uses commas instead of decimals could not use the app.
 
     </releaseNotes>
   </update>
