@@ -7,6 +7,7 @@ import net.ricecode.similarity.JaroWinklerStrategy
 import net.ricecode.similarity.StringSimilarityServiceImpl
 import org.opencv.core.Point
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
@@ -26,7 +27,7 @@ class Scan(private val game: Game) {
 	private var characterScrollDiff = 0f
 
 	private val stringSimilarityService = StringSimilarityServiceImpl(JaroWinklerStrategy())
-	private val decimalFormat = DecimalFormat("#.###")
+	private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols(Locale.US))
 	private val textSimilarityConfidence = 0.85
 
 	private val regionRightSide = intArrayOf(MPS.displayWidth / 2, 0, MPS.displayWidth / 2, MPS.displayHeight)

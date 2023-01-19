@@ -14,6 +14,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import com.steve1316.genshin_inventory_scanner_android.utils.MediaProjectionService as MPS
 
 /**
@@ -24,7 +26,7 @@ class ImageUtils(context: Context, private val game: Game) {
 	private var myContext = context
 
 	private val matchMethod: Int = Imgproc.TM_CCOEFF_NORMED
-	private val decimalFormat = DecimalFormat("#.###")
+	private val decimalFormat = DecimalFormat("#.###", DecimalFormatSymbols(Locale.US))
 
 	// private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 	private val tessBaseAPI: TessBaseAPI
