@@ -6,6 +6,9 @@
         "name": "AcquaintFate"
     },
     {
+        "name": "ActivatedStarshroom"
+    },
+    {
         "name": "AdhigamaWood"
     },
     {
@@ -316,6 +319,9 @@
     },
     {
         "name": "DendroSigil"
+    },
+    {
+        "name": "DesiccatedShell"
     },
     {
         "name": "DewOfRepudiation"
@@ -708,6 +714,9 @@
         "name": "MarionetteCore"
     },
     {
+        "name": "MarkedShell"
+    },
+    {
         "name": "MaskOfMemories"
     },
     {
@@ -805,6 +814,9 @@
     },
     {
         "name": "Mushroom"
+    },
+    {
+        "name": "MysteriousMeat"
     },
     {
         "name": "MysticEnhancementOre"
@@ -993,6 +1005,9 @@
         "name": "PrithivaTopazSliver"
     },
     {
+        "name": "PseudoStamens"
+    },
+    {
         "name": "Pufferfish"
     },
     {
@@ -1077,6 +1092,9 @@
         "name": "SandbearerWood"
     },
     {
+        "name": "SandGreasePupa"
+    },
+    {
         "name": "SandstormAngler"
     },
     {
@@ -1090,6 +1108,9 @@
     },
     {
         "name": "ScatteredPieceOfDecarabiansDream"
+    },
+    {
+        "name": "ScorchedStarshroom"
     },
     {
         "name": "SeaGanoderma"
@@ -1203,6 +1224,9 @@
         "name": "Starconch"
     },
     {
+        "name": "Starshroom"
+    },
+    {
         "name": "Starsilver"
     },
     {
@@ -1213,6 +1237,9 @@
     },
     {
         "name": "SturdyBoneShard"
+    },
+    {
+        "name": "SturdyShell"
     },
     {
         "name": "Sugar"

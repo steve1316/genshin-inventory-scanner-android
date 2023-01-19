@@ -249,6 +249,9 @@
         "name": "LustrousStoneFromGuyun"
     },
     {
+        "name": "MarkedShell"
+    },
+    {
         "name": "MaskOfTheKijin"
     },
     {
@@ -445,6 +448,9 @@
     },
     {
         "name": "SturdyBoneShard"
+    },
+    {
+        "name": "SturdyShell"
     },
     {
         "name": "SugardewBait"
